@@ -116,6 +116,7 @@ const Opacity = styled.div`
     top: 0;
     right: 0;
     bottom: 0;
+    z-index: 1999;
     left: 0;
     background-color: rgba(0,0,0,0.7);
 `
@@ -125,7 +126,7 @@ const RegComponent = styled.div`
     width: 70vw;
     top: 0;
     background-color: white;
-    z-index: 999;
+    z-index: 2000;
     top: 15vh;
     left: 15vw;
     opacity: ${props => props.openLogin ? "1" : "0"};

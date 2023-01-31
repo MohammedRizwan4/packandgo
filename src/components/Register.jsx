@@ -148,6 +148,7 @@ const Opacity = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 1999;
     background-color: rgba(0,0,0,0.8);
 `
 const RegComponent = styled.div`
@@ -156,7 +157,7 @@ const RegComponent = styled.div`
     width: 70vw;
     top: 0;
     background-color: white;
-    z-index: 999;
+    z-index: 2000;
     top: 5vh;
     left: 15vw;
     animation: ${slideDown} .7s ease-in-out;

@@ -1,0 +1,31 @@
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.mySwiper {
+  height: 100%;
+  width: 95vw;
+  padding: 4rem 6rem;
+}
+.swiper-slide {
+  width: 100%;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  top: 50%;
+  width: 4rem;
+  height: 4rem;
+  background: #fff;
+  border: 1px solid gray;
+  border-radius: 50%;
+  color: blue;
+  font-weight: 700;
+  outline: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1.5rem;
+}
