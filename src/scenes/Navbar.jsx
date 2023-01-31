@@ -1,11 +1,20 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import Register from '../components/Register';
+import Login from '../components/Login';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 const Navbar = () => {
+
+    const [openRegister, setOpenRegister] = useState(false);
+    const [openLogin, setOpenLogin] = useState(false);
+
+    const [navbarOpen, setNavbarOpen] = useState(false);
+
     return (
         <>
-            <Nav>
+            <Nav openLogin={openLogin}>
                 <div className="left">
                     <div className="logo">PACK&GO</div>
                 </div>
@@ -19,13 +28,33 @@ const Navbar = () => {
                         </ul>
                     </div>
                     <div className="buttons">
-                        <button>REGISTER</button>
-                        <button>LOGIN</button>
+                        <button onClick={() => setOpenRegister(!openRegister)}>REGISTER</button>
+                        <button onClick={() => setOpenLogin(!openLogin)}>LOGIN</button>
                     </div>
                 </div>
                 <div className="menu">
-                    <MenuRoundedIcon className='icon'/>
+                    {!navbarOpen ? <MenuRoundedIcon className='icon' onClick={() => setNavbarOpen(!navbarOpen)} /> : <CancelOutlinedIcon className='icon' onClick={() => setNavbarOpen(!navbarOpen)} />}
                 </div>
+                {navbarOpen && <div className="listMenu">
+                    <ul>
+                        <li><a href="#">HOME</a></li>
+                        <li id="theme"><a href="#">THEME</a></li>
+                        <div className="hide">
+                            <ul>
+                                <li><a href="#">Top Packages</a></li>
+                                <li><a href="#">Top Packages</a></li>
+                                <li><a href="#">Top Packages</a></li>
+                                <li><a href="#">Top Packages</a></li>
+                            </ul>
+                        </div>
+                        <li><a href="#">CONTACT US</a></li>
+                        <li><a href="#">ABOUT US</a></li>
+                        <li onClick={() => setOpenRegister(!openRegister)}><a href="#">REGISTER</a></li>
+                        <li onClick={() => setOpenLogin(!openLogin)}><a href="#">LOGIN</a></li>
+                    </ul>
+                </div>}
+                <Register openRegister={openRegister} setOpenRegister={() => setOpenRegister(!openRegister)} setOpenLogin={() => setOpenLogin(true)} />
+                <Login openLogin={openLogin} setOpenLogin={() => setOpenLogin(!openLogin)} />
             </Nav>
         </>
     );
@@ -33,12 +62,104 @@ const Navbar = () => {
 
 export default Navbar;
 
+const slideDown = keyframes`
+  from {
+    top: -100%;
+  }
+  to {
+    top: 0;
+  }
+`;
+
 const Nav = styled.nav`
     height: 10vh;
+    width: 100%;
     background-color: whitesmoke;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    .listMenu{
+        position: absolute;
+        height: max-content;
+        width: 25rem;
+        background-color: whitesmoke;
+        box-shadow: rgba(0,0,0,0.35) 5px 5px 15px;
+        top: 10vh;
+        right: 0;
+        ul{
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 2rem;
+            padding: 2rem 0 ;
+            .hide{
+                display: none;
+            }
+            #theme:hover + .hide,.hide:hover{
+                display: block;
+                position: absolute;
+                top: 9.1rem;
+                right: 25rem;
+                box-shadow: rgba(0,0,0,0.35) 5px 5px 15px;
+                ul{
+                    display: flex;
+                    height: 20rem;
+                    flex-direction: column;
+                    width: 30rem;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 1rem;
+                    padding: 0 2rem;
+                    li:hover a{
+                        color: white;
+                    }
+                    li{
+                        list-style-type: none;
+                        height: 4.5rem;
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                        justify-content: center;
+                        &:hover{
+                            color: white;
+                            background-color: #393a3b;
+                        }
+                        a{
+                            text-decoration: none;
+                            font-size: 2rem;
+                            color: #393a3b;
+                        }
+                    }
+                }
+            }
+            li{
+                list-style-type: none;
+                height: 5rem;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                justify-content: center;
+                &:hover{
+                    color: white;
+                    background-color: #393a3b;
+                }
+                a{
+                    text-decoration: none;
+                    font-size: 2rem;
+                    color: #393a3b;
+                }
+            }
+            li:hover a{
+                color: white;
+            }
+        }
+    }
     .left{
         margin-left: 15rem;
         .logo{
@@ -102,6 +223,11 @@ const Nav = styled.nav`
         }
         .menu{
             display: none;
+            animation: ${slideDown} .7s ease-in-out;
+            .icon{
+                color: #393a3b;
+                cursor: pointer;
+            }
         }
     }
 
@@ -131,15 +257,18 @@ const Nav = styled.nav`
             display: block;
             display: flex;
             justify-content: center;
+            animation: ${slideDown} .7s ease-in-out;
             align-items: center;
             .icon{
                 font-size: 3.5rem;
                 margin-right: 1.5rem;
+                cursor: pointer;
             }
         }
     }
 
     @media (min-width:875px) and (max-width:1024px) {
+        width: 100%;
         .left{
             margin-left: 5rem;
             .logo{
@@ -174,6 +303,7 @@ const Nav = styled.nav`
     }
 
     @media (min-width:1024px) and (max-width:1200px) {
+        width: 100%;
         .left{
             margin-left: 5rem;
         }
