@@ -13,7 +13,7 @@ import "./swiper.css";
 import { Pagination, Navigation } from "swiper";
 const Recommended = () => {
     const sliderSettings = {
-        440: {
+        300: {
             slidesPerView: 1,
             slidesPerGroup: 1,
             slidesPerGroupSkip: 1,

@@ -10,6 +10,7 @@
 }
 .swiper-slide {
   width: 100%;
+  margin-bottom: 3rem;
 }
 
 .swiper-button-prev,

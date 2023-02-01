@@ -14,7 +14,7 @@ import "./swiper.css";
 import { Pagination, Navigation } from "swiper";
 const TopSearch = () => {
     const sliderSettings = {
-        440: {
+        300: {
             slidesPerView: 1,
             slidesPerGroup: 1,
             slidesPerGroupSkip: 1,
@@ -740,7 +740,6 @@ const Section = styled.section`
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
-  margin: 5rem 0;
   gap: 2.5rem;
   width: 100%;
   h1 {
