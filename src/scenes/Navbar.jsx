@@ -41,7 +41,7 @@ const Navbar = () => {
   };
 
   return (
-    <>
+    <div className="mainNavbar">
       <Nav openLogin={openLogin}>
         <Toaster
           toastOptions={{ style: { fontSize: "2rem" } }}
@@ -178,7 +178,7 @@ const Navbar = () => {
           setOpenLogin={() => setOpenLogin(!openLogin)}
         />
       </Nav>
-    </>
+    </div>
   );
 };
 

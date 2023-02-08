@@ -18,6 +18,7 @@ import Theme1 from "./scenes/Theme1";
 import Theme2 from "./scenes/Theme2";
 import Theme3 from "./scenes/Theme3";
 import Theme4 from "./scenes/Theme4";
+import Package from "./scenes/Package";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/theme2" element={<Theme2 />} />
         <Route path="/theme3" element={<Theme3 />} />
         <Route path="/theme4" element={<Theme4 />} />
+        <Route path="/id" element={<Package />} />
       </Routes>
     </BrowserRouter>
   );

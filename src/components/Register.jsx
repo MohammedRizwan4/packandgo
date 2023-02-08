@@ -238,7 +238,7 @@ const Opacity = styled.div`
   bottom: 0;
   left: 0;
   z-index: 1999;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, .8);
 `;
 const RegComponent = styled.div`
   position: absolute;
