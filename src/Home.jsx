@@ -1,26 +1,24 @@
 import React from "react";
-import Advertisement from "./scenes/Advertisement";
-import Footer from "./scenes/Footer";
-import Hero from "./scenes/Hero";
-import Navbar from "./scenes/Navbar";
-import Recommended from "./scenes/Recommended";
-import Slider from "./scenes/Slider";
-import TopDestinations from "./scenes/TopDestinations";
-import TopSearch from "./scenes/TopSearch";
+import Advertisement from "./components/users/Advertisement";
+import Footer from "./components/users/Footer";
+import Hero from "./components/users/Hero";
+import Navbar from './components/users/Navbar';
+import TopDestinations from "./scenes/home/TopDestinations";
+import TopSearch from "./scenes/home/TopSearch";
 
 const Home = () => {
-  return (
-    <div>
-      <Navbar />
-      <Hero />
-      {/* <Slider /> */}
-      <Advertisement />
-      <TopDestinations />
-      {/* <Recommended /> */}
-      <TopSearch />
-      <Footer/>
-    </div>
-  );
+    return (
+        <div>
+            <Navbar />
+            <Hero />
+            {/* <Slider /> */}
+            <Advertisement />
+            <TopDestinations />
+            {/* <Recommended /> */}
+            <TopSearch />
+            <Footer />
+        </div>
+    );
 };
 
 export default Home;

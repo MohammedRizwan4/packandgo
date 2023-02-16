@@ -10,144 +10,129 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
 import { setSuccess } from "../store/reducers/globalReducer";
 import { setUserToken } from "../store/reducers/authReducer";
-import { setIsLogin } from "../store/reducers/toggleReducer";
 
 // min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit.
 
-const Login = ({ openLogin, setOpenLogin }) => {
-  const { isLogin } = useSelector((state) => state.toggleReducer);
-  const basicSchema = yup.object().shape({
-    email: yup
-      .string()
-      .email("Please enter a valid email")
-      .required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
-  const [loginData, response] = useAuthLoginMutation();
+const Login = ({ loginOpen, setLoginOpen }) => {
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+    const basicSchema = yup.object().shape({
+        email: yup
+            .string()
+            .email("Please enter a valid email")
+            .required("Email is required"),
+        password: yup.string().required("Password is required"),
+    });
+    const [loginData, response1] = useAuthLoginMutation();
 
-  const onSubmit = async (values, actions) => {
-    loginData(values);
-    // actions.resetForm();
-    dispatch(setIsLogin(false));
-  };
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const {
-    values,
-    errors,
-    touched,
-    isSubmitting,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: basicSchema,
-    onSubmit,
-  });
+    const onSubmit = async (values, actions) => {
+        loginData(values);
+        // actions.resetForm();
+    };
 
-  useEffect(() => {
-    if (response?.isSuccess) {
-      if (response?.data?.token) {
-        localStorage.setItem("login-token", response?.data?.token);
-        console.log(response?.data?.token);
-      }
-      dispatch(setUserToken(response?.data?.token));
-      toast.success("Logged In successfully", {
-        style: {
-          backgroundColor: "#393a3b",
-          color: "white",
-          padding: "16px",
+    const {
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+    } = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
         },
-      });
-      dispatch(setSuccess(response?.data?.msg));
-      setTimeout(() => {
-        setOpenLogin(false);
-      }, 1000);
-    }
-  }, [response?.isSuccess]);
+        validationSchema: basicSchema,
+        onSubmit,
+    });
 
-  useEffect(() => {
-    if (response.isError) {
-      toast.error(response?.error?.data?.errors[0].msg);
-    }
-  }, [response?.isError]);
+    useEffect(() => {
+        if (response1?.isSuccess) {
+            if (response1?.data?.token) {
+                localStorage.setItem("login-token", response1?.data?.token);
+                console.log(response1?.data?.token);
+            }
+            dispatch(setUserToken(response1?.data?.token));
+            toast.success("Logged In successfully");
+        }
+    }, [response1?.isSuccess]);
 
-  return createPortal(
-    <>
-      {isLogin && (
-        <>
-          <Toaster
+    useEffect(() => {
+        if (response1.isError) {
+            toast.error(response1?.error?.data?.errors[0].msg);
+        }
+    }, [response1?.isError]);
+
+    return <>
+        <Toaster
+            toastOptions={{ style: { fontSize: "8px" } }}
             position="top-center"
-            toastOptions={{ style: { fontSize: "2rem" } }}
             reverseOrder={true}
-          />
-          <RegComponent isLogin={isLogin}>
+        />
+        <RegComponent>
             <div className="closeIcon">
-              <div className="title">Log In</div>
-              <HighlightOffIcon
-                className="icon"
-                onClick={() => dispatch(setIsLogin(false))}
-              >
-                close
-              </HighlightOffIcon>
+                <div className="title">Log In</div>
+                <HighlightOffIcon
+                    className="icon"
+                    onClick={() => setLoginOpen(false)}
+                >
+                    close
+                </HighlightOffIcon>
             </div>
             <div className="login">
-              <form
-                className="inputs"
-                onSubmit={handleSubmit}
-                autoComplete="off"
-              >
-                <div className="input">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    value={values.email}
-                    id="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={
-                      errors.email && touched.email ? "input-error" : ""
-                    }
-                    type="email"
-                    placeholder="Enter your Email"
-                  />
-                  {errors.email && touched.email && (
-                    <p className="error">{errors.email}</p>
-                  )}
-                </div>
-                <div className="input">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    value={values.password}
-                    id="password"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={
-                      errors.password && touched.password ? "input-error" : ""
-                    }
-                    type="password"
-                    placeholder="Enter your Password"
-                  />
-                  {errors.password && touched.password && (
-                    <p className="error">{errors.password}</p>
-                  )}
-                </div>
-                <button className="submit">Submit</button>
-              </form>
+                <form
+                    className="inputs"
+                    onSubmit={handleSubmit}
+                    // autoComplete="off"
+                >
+                    <div className="input">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            value={values.email}
+                            id="email"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={
+                                errors.email && touched.email ? "input-error" : ""
+                            }
+                            type="email"
+                            placeholder="Enter your Email"
+                        />
+                        {
+                            errors.email && touched.email ? <p></p> : <p style={{ visibility: "hidden" }}>Hello brother</p>
+                        }
+                        {errors.email && touched.email && (
+                            <p className="error">{errors.email}</p>
+                        )}
+                    </div>
+                    <div className="input">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            value={values.password}
+                            id="password"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={
+                                errors.password && touched.password ? "input-error" : ""
+                            }
+                            type="password"
+                            placeholder="Enter your Password"
+                        />
+                        {
+                            errors.password && touched.password ? <p></p> : <p style={{ visibility: "hidden" }}>Hello brother</p>
+                        }
+                        {errors.password && touched.password && (
+                            <p className="error">{errors.password}</p>
+                        )}
+                    </div>
+                    <button className="submit">Submit</button>
+                </form>
             </div>
             <div className="googlelinks"></div>
-          </RegComponent>
-          <Opacity onClick={() => dispatch(setIsLogin(false))} />
-        </>
-      )}
-    </>,
-    document.getElementById("portal")
-  );
+        </RegComponent></>
 };
 
 export default Login;
@@ -161,71 +146,70 @@ const slideDown = keyframes`
   }
 `;
 
-const Opacity = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1999;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-`;
 const RegComponent = styled.div`
-  position: absolute;
-  height: 70vh;
-  width: 70vw;
-  top: 0;
-  background-color: white;
+  height: 100%;
+  width: 100%;
   z-index: 2000;
-  top: 15vh;
-  left: 15vw;
-  opacity: ${(props) => (props.isLogin ? "1" : "0")};
-  transition: all 0.5s ease-in-out;
-  padding: 4rem;
-  animation: ${slideDown} 0.7s ease-in-out;
+  background-color: var(--bgYellow);
+  padding: var(--r2) var(--r4);
   .closeIcon {
     display: flex;
     justify-content: space-between;
     align-items: center;
     .icon {
-      font-size: 4rem;
+      font-size: var(--r3);
       cursor: pointer;
-      color: #393a3b;
+      color: var(--bgDarkBlue);
     }
     .title {
-      font-size: 3rem;
-      font-weight: 800;
-      margin-left: 2rem;
+      font-size: var(--r3);
+      font-weight: 700;
+      color: var(--bgDarkBlue);
     }
   }
   .login {
     .inputs {
-      margin-top: 5rem;
-      margin-left: 2rem;
+      margin-top: var(--r2);
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "email "
+        "password"
+        "submit";
+      grid-column-gap: 3rem;
+      /* grid-row-gap: 2rem; */
+      .email {
+        grid-area: email;
+      }
+      .password {
+        grid-area: password;
+      }
       .input {
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 4rem;
+        gap: var(--r-5);
         .input-error {
           border: 2px solid red;
         }
         .error {
-          font-size: 1.7rem;
+          font-size: var(--r1-25);
+          padding: 0;
+          padding-bottom: var(--r-5);
           color: red;
         }
         label {
-          font-size: 2.5rem;
-          color: #393a3b;
-          font-weight: bold;
+          font-size: var(--r1-5);
+          color: var(--bgDarkBlue);
+          font-weight: 700;
         }
         input {
-          padding: 1rem 2rem;
+          padding:var(--r-75) var(--r1-75);
           outline: none;
           background-color: white;
           border: 2px solid #a6a4a1;
-          font-size: 2.2rem;
+          font-size: var(--r1-75);
+          width: 100%;
           &:focus {
             border: 2px solid #383734;
             transition: all 0.3s ease-in-out;
@@ -233,12 +217,14 @@ const RegComponent = styled.div`
         }
       }
       .submit {
-        padding: 1rem 3rem;
-        font-size: 2rem;
+        padding: var(--r1) var(--r3);
+        font-size: var(--r1-75);
         font-weight: 600;
-        color: #383734;
+        color: var(--bgYellow);
         border: 2px solid #383734;
-        background-color: white;
+        background-color: var(--bgDarkBlue);
+        margin-top: var(--r1-75);
+        grid-area: submit;
         &:hover {
           color: #a6a4a1;
           background-color: #383734;
@@ -246,6 +232,17 @@ const RegComponent = styled.div`
           transition: all 0.3s ease-in-out;
           cursor: pointer;
         }
+      }
+    }
+  }
+
+  @media (max-width: 875px) {
+    .login {
+      .inputs {
+        grid-template-areas:
+          "email email"
+          "password password"
+          "submit submit";
       }
     }
   }
