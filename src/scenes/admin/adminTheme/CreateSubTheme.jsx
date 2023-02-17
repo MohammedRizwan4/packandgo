@@ -19,7 +19,8 @@ const CreateSubTheme = () => {
 
     const [state, setState] = useState({
         name: '',
-        image: ''
+        image: '',
+        description: ''
     })
 
     const handleChange = (e) => {
@@ -38,6 +39,7 @@ const CreateSubTheme = () => {
         const formData = new FormData();
         formData.append('image', state.image);
         formData.append('name', state.name)
+        formData.append('description', state.description)
         themeServices(formData)
     }
 
@@ -73,6 +75,8 @@ const CreateSubTheme = () => {
                         >
                             <label htmlFor="themeName">Theme Name</label>
                             <input type="text" placeholder='Enter Theme Name' name='name' id="name" value={state.name} onChange={handleChange} />
+                            <label htmlFor="themeName">Description</label>
+                            <input type="text" placeholder='Enter Description' name='description' id="description" value={state.description} onChange={handleChange} />
                             <label htmlFor="upload-theme">Upload File</label>
                             <input type="file" accept='.jpg, .jpeg, .png' id="upload-theme" onChange={(e) => handleFileSelect(e, 'image')} />
                             <input type="submit" value="Submit" />

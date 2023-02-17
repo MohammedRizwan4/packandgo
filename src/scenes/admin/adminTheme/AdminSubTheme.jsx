@@ -5,10 +5,13 @@ import Spinner from '../../../components/users/Spinner';
 import { useDeleteThemeMutation, useFetchAllThemesQuery } from '../../../store/services/themeService';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AdminSubTheme = () => {
 
+    const { success } = useSelector(state => state.globalReducer)
     let [rows, setRows] = useState([])
+    const dispatch = useDispatch();
 
     const [deleteTheme, response] = useDeleteThemeMutation();
 
@@ -18,10 +21,16 @@ const AdminSubTheme = () => {
     }
 
     const columns = [
-        { field: '_id', headerName: 'ID', width: 300 },
+        { field: '_id', headerName: 'ID', width: 150 },
         {
             field: 'name',
             headerName: 'Theme name',
+            width: 200,
+            editable: true,
+        },
+        {
+            field: 'description',
+            headerName: 'Description',
             width: 400,
             editable: true,
         },

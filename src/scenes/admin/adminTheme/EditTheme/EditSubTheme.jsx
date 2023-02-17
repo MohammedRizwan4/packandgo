@@ -22,12 +22,14 @@ const EditSubTheme = () => {
     const { id } = useParams();
 
     const { data, isFetching } = useFetchOneThemeQuery(id);
+    console.log(data);
 
     const dispatch = useDispatch();
 
     const [state, setState] = useState({
         name: '',
-        image: ''
+        image: '',
+        description: ''
     })
 
     const handleChange = (e) => {
@@ -48,15 +50,18 @@ const EditSubTheme = () => {
             formData.append('id', id)
             formData.append('name', state.name)
             formData.append('image', state.image);
+            formData.append('description', state.description);
             console.log(state.image);
             updateTheme(formData);
         }
         else {
             formData.append('id', id)
             formData.append('name', state.name)
+            formData.append('description', state.description)
             const data = {
                 id: id,
-                name: state.name
+                name: state.name,
+                description: state.description
             }
             updateThemeName(data);
         }
@@ -64,8 +69,7 @@ const EditSubTheme = () => {
 
     useEffect(() => {
         if (response?.isSuccess || response1.isSuccess) {
-            toast.success(response?.data?.msg);
-            dispatch(setSuccess("Theme added Successfully"))
+            dispatch(setSuccess("Theme has been Updated Successfully"))
             navigate("/dashboard/theme")
         }
         if (response?.isError) {
@@ -88,21 +92,15 @@ const EditSubTheme = () => {
         }
     }
 
-    console.log();
-
     useEffect(() => {
         if (data?.theme) {
             setState(prev => ({ ...prev, name: data?.theme[0]?.name }))
+            setState(prev => ({ ...prev, description: data?.theme[0]?.description }))
         }
     }, [data])
 
     return (
         <>
-            <Toaster
-                toastOptions={{ style: { fontSize: "1.5rem" } }}
-                position="top-center"
-                reverseOrder={true}
-            />
             <Section>
                 <div className="add">
                     <Link to="/dashboard/theme"><button>Back</button></Link>
@@ -118,6 +116,8 @@ const EditSubTheme = () => {
                             >
                                 <label htmlFor="themeName">Theme Name</label>
                                 <input type="text" placeholder='Enter Theme Name' name='name' id="name" value={state.name} onChange={handleChange} />
+                                <label htmlFor="themeName">Description</label>
+                                <input type="text" placeholder='Enter Description' name='description' id="description" value={state.description} onChange={handleChange} />
                                 <label htmlFor="upload-theme">Upload File</label>
                                 <input type="file" accept='.jpg, .jpeg, .png' id="upload-theme" onChange={(e) => handleImageUpload(e)} />
                                 <input type="submit" value="Submit" />

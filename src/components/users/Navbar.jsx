@@ -22,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import Register from "../Register";
 import Login from "../Login";
 import { logout } from "../../store/reducers/authReducer";
+import { useFetchAllThemesQuery } from "../../store/services/themeService";
 
 const style = {
     position: 'absolute',
@@ -47,6 +48,9 @@ const style1 = {
 
 const Navbar = () => {
 
+    const { data, isFetching } = useFetchAllThemesQuery();
+    console.log(data);
+
     const [open, setOpen] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
     const handleOpen = () => {
@@ -65,6 +69,7 @@ const Navbar = () => {
 
     let token;
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -107,30 +112,19 @@ const Navbar = () => {
                                 </li>
                             </Link>
                             <Link to="/theme">
-                                <li id="theme">
+                                <li id="theme" className="bounce">
                                     <a href="#">THEMES</a>
                                     <div className="theme_big">
                                         <ul>
-                                            <Link to="/theme1" style={{ margin: "0", padding: "0" }}>
-                                                <li>
-                                                    <a href="#">Theme1</a>
-                                                </li>
-                                            </Link>
-                                            <Link to="/theme2" style={{ margin: "0", padding: "0" }}>
-                                                <li>
-                                                    <a href="#">Theme2</a>
-                                                </li>
-                                            </Link>
-                                            <Link to="/theme3" style={{ margin: "0", padding: "0" }}>
-                                                <li>
-                                                    <a href="#">Theme3</a>
-                                                </li>
-                                            </Link>
-                                            <Link to="/theme4" style={{ margin: "0", padding: "0" }}>
-                                                <li>
-                                                    <a href="#">Theme4</a>
-                                                </li>
-                                            </Link>
+                                            {data?.map((theme, index) => {
+                                                return (
+                                                    <Link to={`/theme${index + 1}`} style={{ margin: "0", padding: "0" }}>
+                                                        <li>
+                                                            <a href="#">{theme.name}</a>
+                                                        </li>
+                                                    </Link>
+                                                )
+                                            })}
                                         </ul>
                                     </div>
                                 </li>
@@ -276,6 +270,19 @@ const Navbar = () => {
 
 export default Navbar;
 
+
+const bounceAnimation = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
 const slideDown = keyframes`
   from {
     top: -100%;
@@ -318,7 +325,14 @@ const Nav = styled.nav`
         background-color: white;
         border-radius: 3rem;
         padding: 2rem 0;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        transform-origin: bottom;
       }
+      .bounce:hover {
+            animation-name: bounce;
+            animation-timing-function: ease;
+        }
       #theme:hover + .theme_big,
       .hide:hover {
         display: block;
@@ -437,7 +451,7 @@ const Nav = styled.nav`
             border-radius: var(--r3);
             padding: var(--r2) 0;
             height: 37vh;
-            width: 20rem;
+            width: 28rem;
             background-color: var(--bgDarkBlue);
             ul{
                 display: flex;

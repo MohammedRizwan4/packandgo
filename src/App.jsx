@@ -2,10 +2,6 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Theme from "./scenes/Themes/Theme";
-import Theme1 from "./scenes/Themes/Theme1";
-import Theme2 from "./scenes/Themes/Theme2";
-import Theme3 from "./scenes/Themes/Theme3";
-import Theme4 from "./scenes/Themes/Theme4";
 import Public from './scenes/routes/Public'
 import Private from './scenes/routes/Private'
 import AdminLogin from './components/admin/AdminLogin'
@@ -15,13 +11,17 @@ import ContactUs from "./scenes/pages/ContactUs";
 import AboutUs from "./scenes/pages/AboutUs";
 import CreateTheme from "./scenes/admin/adminTheme/CreateTheme";
 import AddPackage from "./scenes/admin/AddPackage";
-import Package from "./scenes/home/Package";
 import AdminTheme from "./scenes/admin/adminTheme/AdminTheme";
 import EditTheme from "./scenes/admin/adminTheme/EditTheme/EditTheme";
 import AdminUsers from "./scenes/admin/adminUsers/AdminUsers";
 import AdminAddUsers from "./scenes/admin/adminUsers/AddUsers/AdminAddUsers";
 import AdminEditUsers from "./scenes/admin/adminUsers/EditUsers/AdminEditUsers";
 import jwtDecode from "jwt-decode";
+import Theme1 from "./scenes/Themes/Theme1/Theme1";
+import Theme2 from "./scenes/Themes/Theme2/Theme2";
+import Theme3 from "./scenes/Themes/Theme3/Theme3";
+import Theme4 from "./scenes/Themes/Theme4/Theme4";
+import Package from "./scenes/package/Package";
 
 const App = () => {
 
