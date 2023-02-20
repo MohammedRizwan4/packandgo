@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import styled from "styled-components";
 import ShareIcon from "@mui/icons-material/Share";
@@ -12,8 +12,11 @@ import Activity from "./Activity/Activity";
 import DayPlan from "./DayPlan/DayPlan";
 import location from './location.jpg';
 import CheckIcon from '@mui/icons-material/Check';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
-const PackageDetail = () => {
+const PackageDetail = ({ data }) => {
+
     const [like, setLike] = useState(false);
     const { isPackagePhoto } = useSelector((state) => state.toggleReducer);
     const dispatch = useDispatch();
@@ -30,7 +33,23 @@ const PackageDetail = () => {
         );
     };
 
+    const [arrow, setArrow] = useState(0);
     const [menu, setMenu] = useState(1);
+
+    const [scrollDisabled, setScrollDisabled] = useState(false);
+
+    useEffect(() => {
+        isPackagePhoto ? setScrollDisabled(true) : setScrollDisabled(false);;
+    }, [isPackagePhoto]);
+
+    useEffect(() => {
+        if (scrollDisabled) {
+            document.documentElement.style.overflow = 'hidden';
+        } else {
+            document.documentElement.style.overflow = 'auto';
+        }
+    }, [scrollDisabled]);
+
     return createPortal(
         <Section menu={menu}>
             <div className="mainPackage">
@@ -38,11 +57,11 @@ const PackageDetail = () => {
                     <div className="left">
                         <div className="package">Package</div>
                         <div className="stars">
-                            <StarIcon style={{ fontSize: "1.6rem", color: "#da6938" }} />
-                            <StarIcon style={{ fontSize: "1.6rem", color: "#da6938" }} />
-                            <StarIcon style={{ fontSize: "1.6rem", color: "#da6938" }} />
-                            <StarIcon style={{ fontSize: "1.6rem", color: "#da6938" }} />
-                            <StarIcon style={{ fontSize: "1.6rem", color: "#da6938" }} />
+                            {
+                                Array.from({ length: data?.stars }, (_, i) => (
+                                    <StarIcon style={{ fontSize: "var(--r1-5)", color: "var(--starColor)" }} />
+                                ))
+                            }
                         </div>
                     </div>
                     <div className="right">
@@ -59,7 +78,7 @@ const PackageDetail = () => {
                     </div>
                 </div>
                 <div className="packageData">
-                    <h3>Scintillating Maldives Canareef Package</h3>
+                    <h3>{data.name}</h3>
                     {/* <p>
                         Vatva Railway Over Bridge Road SANKHESHWAR IND.PARK-2, BLOCK, B, OPP
                         GUJRAT OFFSET, nr. Vatva Railway Over Bridge Road, 382445 Ahmedabad,
@@ -70,41 +89,15 @@ const PackageDetail = () => {
                     className="images"
                     onClick={() => dispatch(setIsPackagePhoto(true))}
                 >
-                    <div className="image1">
-                        <img
-                            src="../../public/assets/topdestination/t4.jpg"
-                            alt=""
-                            className="image"
-                        />
-                    </div>
-                    <div className="image2">
-                        <img
-                            src="../../public/assets/topdestination/t4.jpg"
-                            alt=""
-                            className="image"
-                        />
-                    </div>
-                    <div className="image3">
-                        <img
-                            src="../../public/assets/topdestination/t4.jpg"
-                            alt=""
-                            className="image"
-                        />
-                    </div>
-                    <div className="image4">
-                        <img
-                            src="../../public/assets/topdestination/t4.jpg"
-                            alt=""
-                            className="image"
-                        />
-                    </div>
-                    <div className="image5">
-                        <img
-                            src="../../public/assets/topdestination/t4.jpg"
-                            alt=""
-                            className="image"
-                        />
-                    </div>
+                    {Array.from({ length: 5 }, (_, index) => (
+                        <div key={index} className={`image${index + 1}`}>
+                            <img
+                                src={`http://localhost:7800/${data?.images[index]}`}
+                                alt="image1"
+                                className="image"
+                            />
+                        </div>
+                    ))}
                 </div>
                 <div className="whole-main1 tripDescription">
                     <div>
@@ -113,23 +106,39 @@ const PackageDetail = () => {
                             <tbody>
                                 <tr>
                                     <td>Trip Location:</td>
-                                    <td>Maldives</td>
+                                    <td>{data.location.city}</td>
                                 </tr>
                                 <tr>
                                     <td>Destinations Covered:</td>
-                                    <td>Destinations Covered:</td>
+                                    <td>
+                                        {
+                                            data?.destinations_covered.map((d) => {
+                                                return (
+                                                    <p>{d} - </p>
+                                                )
+                                            })
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Starting Point: </td>
-                                    <td>Male International Airport</td>
+                                    <td>{data?.starting_point}</td>
                                 </tr>
                                 <tr>
                                     <td>End Point: </td>
-                                    <td>Male InterNational Airport</td>
+                                    <td>{data?.ending_point}</td>
                                 </tr>
                                 <tr>
                                     <td>Accommodation:</td>
-                                    <td>Hotels</td>
+                                    <td>
+                                        {
+                                            data?.accommodations.map((d) => {
+                                                return (
+                                                    <p>{d} - </p>
+                                                )
+                                            })
+                                        }
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -158,7 +167,7 @@ const PackageDetail = () => {
                         ) : menu === 2 ? (
                             <Activity />
                         ) : (
-                            <DayPlan />
+                            <><DayPlan /><DayPlan/></>
                         )}
                     </div>
                 </div>
@@ -167,31 +176,31 @@ const PackageDetail = () => {
                         <h1>Highlights</h1>
                         <div className="two-boxes">
                             <div className="container">
-                                <CheckIcon className="icon"/>
+                                <CheckIcon className="icon" />
                                 <p>Travel Period: Not applicable for festive season</p>
                             </div>
                             <div className="container">
-                                <CheckIcon className="icon"/>
+                                <CheckIcon className="icon" />
                                 <p>Flight tickets are included from New Delhi, Bangalore, Mumbai, Chennai</p>
                             </div>
                         </div>
                         <div className="two-boxes">
                             <div className="container">
-                                <CheckIcon className="icon"/>
+                                <CheckIcon className="icon" />
                                 <p>Relaxing leisure days on the beaches</p>
                             </div>
                             <div className="container">
-                                <CheckIcon className="icon"/>
+                                <CheckIcon className="icon" />
                                 <p>Meet the people here and gain an understanding of their culture</p>
                             </div>
                         </div>
                         <div className="two-boxes">
                             <div className="container">
-                                <CheckIcon className="icon"/>
+                                <CheckIcon className="icon" />
                                 <p>Dive into the surrounding water for a wonderful experience</p>
                             </div>
                             <div className="container">
-                                <CheckIcon className="icon"/>
+                                <CheckIcon className="icon" />
                                 <p>Travel Period: Not applicable for festive season</p>
                             </div>
                         </div>
@@ -199,7 +208,20 @@ const PackageDetail = () => {
                 </div>
             </div>
             {isPackagePhoto && (
-                <Opacity onClick={() => dispatch(setIsPackagePhoto(false))} />
+                <>
+                    <Opacity onClick={() => dispatch(setIsPackagePhoto(false))} />
+                    <div className="slider">
+                        <div className="left"><ArrowLeftIcon onClick={() => setArrow(arrow => arrow === 0 ? 4 : arrow - 1)} style={{ fontSize: "2.5rem", color: "white" }} /></div>
+                        <div className="middle">
+                            <img
+                                src={`http://localhost:7800/${data?.images[arrow]}`}
+                                alt="image1"
+                                className="image"
+                            />
+                        </div>
+                        <div className="right"><ArrowRightIcon onClick={() => setArrow(arrow => arrow === 4 ? 0 : arrow + 1)} style={{ fontSize: "2.5rem", color: "white" }} /></div>
+                    </div>
+                </>
             )}
         </Section>,
         document.getElementById("images")
@@ -216,15 +238,59 @@ const Opacity = styled.div`
   left: 0;
   z-index: 1999;
   background-color: rgba(0, 0, 0, 0.8);
-`;
+  `;
 
 const Section = styled.section`
-  height: 200vh;
+  height: max-content;
   width: 100%;
   max-width: 90%;
   margin: auto;
+  position: relative;
+  .slider{
+    position: absolute;
+    width: 100%;
+    height: 90vh;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    .left{
+        width: 5rem;
+        height: 5rem;
+        background-color: gray;
+        opacity: .6;
+        cursor: pointer;
+        z-index: 2999;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .middle{
+        z-index: 2999;
+        img{
+            width: 100rem;
+            height: 50rem;
+            object-fit: cover;
+            border-radius: 2rem;
+        }
+    }
+    .right{
+        width: 5rem;
+        height: 5rem;
+        background-color: gray;
+        cursor: pointer;
+        opacity: .6;
+        z-index: 2999;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  }
   .mainPackage {
-    height: 100%;
+    height: max-content;
     width: 100%;
     /* background-color: beige; */
     .tripDescription {
@@ -252,6 +318,10 @@ const Section = styled.section`
               font-size: 1.5rem;
               font-weight: 500;
               padding-right: var(--r2);
+              p{
+                padding: 0;
+                color: black;
+              }
             }
           }
         }
@@ -429,7 +499,7 @@ const Section = styled.section`
       .particularContent {
         width: 95%;
         margin-top: 4rem;
-        height: 40vh;
+        height: max-content;
         background-color: white;
         margin: 1rem 2rem;
       }

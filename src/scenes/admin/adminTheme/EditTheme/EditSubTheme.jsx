@@ -32,6 +32,20 @@ const EditSubTheme = () => {
         description: ''
     })
 
+    const check = () => {
+        if (state.name && state.description) {
+            if(imagePreview){
+                if(state.name && state.description) {
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true
+    }
+
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
     }
@@ -120,7 +134,7 @@ const EditSubTheme = () => {
                                 <input type="text" placeholder='Enter Description' name='description' id="description" value={state.description} onChange={handleChange} />
                                 <label htmlFor="upload-theme">Upload File</label>
                                 <input type="file" accept='.jpg, .jpeg, .png' id="upload-theme" onChange={(e) => handleImageUpload(e)} />
-                                <input type="submit" value="Submit" />
+                                <input disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} type="submit" value="Submit" />
                             </form>
                         </div>
                     </div>

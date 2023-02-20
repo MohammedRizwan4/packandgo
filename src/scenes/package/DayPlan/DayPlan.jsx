@@ -81,7 +81,7 @@ const Section = styled.section`
     align-items: flex-start;
     justify-content: start;
     width: 100%;
-    height: 100%;
+    height: max-content;
     .left{
         flex: .9;
         border-right: 2px solid black;

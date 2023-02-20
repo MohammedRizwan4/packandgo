@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import AdminNav from '../../../../components/admin/AdminNav';
 import AdminSidebar from '../../../../components/admin/AdminSidebar';
-import CreateSubTheme from '../CreateSubTheme';
 import EditSubTheme from './EditSubTheme';
 
 const EditTheme = () => {

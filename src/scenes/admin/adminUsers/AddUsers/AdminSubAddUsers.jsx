@@ -26,6 +26,13 @@ const AdminSubAddUsers = () => {
         confirmPassword: ""
     })
 
+    const check = () => {
+        if (state.firstName && state.lastName && state.email && state.password && state.confirmPassword && (state.password === state.confirmPassword)) {
+            return false;
+        }
+        return true
+    }
+
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
     }
@@ -74,7 +81,7 @@ const AdminSubAddUsers = () => {
                                 </div>
                                 <div className="join">
                                     <label htmlFor="themeName">Email</label>
-                                    <input type="text" placeholder='Enter Users Email ID' name='email' id="email" value={state.email} onChange={handleChange} />
+                                    <input type="email" placeholder='Enter Users Email ID' name='email' id="email" value={state.email} onChange={handleChange} />
                                 </div>
                                 <div className="join">
                                     <label htmlFor="themeName">Password</label>
@@ -84,7 +91,7 @@ const AdminSubAddUsers = () => {
                                     <label htmlFor="themeName">Confirm Password</label>
                                     <input type="text" placeholder='Enter Confirm Password' name='confirmPassword' id="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
                                 </div>
-                                <input type="submit" value="Submit" />
+                                <input disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} type="submit" value="Submit" />
                             </form>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ import { useDeleteThemeMutation, useFetchAllThemesQuery } from '../../../store/s
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
+import { display } from '@mui/system';
 
 const AdminSubTheme = () => {
 
@@ -19,6 +20,20 @@ const AdminSubTheme = () => {
         console.log(deleteFilePath);
         deleteTheme({ id, deleteFilePath })
     }
+
+    const { data, isFetching, isLoading, error } = useFetchAllThemesQuery({
+        selectFromResult: ({ data, error }) => ({ data, error }),
+        rejections: true,
+    });
+
+    const check = () => {
+        if (data?.length >= 4) {
+            console.log(data?.length);
+            return true
+        }
+        return false
+    }
+    check()
 
     const columns = [
         { field: '_id', headerName: 'ID', width: 150 },
@@ -67,11 +82,6 @@ const AdminSubTheme = () => {
         },
     ];
 
-    const { data, isFetching, isLoading, error } = useFetchAllThemesQuery({
-        selectFromResult: ({ data, error }) => ({ data, error }),
-        rejections: true,
-    });
-
     console.log(useFetchAllThemesQuery());
 
     console.log(isLoading, error);
@@ -91,8 +101,8 @@ const AdminSubTheme = () => {
     return (
         <>
             <Section>
-                <div className="add">
-                    <Link to="/dashboard/create-theme"><button>Add Theme</button></Link>
+                <div className="add" style={{ opacity: check() ? '.7' : "1", }}>
+                    <Link to="/dashboard/create-theme" style={{ opacity: check() ? '.7' : "1" }}><button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }}>Add Theme</button></Link>
                 </div>
                 <div className="content">
                     {

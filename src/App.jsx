@@ -5,12 +5,10 @@ import Theme from "./scenes/Themes/Theme";
 import Public from './scenes/routes/Public'
 import Private from './scenes/routes/Private'
 import AdminLogin from './components/admin/AdminLogin'
-import Dashboard from './scenes/admin/Dashboard'
+import AdminPackages from "./scenes/admin/adminPackages/AdminPackages";
 import Home from "./Home";
 import ContactUs from "./scenes/pages/ContactUs";
 import AboutUs from "./scenes/pages/AboutUs";
-import CreateTheme from "./scenes/admin/adminTheme/CreateTheme";
-import AddPackage from "./scenes/admin/AddPackage";
 import AdminTheme from "./scenes/admin/adminTheme/AdminTheme";
 import EditTheme from "./scenes/admin/adminTheme/EditTheme/EditTheme";
 import AdminUsers from "./scenes/admin/adminUsers/AdminUsers";
@@ -22,6 +20,9 @@ import Theme2 from "./scenes/Themes/Theme2/Theme2";
 import Theme3 from "./scenes/Themes/Theme3/Theme3";
 import Theme4 from "./scenes/Themes/Theme4/Theme4";
 import Package from "./scenes/package/Package";
+import AdminAddPackage from "./scenes/admin/adminPackages/AddPackages/AdminAddPackage";
+import CreateTheme from "./scenes/admin/adminTheme/AddTheme/CreateTheme";
+import AdminEditPackage from "./scenes/admin/adminPackages/EditPackages/AdminEditPackage";
 
 const App = () => {
 
@@ -49,11 +50,12 @@ const App = () => {
                     <Route path="updateuser/:id" element={<Private><AdminEditUsers /></Private>} ></Route>
                     <Route path="add-users" element={<Private><AdminAddUsers /></Private>} ></Route>
                     <Route path="update/:id" element={<Private><EditTheme /></Private>} ></Route>
-                    <Route path="packages" element={<Private><Dashboard /></Private>} />
-                    <Route path="addpackage" element={<Private><AddPackage /></Private>} />
+                    <Route path="packages" element={<Private><AdminPackages /></Private>} />
+                    <Route path="add-package" element={<Private><AdminAddPackage /></Private>} />
+                    <Route path="update-package/:id" element={<Private><AdminEditPackage /></Private>} ></Route>
                     <Route path="theme" element={<Private><AdminTheme /></Private>} />
                     <Route path="create-theme" element={<Private><CreateTheme /></Private>} />
-                    <Route path="*" element={<Private><AddPackage /></Private>} />
+                    <Route path="*" element={<Private><AdminAddUsers /></Private>} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/theme" element={<Theme />} />
@@ -63,7 +65,7 @@ const App = () => {
                 <Route path="/theme2" element={<Theme2 />} />
                 <Route path="/theme3" element={<Theme3 />} />
                 <Route path="/theme4" element={<Theme4 />} />
-                <Route path="/id" element={<Package />} />
+                <Route path="/package/:id" element={<Package />} />
             </Routes>
         </BrowserRouter>
     );

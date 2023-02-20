@@ -53,7 +53,7 @@ const themeService = createApi({
             fetchOneTheme: builder.query({
                 query: (id) => {
                     return {
-                        url: `/${id}`,
+                        url: `fetchOne/${id}`,
                         method: "GET"
                     }
                 },

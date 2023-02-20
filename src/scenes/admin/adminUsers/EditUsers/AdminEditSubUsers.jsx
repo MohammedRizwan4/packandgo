@@ -31,6 +31,21 @@ const AdminEditSubUsers = () => {
         confirmPassword: ""
     })
 
+    const check = () => {
+        if (state.firstName && state.lastName && state.email) {
+            if(state.password || state.confirmPassword) {
+                if(state.password === state.confirmPassword){
+                    return false;
+                }
+                else {
+                    return true
+                }
+            }
+            return false;
+        }
+        return true
+    }
+
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
     }
@@ -103,7 +118,7 @@ const AdminEditSubUsers = () => {
                                     <label htmlFor="themeName">Confirm Password</label>
                                     <input type="text" placeholder='Enter Confirm Password' name='confirmPassword' id="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
                                 </div>
-                                <input type="submit" value="Submit" />
+                                <input disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} type="submit" value="Submit" />
                             </form>
                         </div>
                     </div>
