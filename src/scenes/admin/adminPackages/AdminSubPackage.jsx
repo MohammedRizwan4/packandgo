@@ -15,7 +15,6 @@ const AdminSubPackage = () => {
     const { data, isFetching } = useFetchAllPackagesQuery();
     console.log(data?.data);
     const [deletePackage, response] = useDeletePackageMutation();
-    console.log();
 
     const handleDelete = (e, id) => {
         deletePackage({ id })

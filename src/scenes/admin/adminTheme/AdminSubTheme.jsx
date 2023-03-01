@@ -46,7 +46,7 @@ const AdminSubTheme = () => {
         {
             field: 'description',
             headerName: 'Description',
-            width: 400,
+            width: 560,
             editable: true,
         },
         {
@@ -69,17 +69,17 @@ const AdminSubTheme = () => {
                 )
             }
         },
-        {
-            field: 'delete',
-            headerName: 'Delete Theme',
-            width: 150,
-            renderCell: (params) => {
-                console.log(params);
-                return (
-                    <button onClick={(e) => handleDelete(e, params.id, params.row.image)} style={{ padding: "1rem 3rem", color: "white", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "red", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Delete</button>
-                )
-            }
-        },
+        // {
+        //     field: 'delete',
+        //     headerName: 'Delete Theme',
+        //     width: 150,
+        //     renderCell: (params) => {
+        //         console.log(params);
+        //         return (
+        //             <button onClick={(e) => handleDelete(e, params.id, params.row.image)} style={{ padding: "1rem 3rem", color: "white", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "red", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Delete</button>
+        //         )
+        //     }
+        // },
     ];
 
     console.log(useFetchAllThemesQuery());
@@ -102,7 +102,7 @@ const AdminSubTheme = () => {
         <>
             <Section>
                 <div className="add" style={{ opacity: check() ? '.7' : "1", }}>
-                    <Link to="/dashboard/create-theme" style={{ opacity: check() ? '.7' : "1" }}><button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }}>Add Theme</button></Link>
+                    {/* <Link to="/dashboard/create-theme" style={{ opacity: check() ? '.7' : "1" }}><button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }}>Add Theme</button></Link> */}
                 </div>
                 <div className="content">
                     {

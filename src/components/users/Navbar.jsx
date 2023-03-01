@@ -118,7 +118,7 @@ const Navbar = () => {
                                         <ul>
                                             {data?.map((theme, index) => {
                                                 return (
-                                                    <Link to={`/theme${index + 1}`} style={{ margin: "0", padding: "0" }}>
+                                                    <Link to={`/theme/${theme._id}`} style={{ margin: "0", padding: "0" }}>
                                                         <li>
                                                             <a href="#">{theme.name}</a>
                                                         </li>

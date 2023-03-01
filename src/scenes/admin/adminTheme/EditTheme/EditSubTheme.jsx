@@ -34,10 +34,10 @@ const EditSubTheme = () => {
 
     const check = () => {
         if (state.name && state.description) {
-            if(imagePreview){
-                if(state.name && state.description) {
+            if (imagePreview) {
+                if (state.name && state.description) {
                     return false;
-                }else{
+                } else {
                     return true;
                 }
             }
@@ -89,7 +89,7 @@ const EditSubTheme = () => {
         if (response?.isError) {
             toast.error("Try again")
         }
-    }, [response?.isSuccess,response1.isSuccess]);
+    }, [response?.isSuccess, response1.isSuccess]);
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -115,6 +115,11 @@ const EditSubTheme = () => {
 
     return (
         <>
+            <Toaster
+                toastOptions={{ style: { fontSize: "1.5rem" } }}
+                position="top-center"
+                reverseOrder={true}
+            />
             <Section>
                 <div className="add">
                     <Link to="/dashboard/theme"><button>Back</button></Link>

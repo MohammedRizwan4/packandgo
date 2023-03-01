@@ -53,12 +53,12 @@ const AdminSubEditPackage = () => {
 
     useEffect(() => {
         setState(prev => ({ ...prev, ['name']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['starting_point']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['city']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['ending_point']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['state_name']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['accommodations']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['destinations_covered']: data1?.package1?.name }))
+        setState(prev => ({ ...prev, ['starting_point']: data1?.package1?.starting_point }))
+        setState(prev => ({ ...prev, ['city']: data1?.package1?.location?.city }))
+        setState(prev => ({ ...prev, ['ending_point']: data1?.package1?.ending_point }))
+        setState(prev => ({ ...prev, ['state_name']: data1?.package1?.location?.state_name }))
+        setState(prev => ({ ...prev, ['accommodations']: data1?.package1?.accommodations }))
+        setState(prev => ({ ...prev, ['destinations_covered']: data1?.package1?.destinations_covered }))
         setState(prev => ({ ...prev, ['stars']: data1?.package1?.stars }))
 
     }, [data1?.package1])
@@ -149,8 +149,11 @@ const AdminSubEditPackage = () => {
 
     useEffect(() => {
         if (response?.isSuccess) {
-            dispatch(setSuccess("User added Successfully"));
+            dispatch(setSuccess("Package Updated Successfully"));
             navigate("/dashboard/packages");
+            setTimeout(() => {
+                dispatch(clearMessage())
+            }, 3000);
         }
         if (response?.isError) {
             toast.error("Try again");
@@ -161,11 +164,6 @@ const AdminSubEditPackage = () => {
 
     return (
         <>
-            <Toaster
-                toastOptions={{ style: { fontSize: "1.5rem" } }}
-                position="top-center"
-                reverseOrder={true}
-            />
             {!isFetching ? <Section>
                 <div className="add">
                     <Link to="/dashboard/packages">

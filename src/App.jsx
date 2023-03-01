@@ -15,14 +15,11 @@ import AdminUsers from "./scenes/admin/adminUsers/AdminUsers";
 import AdminAddUsers from "./scenes/admin/adminUsers/AddUsers/AdminAddUsers";
 import AdminEditUsers from "./scenes/admin/adminUsers/EditUsers/AdminEditUsers";
 import jwtDecode from "jwt-decode";
-import Theme1 from "./scenes/Themes/Theme1/Theme1";
-import Theme2 from "./scenes/Themes/Theme2/Theme2";
-import Theme3 from "./scenes/Themes/Theme3/Theme3";
-import Theme4 from "./scenes/Themes/Theme4/Theme4";
 import Package from "./scenes/package/Package";
 import AdminAddPackage from "./scenes/admin/adminPackages/AddPackages/AdminAddPackage";
 import CreateTheme from "./scenes/admin/adminTheme/AddTheme/CreateTheme";
 import AdminEditPackage from "./scenes/admin/adminPackages/EditPackages/AdminEditPackage";
+import SubTheme from "./scenes/Themes/SubTheme";
 
 const App = () => {
 
@@ -61,10 +58,7 @@ const App = () => {
                 <Route path="/theme" element={<Theme />} />
                 <Route path="/contactus" element={<ContactUs />} />
                 <Route path="/aboutus" element={<AboutUs />} />
-                <Route path="/theme1" element={<Theme1 />} />
-                <Route path="/theme2" element={<Theme2 />} />
-                <Route path="/theme3" element={<Theme3 />} />
-                <Route path="/theme4" element={<Theme4 />} />
+                <Route path="/theme/:id" element={<SubTheme />} />
                 <Route path="/package/:id" element={<Package />} />
             </Routes>
         </BrowserRouter>

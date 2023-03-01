@@ -2,7 +2,6 @@ import React from "react";
 import Navbar from '../../components/users/Navbar';
 import TopSearch from '../home/TopSearch';
 
-
 const Theme = () => {
   return (
     <div>

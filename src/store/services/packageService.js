@@ -77,10 +77,10 @@ const packageService = createApi({
                 },
                 invalidatesTags: ['packages']
             }),
-            fetchTheme1Package: builder.query({
+            fetchThemePackage: builder.query({
                 query: (id) => {
                     return {
-                        url: `fetch-theme1-packages/${id}`,
+                        url: `fetch-theme-packages/${id}`,
                         method: "GET"
                     }
                 }
@@ -89,7 +89,7 @@ const packageService = createApi({
     }
 })
 
-export const { useCreatePackageMutation, useFetchTheme1PackageQuery, useUpdatePackageMutation, useFetchAllPackagesQuery, useFetchOnePackageQuery, useDeletePackageMutation } = packageService;
+export const { useCreatePackageMutation, useFetchThemePackageQuery, useUpdatePackageMutation, useFetchAllPackagesQuery, useFetchOnePackageQuery, useDeletePackageMutation } = packageService;
 
 export default packageService;
 

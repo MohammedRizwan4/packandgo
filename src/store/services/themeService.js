@@ -89,37 +89,10 @@ const themeService = createApi({
                 },
                 invalidatesTags: ['products']
             }),
-            fetchTheme1: builder.query({
+            fetchSingleTheme: builder.query({
                 query: (id) => {
                     return {
-                        url: `/fetch-theme/0`,
-                        method: "GET"
-                    }
-                },
-                providesTags: ['products']
-            }),
-            fetchTheme2: builder.query({
-                query: (id) => {
-                    return {
-                        url: `/fetch-theme/1`,
-                        method: "GET"
-                    }
-                },
-                providesTags: ['products']
-            }),
-            fetchTheme3: builder.query({
-                query: (id) => {
-                    return {
-                        url: `/fetch-theme/2`,
-                        method: "GET"
-                    }
-                },
-                providesTags: ['products']
-            }),
-            fetchTheme4: builder.query({
-                query: (id) => {
-                    return {
-                        url: `/fetch-theme/3`,
+                        url: `/fetch-theme/${id}`,
                         method: "GET"
                     }
                 },
@@ -129,7 +102,7 @@ const themeService = createApi({
     }
 })
 
-export const { useAddThemeMutation, useDeleteThemeMutation, useFetchTheme1Query, useFetchTheme2Query, useFetchTheme3Query, useFetchTheme4Query, useFetchAllThemesQuery, useFetchOneThemeQuery, useUpdateThemeNameMutation, useUpdateThemeMutation } = themeService;
+export const { useAddThemeMutation, useDeleteThemeMutation, useFetchSingleThemeQuery, useFetchAllThemesQuery, useFetchOneThemeQuery, useUpdateThemeNameMutation, useUpdateThemeMutation } = themeService;
 
 export default themeService;
 

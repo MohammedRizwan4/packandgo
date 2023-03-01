@@ -316,7 +316,7 @@ const Section = styled.div`
         overflow: hidden;
         display: block;
         width: 100%;
-        height: 100%;
+        height: 25rem;
         object-fit: cover;
         transition: transform 0.3s;
         :hover {

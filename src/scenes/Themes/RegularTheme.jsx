@@ -100,7 +100,7 @@ const Section = styled.section`
     position: sticky;
     .container{
         max-width: 80%;
-        height: 100%;
+        height: 10vh;
         margin: auto;
         display: flex;
         align-items: center;

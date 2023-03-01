@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import styled from "styled-components";
 import ShareIcon from "@mui/icons-material/Share";
@@ -10,12 +10,46 @@ import { createPortal } from "react-dom";
 import { setIsPackagePhoto } from "../../store/reducers/toggleReducer";
 import Activity from "./Activity/Activity";
 import DayPlan from "./DayPlan/DayPlan";
-import location from './location.jpg';
-import CheckIcon from '@mui/icons-material/Check';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import location from "./location.jpg";
+import CheckIcon from "@mui/icons-material/Check";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ClearIcon from "@mui/icons-material/Clear";
+import FlightIcon from "@mui/icons-material/Flight";
+import HouseSidingIcon from "@mui/icons-material/HouseSiding";
+import img1 from "../../../public/car.jpg";
+import img2 from "../../../public/hotel.jpg";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 const PackageDetail = ({ data }) => {
+
+    const [isSticky, setIsSticky] = useState(false);
+
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         const scrollTop = window.pageYOffset;
+    //         if (scrollTop > 200) {
+    //             setIsSticky(true);
+    //         } else {
+    //             setIsSticky(false);
+    //         }
+    //     };
+
+    //     window.addEventListener('scroll', handleScroll);
+
+    //     return () => {
+    //         window.removeEventListener('scroll', handleScroll);
+    //     };
+    // }, []);
+
+    const [photosSelect, setPhotosSelect] = useState(1);
+    const [singlePhoto, setSinglePhoto] = useState(0);
+
+    const [options, setOptions] = useState(1);
+    const [itineraryOptions, setItineraryOptions] = useState(1);
+
+    const [dayPlan, setDayPlan] = useState(1);
 
     const [like, setLike] = useState(false);
     const { isPackagePhoto } = useSelector((state) => state.toggleReducer);
@@ -36,172 +70,342 @@ const PackageDetail = ({ data }) => {
     const [arrow, setArrow] = useState(0);
     const [menu, setMenu] = useState(1);
 
-    const [scrollDisabled, setScrollDisabled] = useState(false);
-
-    useEffect(() => {
-        isPackagePhoto ? setScrollDisabled(true) : setScrollDisabled(false);;
-    }, [isPackagePhoto]);
-
-    useEffect(() => {
-        if (scrollDisabled) {
-            document.documentElement.style.overflow = 'hidden';
-        } else {
-            document.documentElement.style.overflow = 'auto';
-        }
-    }, [scrollDisabled]);
-
     return createPortal(
-        <Section menu={menu}>
+        <Section
+            menu={menu}
+            isPackagePhoto={isPackagePhoto}
+            singlePhoto={singlePhoto}
+            itineraryOptions={itineraryOptions}
+            dayPlan={dayPlan}
+            isSticky={isSticky}
+        >
             <div className="mainPackage">
-                <div className="header">
+                <div className="mainDiv">
+                    <div className="header">
+                        <div className="left">
+                            <div className="package">
+                                <h3>{data?.name}</h3>
+                                <div className="info">
+                                    <div className="timeLimit">4N/5D</div>
+                                    <div className="flexPackage">Flexi Package</div>
+                                    <div className="timeCity">4N Goa</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="right">
+                            <div className="stars">
+                                {Array.from({ length: data?.stars }, (_, i) => (
+                                    <StarIcon
+                                        style={{
+                                            fontSize: "var(--r1-5)",
+                                            color: "var(--starColor)",
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                            {like ? (
+                                <FavoriteIcon onClick={() => setLike(!like)} className="icon" />
+                            ) : (
+                                <FavoriteBorderIcon
+                                    className="icon"
+                                    onClick={() => setLike(!like)}
+                                />
+                            )}
+                            <ShareIcon className="icon" />
+                            <button className="bookingTitle">Book Now</button>
+                        </div>
+                    </div>
+                    <div
+                        className="images"
+                        // style={{ width: chatWidth }}
+                        onClick={() => dispatch(setIsPackagePhoto(true))}
+                    >
+                        {console.log(data)}
+                        {Array.from({ length: 5 }, (_, index) => (
+                            <div key={index} className={`image${index + 1}`}>
+                                <img
+                                    src={`http://localhost:7800/${data?.images[index]}`}
+                                    alt="image1"
+                                    className="image"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="menu">
+                        <div
+                            className="singleTitle"
+                            style={{
+                                borderBottom: options === 1 ? ".4rem solid #008cff" : "0",
+                            }}
+                            onClick={() => setOptions(1)}
+                        >
+                            Itinerary
+                        </div>
+                        <div
+                            className="singleTitle"
+                            style={{
+                                borderBottom: options === 2 ? ".4rem solid #008cff" : "0",
+                            }}
+                            onClick={() => setOptions(2)}
+                        >
+                            Policies
+                        </div>
+                        <div
+                            className="singleTitle"
+                            style={{
+                                borderBottom: options === 3 ? ".4rem solid #008cff" : "0",
+                            }}
+                            onClick={() => setOptions(3)}
+                        >
+                            Summary
+                        </div>
+                    </div>
+                </div>
+                <div className="restDiv" id="menu-bar">
+                    {options === 1 && (
+                        <div className="itinerary">
+                            <div className="menu">
+                                <div className="item" onClick={() => setItineraryOptions(1)}>
+                                    <div
+                                        className="roll"
+                                        style={{
+                                            backgroundColor:
+                                                itineraryOptions === 1 ? "white" : "#ecf7ff",
+                                            border:
+                                                itineraryOptions === 1 ? "1px solid #35a8ff" : "none",
+                                            color: itineraryOptions === 1 ? "#0a8cff" : "black",
+                                            fontWeight: itineraryOptions === 1 ? "500" : "100",
+                                        }}
+                                    >
+                                        <span
+                                            style={{ fontWeight: itineraryOptions ? "500" : "100" }}
+                                        >
+                                            6
+                                        </span>
+                                        <h1
+                                            style={{
+                                                fontWeight: itineraryOptions === 1 ? "900" : "100",
+                                            }}
+                                        >
+                                            day plan
+                                        </h1>
+                                    </div>
+                                </div>
+                                <div className="item" onClick={() => setItineraryOptions(2)}>
+                                    <div
+                                        className="roll"
+                                        style={{
+                                            backgroundColor:
+                                                itineraryOptions === 2 ? "white" : "#ecf7ff",
+                                            border:
+                                                itineraryOptions === 2 ? "1px solid #35a8ff" : "none",
+                                            color: itineraryOptions === 2 ? "#0a8cff" : "black",
+                                            fontWeight: itineraryOptions === 2 ? "500" : "100",
+                                        }}
+                                    >
+                                        <span
+                                            style={{ fontWeight: itineraryOptions ? "500" : "100" }}
+                                        >
+                                            1
+                                        </span>
+                                        <h1
+                                            style={{
+                                                fontWeight: itineraryOptions === 2 ? "900" : "100",
+                                            }}
+                                        >
+                                            Hotel
+                                        </h1>
+                                    </div>
+                                </div>
+                                <div className="item" onClick={() => setItineraryOptions(3)}>
+                                    <div
+                                        className="roll"
+                                        style={{
+                                            backgroundColor:
+                                                itineraryOptions === 3 ? "white" : "#ecf7ff",
+                                            border:
+                                                itineraryOptions === 3 ? "1px solid #35a8ff" : "none",
+                                            color: itineraryOptions === 3 ? "#0a8cff" : "black",
+                                            fontWeight: itineraryOptions === 3 ? "500" : "100",
+                                        }}
+                                    >
+                                        <span
+                                            style={{ fontWeight: itineraryOptions ? "500" : "100" }}
+                                        >
+                                            3
+                                        </span>
+                                        <h1
+                                            style={{
+                                                fontWeight: itineraryOptions === 3 ? "900" : "100",
+                                            }}
+                                        >
+                                            Activity
+                                        </h1>
+                                    </div>
+                                </div>
+                                {/* <div className="item" onClick={() => setItineraryOptions(4)}>
+                                        <div className="roll" style={{ backgroundColor: itineraryOptions === 4 ? "white" : "#ecf7ff", border: itineraryOptions === 4 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 4 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 4 ? "500" : "100" }}>
+                                            <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>6</span>
+                                            <h1 style={{ fontWeight: itineraryOptions === 4 ? "900" : "100" }}>day plan</h1>
+                                        </div>
+                                    </div>
+                                    <div className="item" onClick={() => setItineraryOptions(5)}>
+                                        <div className="roll" style={{ backgroundColor: itineraryOptions === 5 ? "white" : "#ecf7ff", border: itineraryOptions === 5 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 5 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 5 ? "500" : "100" }}>
+                                            <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>6</span>
+                                            <h1 style={{ fontWeight: itineraryOptions === 5 ? "900" : "100" }}>day plan</h1>
+                                        </div>
+                                    </div> */}
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="dayPlanDetails">
                     <div className="left">
-                        <div className="package">Package</div>
-                        <div className="stars">
-                            {
-                                Array.from({ length: data?.stars }, (_, i) => (
-                                    <StarIcon style={{ fontSize: "var(--r1-5)", color: "var(--starColor)" }} />
-                                ))
-                            }
+                        <h1>Day Plan</h1>
+                        <div className="box">
+                            <div className="item">
+                                <ul>
+                                    <li
+                                        onClick={() => setDayPlan(1)}
+                                        style={{
+                                            backgroundColor:
+                                                dayPlan === 1 ? "rgb(74, 74, 74)" : "white",
+                                            color: dayPlan === 1 ? "white" : "rgb(74, 74, 74)",
+                                        }}
+                                    >
+                                        24 Mar,Sun
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="item">
+                                <ul>
+                                    <li
+                                        onClick={() => setDayPlan(2)}
+                                        style={{
+                                            backgroundColor:
+                                                dayPlan === 2 ? "rgb(74, 74, 74)" : "white",
+                                            color: dayPlan === 2 ? "white" : "rgb(74, 74, 74)",
+                                        }}
+                                    >
+                                        24 Mar,Sun
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="item">
+                                <ul>
+                                    <li
+                                        onClick={() => setDayPlan(3)}
+                                        style={{
+                                            backgroundColor:
+                                                dayPlan === 3 ? "rgb(74, 74, 74)" : "white",
+                                            color: dayPlan === 3 ? "white" : "rgb(74, 74, 74)",
+                                        }}
+                                    >
+                                        24 Mar,Sun
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="item">
+                                <ul>
+                                    <li
+                                        onClick={() => setDayPlan(4)}
+                                        style={{
+                                            backgroundColor:
+                                                dayPlan === 4 ? "rgb(74, 74, 74)" : "white",
+                                            color: dayPlan === 4 ? "white" : "rgb(74, 74, 74)",
+                                        }}
+                                    >
+                                        24 Mar,Sun
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="item">
+                                <ul>
+                                    <li
+                                        onClick={() => setDayPlan(5)}
+                                        style={{
+                                            backgroundColor:
+                                                dayPlan === 5 ? "rgb(74, 74, 74)" : "white",
+                                            color: dayPlan === 5 ? "white" : "rgb(74, 74, 74)",
+                                        }}
+                                    >
+                                        24 Mar,Sun
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div className="right">
-                        {like ? (
-                            <FavoriteIcon onClick={() => setLike(!like)} className="icon" />
-                        ) : (
-                            <FavoriteBorderIcon
-                                className="icon"
-                                onClick={() => setLike(!like)}
-                            />
-                        )}
-                        <ShareIcon className="icon" />
-                        <button className="bookingTitle">Book Now</button>
-                    </div>
-                </div>
-                <div className="packageData">
-                    <h3>{data.name}</h3>
-                    {/* <p>
-                        Vatva Railway Over Bridge Road SANKHESHWAR IND.PARK-2, BLOCK, B, OPP
-                        GUJRAT OFFSET, nr. Vatva Railway Over Bridge Road, 382445 Ahmedabad,
-                        India
-                    </p> */}
-                </div>
-                <div
-                    className="images"
-                    onClick={() => dispatch(setIsPackagePhoto(true))}
-                >
-                    {Array.from({ length: 5 }, (_, index) => (
-                        <div key={index} className={`image${index + 1}`}>
-                            <img
-                                src={`http://localhost:7800/${data?.images[index]}`}
-                                alt="image1"
-                                className="image"
-                            />
-                        </div>
-                    ))}
-                </div>
-                <div className="whole-main1 tripDescription">
-                    <div>
-                        <h1>Scintillating Maldives Canareef Package</h1>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Trip Location:</td>
-                                    <td>{data.location.city}</td>
-                                </tr>
-                                <tr>
-                                    <td>Destinations Covered:</td>
-                                    <td>
-                                        {
-                                            data?.destinations_covered.map((d) => {
-                                                return (
-                                                    <p>{d} - </p>
-                                                )
-                                            })
-                                        }
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Starting Point: </td>
-                                    <td>{data?.starting_point}</td>
-                                </tr>
-                                <tr>
-                                    <td>End Point: </td>
-                                    <td>{data?.ending_point}</td>
-                                </tr>
-                                <tr>
-                                    <td>Accommodation:</td>
-                                    <td>
-                                        {
-                                            data?.accommodations.map((d) => {
-                                                return (
-                                                    <p>{d} - </p>
-                                                )
-                                            })
-                                        }
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <img src={location} alt="" />
-                    </div>
-                </div>
-                <div className="whole-main">
-                    <div className="content">
-                        <div className="menu">
-                            <button className="btn1" onClick={() => setMenu(1)}>
-                                Itinerary
-                            </button>
-                            <button className="btn3" onClick={() => setMenu(3)}>
-                                Day Plan
-                            </button>
-                            <button className="btn2" onClick={() => setMenu(2)}>
-                                Activity
-                            </button>
-                        </div>
-                    </div>
-                    <div className="particularContent">
-                        {menu === 1 ? (
-                            <Itinerary />
-                        ) : menu === 2 ? (
-                            <Activity />
-                        ) : (
-                            <><DayPlan /><DayPlan/></>
-                        )}
-                    </div>
-                </div>
-                <div className="whole-main2">
-                    <div className="content">
-                        <h1>Highlights</h1>
-                        <div className="two-boxes">
-                            <div className="container">
-                                <CheckIcon className="icon" />
-                                <p>Travel Period: Not applicable for festive season</p>
+                        <div className="title">
+                            <div className="left1">
+                                <h1>Day 1 - Arrival in Agra</h1>
                             </div>
-                            <div className="container">
-                                <CheckIcon className="icon" />
-                                <p>Flight tickets are included from New Delhi, Bangalore, Mumbai, Chennai</p>
+                            <div className="right1">
+                                <div className="item">INCLUDED</div>
+                                <div className="item">
+                                    <FlightIcon />
+                                    <span>1 Flight</span>
+                                </div>
+                                <h2>|</h2>
+                                <div className="item">
+                                    <HouseSidingIcon />
+                                    <span>1 Hotel</span>
+                                </div>
                             </div>
                         </div>
-                        <div className="two-boxes">
-                            <div className="container">
-                                <CheckIcon className="icon" />
-                                <p>Relaxing leisure days on the beaches</p>
+                        <div className="car">
+                            <div className="title">
+                                <div className="east">
+                                    <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                </div>
+                                <div className="west">
+                                    <button>Remove</button>
+                                </div>
                             </div>
-                            <div className="container">
-                                <CheckIcon className="icon" />
-                                <p>Meet the people here and gain an understanding of their culture</p>
+                            <div className="content">
+                                <div className="left">
+                                    <img src={img1} alt="" />
+                                </div>
+                                <div className="right">
+                                    <h1>Private Transfer</h1>
+                                    <p>
+                                        After your arrival at Bangkok Airport, you will be directly
+                                        transferred to your hotel in Pattaya by a private vehicle.
+                                        You should exit from Gate No. 10 Exit C and reach the pickup
+                                        point outside the airport as per the given flight timings.
+                                        The maximum waiting time will be 1.5 hours after flight
+                                        touchdown. The luggage limitation per person is 1 handbag
+                                        and 1 normal-sized trolley. In case you exceed the same,
+                                        additional charges for a separate vehicle will be levied.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <div className="two-boxes">
-                            <div className="container">
-                                <CheckIcon className="icon" />
-                                <p>Dive into the surrounding water for a wonderful experience</p>
+                        <div className="car1">
+                            <div className="title">
+                                <div className="east">
+                                    <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
+                                </div>
+                                <div className="west">
+                                    <button>Change</button>
+                                </div>
                             </div>
-                            <div className="container">
-                                <CheckIcon className="icon" />
-                                <p>Travel Period: Not applicable for festive season</p>
+                            <div className="content1">
+                                <div className="left">
+                                    <img src={img2} alt="" />
+                                </div>
+                                <div className="south">
+                                    <div className="label">Resort</div>
+                                    <h1>
+                                        Mike Beach Resort, SHA Extra Plus - Holidays Selections{" "}
+                                    </h1>
+                                    <h3>North Pattaya</h3>
+                                    <p>120 m from Pattaya Beach</p>
+                                    <div className="date">
+                                        <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
+                                        <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -209,17 +413,97 @@ const PackageDetail = ({ data }) => {
             </div>
             {isPackagePhoto && (
                 <>
-                    <Opacity onClick={() => dispatch(setIsPackagePhoto(false))} />
-                    <div className="slider">
-                        <div className="left"><ArrowLeftIcon onClick={() => setArrow(arrow => arrow === 0 ? 4 : arrow - 1)} style={{ fontSize: "2.5rem", color: "white" }} /></div>
-                        <div className="middle">
-                            <img
-                                src={`http://localhost:7800/${data?.images[arrow]}`}
-                                alt="image1"
-                                className="image"
+                    <Opacity />{" "}
+                    {/*   onClick={() => dispatch(setIsPackagePhoto(false))}  */}
+                    <div className="whole fade">
+                        <div className="icons">
+                            <ClearIcon
+                                className="icon"
+                                onClick={() => dispatch(setIsPackagePhoto(false))}
                             />
                         </div>
-                        <div className="right"><ArrowRightIcon onClick={() => setArrow(arrow => arrow === 4 ? 0 : arrow + 1)} style={{ fontSize: "2.5rem", color: "white" }} /></div>
+                        <div className="slider">
+                            <div className="text">
+                                <div className="left">
+                                    <h2>Amazing Goa Flight Inclusive Deal 4N</h2>
+                                    <p>6 Photos</p>
+                                    <div className="flex">
+                                        <div
+                                            className={photosSelect === 1 ? "blue single" : "single"}
+                                            onClick={() => setPhotosSelect(1)}
+                                        >
+                                            All Photos
+                                        </div>
+                                        <div
+                                            className={photosSelect === 2 ? "blue single" : "single"}
+                                            onClick={() => setPhotosSelect(2)}
+                                        >
+                                            Day 1 - goa
+                                        </div>
+                                        <div
+                                            className={photosSelect === 3 ? "blue single" : "single"}
+                                            onClick={() => setPhotosSelect(3)}
+                                        >
+                                            Day 2 - goa
+                                        </div>
+                                        <div
+                                            className={photosSelect === 4 ? "blue single" : "single"}
+                                            onClick={() => setPhotosSelect(4)}
+                                        >
+                                            Day 3 - goa
+                                        </div>
+                                        <div
+                                            className={photosSelect === 5 ? "blue single" : "single"}
+                                            onClick={() => setPhotosSelect(5)}
+                                        >
+                                            Day 4 - goa
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="right">
+                                    <button>Book package</button>
+                                </div>
+                            </div>
+                            <div className="middle">
+                                <img
+                                    src={`http://localhost:7800/${data?.images[singlePhoto]}`}
+                                    alt="image1"
+                                    className="image"
+                                />
+                            </div>
+                            <div className="right">
+                                <img
+                                    src={`http://localhost:7800/${data?.images[0]}`}
+                                    className="img1"
+                                    alt=""
+                                    onClick={() => setSinglePhoto(0)}
+                                />
+                                <img
+                                    src={`http://localhost:7800/${data?.images[1]}`}
+                                    className="img2"
+                                    alt=""
+                                    onClick={() => setSinglePhoto(1)}
+                                />
+                                <img
+                                    src={`http://localhost:7800/${data?.images[2]}`}
+                                    className="img3"
+                                    alt=""
+                                    onClick={() => setSinglePhoto(2)}
+                                />
+                                <img
+                                    src={`http://localhost:7800/${data?.images[3]}`}
+                                    className="img4"
+                                    alt=""
+                                    onClick={() => setSinglePhoto(3)}
+                                />
+                                <img
+                                    src={`http://localhost:7800/${data?.images[4]}`}
+                                    className="img5"
+                                    alt=""
+                                    onClick={() => setSinglePhoto(4)}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </>
             )}
@@ -237,103 +521,417 @@ const Opacity = styled.div`
   bottom: 0;
   left: 0;
   z-index: 1999;
-  background-color: rgba(0, 0, 0, 0.8);
-  `;
+  /* background-color: rgba(0, 0, 0, 0.8); */
+`;
 
 const Section = styled.section`
   height: max-content;
   width: 100%;
-  max-width: 90%;
   margin: auto;
+  box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+  background-color: #f2f2f2;
   position: relative;
-  .slider{
-    position: absolute;
+  .whole {
     width: 100%;
-    height: 90vh;
+    height: 100vh;
     top: 0;
+    position: absolute;
+    background-color: black;
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    .left{
-        width: 5rem;
-        height: 5rem;
-        background-color: gray;
-        opacity: .6;
+    .icons {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      color: white;
+      z-index: 99999999999;
+      .icon {
+        font-size: 2.5rem;
         cursor: pointer;
-        z-index: 2999;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      }
     }
-    .middle{
-        z-index: 2999;
-        img{
-            width: 100rem;
-            height: 50rem;
-            object-fit: cover;
-            border-radius: 2rem;
+    .slider {
+      height: 100%;
+      width: 100%;
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100%;
+      margin-top: 3rem;
+      gap: 3rem;
+      z-index: 900999999;
+      .text {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+        .left {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: 0.5rem;
+          width: 100%;
+          h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+          }
+          p {
+            color: white;
+            font-size: 1.3rem;
+            padding: 0;
+          }
+          .flex {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            .single {
+              padding: 0.6rem 1rem;
+              color: white;
+              border: 1px solid white;
+              font-size: 1.4rem;
+              text-transform: uppercase;
+              cursor: pointer !important;
+              border-radius: 0.4rem;
+            }
+            .blue {
+              background-color: rgb(0, 140, 255);
+              border: 1px solid rgb(0, 140, 255);
+            }
+          }
         }
-    }
-    .right{
-        width: 5rem;
-        height: 5rem;
-        background-color: gray;
-        cursor: pointer;
-        opacity: .6;
+        .right {
+          margin: 0;
+          button {
+            background-image: linear-gradient(93deg, #53b2fe, #065af3),
+              linear-gradient(93deg, #53b2fe, #065af3);
+            padding: 0.7rem 2rem;
+            color: white;
+            font-size: 1.7rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            width: 18rem;
+            border-radius: 2rem;
+          }
+        }
+      }
+      .middle {
         z-index: 2999;
-        border-radius: 50%;
+        img {
+          width: 60rem;
+          height: 35rem;
+          object-fit: cover;
+          border-radius: 0.5rem;
+          filter: brightness(150%);
+        }
+      }
+      .right {
+        margin-top: 3rem;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        gap: 0.7rem;
+        .img1 {
+          opacity: ${(props) => (props.singlePhoto === 0 ? "1" : ".4")};
+        }
+        .img2 {
+          opacity: ${(props) => (props.singlePhoto === 1 ? "1" : ".4")};
+        }
+        .img3 {
+          opacity: ${(props) => (props.singlePhoto === 2 ? "1" : ".4")};
+        }
+        .img4 {
+          opacity: ${(props) => (props.singlePhoto === 3 ? "1" : ".4")};
+        }
+        .img5 {
+          opacity: ${(props) => (props.singlePhoto === 4 ? "1" : ".4")};
+        }
+        img {
+          width: 9rem;
+          height: 7rem;
+          border-radius: 0.7rem;
+          object-fit: cover;
+          cursor: pointer;
+          opacity: 0.4;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
     }
   }
   .mainPackage {
     height: max-content;
     width: 100%;
-    /* background-color: beige; */
-    .tripDescription {
-      height: 20vh;
+    background-color: white;
+    .dayPlanDetails {
+      position: ${props => props.isSticky ? "fixed" : "static"};
       width: 100%;
-      padding: 2rem 2rem;
-      font-size: 1.5rem;
+      max-width: 57%;
+      margin-left: 10%;
+      height: 70vh;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      img{
-        width: 20rem;
-        height: 20rem;
-        object-fit: cover;
-      }
-      table {
-        tbody {
-          tr {
-            td {
-              :first-child {
+      box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+      .left {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        flex: 0.7;
+        padding: 0.5rem 1rem;
+        h1 {
+          font-size: 2rem;
+          color: rgb(74, 74, 74);
+          font-weight: 900;
+          margin-left: 1.6rem;
+        }
+        .box {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          width: 100%;
+          gap: 0.6rem;
+          margin-top: 2rem;
+          .item {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-start;
+            ul {
+              margin-left: 1.6rem;
+              li {
+                font-size: 1.4rem;
+                list-style-type: none;
+                color: rgb(74, 74, 74);
                 font-weight: 500;
-                font-size: 1.8rem;
-              }
-              margin-bottom: var(--r1-25);
-              font-size: 1.5rem;
-              font-weight: 500;
-              padding-right: var(--r2);
-              p{
-                padding: 0;
-                color: black;
+                padding: 0.4rem 2rem;
+                cursor: pointer;
+                border-radius: 0.3rem;
+                border-bottom-right-radius: 2rem;
+                border-top-right-radius: 2rem;
               }
             }
           }
         }
       }
+      .right {
+        width: 100%;
+        height: 100%;
+        flex: 3;
+        .title {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          .left1 {
+            width: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            h1 {
+              background-color: #f4d1ca;
+              font-size: 1.5rem;
+              padding: 1rem 2rem;
+              border-radius: 0.4rem;
+              font-weight: 700;
+            }
+          }
+          .right1 {
+            width: 30%;
+            margin-top: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            gap: 0.7rem;
+            color: rgb(74, 74, 74);
+            .item {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 500;
+              h2 {
+                font-size: 1rem;
+                font-weight: medium;
+              }
+            }
+          }
+        }
+        .car {
+          width: 100%;
+          height: max-content;
+          padding: 2rem 1rem;
+          .title {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .east {
+              h1 {
+                padding: 1rem 2rem;
+                opacity: 0.8;
+                font-size: 1.4rem;
+                font-weight: 500;
+                color: rgb(74, 74, 74);
+              }
+            }
+            .west {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              button {
+                color: rgb(0, 140, 255);
+                font-weight: 900;
+                font-size: 1.3rem;
+                border: none;
+                cursor: pointer;
+                padding: 1rem 2rem;
+                margin-right: 2rem;
+                text-transform: uppercase;
+                background-color: inherit;
+              }
+            }
+          }
+          .content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .left {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              background-color: inherit;
+              img {
+                width: 20rem;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+            .right {
+              flex: 1.7;
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              padding-right: 2rem;
+              h1 {
+                font-size: 1.7rem;
+              }
+              p {
+                padding: 0;
+              }
+            }
+          }
+        }
+      }
+      .car1 {
+        width: 100%;
+        height: max-content;
+        padding: 2rem 1rem;
+        .title {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .east {
+            h1 {
+              padding: 1rem 2rem;
+              opacity: 0.8;
+              font-size: 1.4rem;
+              font-weight: 500;
+              color: rgb(74, 74, 74);
+            }
+          }
+          .west {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            button {
+              color: rgb(0, 140, 255);
+              font-weight: 900;
+              font-size: 1.3rem;
+              border: none;
+              cursor: pointer;
+              padding: 1rem 2rem;
+              margin-right: 2rem;
+              background-color: inherit;
+              text-transform: uppercase;
+            }
+          }
+        }
+        .content1 {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          .left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: inherit;
+            img {
+              width: 20rem;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+          .south {
+            flex: 1.7;
+            margin: 1rem;
+            .label {
+              width: max-content;
+              color: white;
+              padding: 0.4rem 1.2rem;
+              border-radius: 0.3rem;
+              font-weight: 500;
+              background-image: linear-gradient(to left, #6a11cb, #2575fc);
+            }
+            h1 {
+              font-size: 1.7rem;
+              margin-top: 1rem;
+              font-weight: 700;
+              letter-spacing: -0.1rem;
+              word-spacing: 0.2rem;
+              margin-bottom: 0.3rem;
+            }
+            h3,
+            p {
+              font-size: 1rem;
+              color: rgb(74, 74, 74);
+              padding: 0;
+            }
+            .date {
+              margin-top: 1rem;
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              gap: 1rem;
+              color: rgb(74, 74, 74);
+            }
+          }
+        }
+      }
     }
+  }
+  .mainDiv {
+    width: 100%;
+    background-color: white;
+    height: 60vh;
+    box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
     .header {
       width: 100%;
+      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
+      margin: auto;
       padding: 2rem 2rem;
-      height: 7rem;
-      align-items: center;
-      justify-content: space-between;
+      height: 10rem;
       display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       background-color: white;
       .left {
         display: flex;
@@ -346,16 +944,45 @@ const Section = styled.section`
           justify-content: center;
         }
         .package {
-          font-size: 1.2rem;
-          width: max-content;
-          padding: 0.5rem 1.7rem;
-          border-radius: 1rem;
-          background-color: blue;
-          color: white;
-          opacity: 0.6;
           display: flex;
-          align-items: center;
-          justify-content: center;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: 0.4rem;
+          h3 {
+            font-size: 3rem;
+            color: var(--bgDarkAdmin);
+            font-weight: 700;
+          }
+          .info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            .timeLimit {
+              padding: 0.3rem 0.5rem;
+              background-color: #26b5a9;
+              color: white;
+              font-weight: 900;
+              border-radius: 0.3rem;
+            }
+            .flexPackage {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.2rem;
+              padding: 0.3rem 0.5rem;
+              background-color: black;
+              border-radius: 0.3rem;
+              color: white;
+              font-weight: 900;
+            }
+            .timeCity {
+              font-size: 1.7rem;
+              font-weight: 700;
+              color: rgb(74, 74, 74);
+            }
+          }
         }
       }
       .right {
@@ -372,35 +999,31 @@ const Section = styled.section`
         .bookingTitle {
           padding: 1rem 2rem;
           cursor: pointer;
-          font-size: 1.3rem;
+          font-size: 1.7rem;
           outline: none;
           border: none;
-          background-color: blue;
+          background-image: linear-gradient(93deg, #53b2fe, #065af3),
+            linear-gradient(93deg, #53b2fe, #065af3);
           color: white;
           font-weight: 600;
-          border-radius: 1.3rem;
+          border-radius: 2rem;
         }
       }
     }
-    .packageData {
-      padding: 1rem 2rem;
-      h3 {
-        font-size: 3rem;
-        color: var(--bgDarkAdmin);
-        font-weight: 700;
-        margin-bottom: 0.6rem;
-      }
-      p {
-        padding: 0;
-        font-size: 1.5rem;
-        color: black;
-      }
+    .is-sticky {
+      position: fixed;
+      top: 10px;
+      z-index: 999;
+      animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
     }
     .images {
       width: 100%;
+      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
+      margin: 0 auto;
+      /* margin-bottom: 1rem; */
       cursor: pointer;
       display: grid;
-      height: max-content;
+      height: 35vh;
       grid-template-columns: 2fr 1fr 1fr;
       grid-template-rows: 50% 50%;
       grid-template-areas:
@@ -408,13 +1031,16 @@ const Section = styled.section`
         "image1 image4 image5";
       grid-column-gap: 1rem;
       grid-row-gap: 1rem;
+      img {
+        border-radius: 0.3rem;
+      }
       .image1 {
         .image {
           height: 100%;
           width: 100%;
           object-fit: cover;
-          border-top-left-radius: 2rem;
-          border-bottom-left-radius: 2rem;
+          border-top-left-radius: 0.5rem;
+          border-bottom-left-radius: 0.5rem;
         }
         grid-area: image1;
         height: 100%;
@@ -436,7 +1062,7 @@ const Section = styled.section`
           height: 100%;
           width: 100%;
           object-fit: cover;
-          border-top-right-radius: 2rem;
+          border-top-right-radius: 0.5rem;
         }
       }
       .image4 {
@@ -455,113 +1081,73 @@ const Section = styled.section`
           height: 100%;
           width: 100%;
           object-fit: cover;
-          border-bottom-right-radius: 2rem;
+          border-bottom-right-radius: 0.5rem;
         }
       }
     }
-    .whole-main {
-      margin: 4rem 7rem;
-      border-radius: 1rem;
-      width: 60%;
+    .menu {
+      width: 100%;
+      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
+      margin: 0 auto;
       height: max-content;
-      border: 2px solid var(--bgBorder);
-      .content {
-        width: 100%;
-        max-width: 60%;
-        margin: 2rem 2rem;
-        .menu {
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          gap: 3rem;
-          button {
-            padding: 1rem 3rem;
-            font-size: var(--r1-75);
-            font-weight: 700;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-          }
-          .btn1 {
-            border-bottom: ${(props) =>
-        props.menu === 1 ? "3px solid black" : "none"};
-          }
-          .btn2 {
-            border-bottom: ${(props) =>
-        props.menu === 2 ? "3px solid black" : "none"};
-          }
-          .btn3 {
-            border-bottom: ${(props) =>
-        props.menu === 3 ? "3px solid black" : "none"};
+      display: flex;
+      margin-top: 1.5rem;
+      align-items: center;
+      justify-content: flex-start;
+      .singleTitle {
+        padding: 2rem 3rem;
+        font-size: 1.7rem;
+        color: #008cff;
+        cursor: pointer;
+        border-bottom: 0.4rem solid white;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+    }
+  }
+  .restDiv {
+    width: 100%;
+    max-width: 57%;
+    margin-left: 10%;
+    margin-top: 3rem;
+    background-color: inherit;
+    height: max-content;
+    .itinerary {
+      width: 100%;
+      box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      .menu {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        background-color: #ecf7ff;
+        padding: 0.5rem 1rem;
+        .item {
+          padding: 0.8rem 1rem;
+          cursor: pointer;
+          .roll {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 1.7rem;
+            text-transform: uppercase;
+            letter-spacing: -0.1rem;
+            word-spacing: 0.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.7rem;
+            span {
+              font-size: 1em;
+            }
+            h1 {
+              font-weight: 100;
+              font-size: 1em;
+            }
           }
         }
       }
-      .particularContent {
-        width: 95%;
-        margin-top: 4rem;
-        height: max-content;
-        background-color: white;
-        margin: 1rem 2rem;
-      }
     }
-    .whole-main2 {
-      margin: 4rem 7rem;
-      border-radius: 1rem;
-      width: 60%;
-      border: 2px solid var(--bgBorder);
-      .content {
-        width: 95%;
-        margin: 3rem 3rem;
-            h1{
-                width: 100%;
-                font-size: 2rem;
-            }
-            .two-boxes{
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                padding: 0 2rem;
-                gap: 4rem;
-                margin-top: 2rem;
-                .container{
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
-                    gap: 1rem;
-                    width: 45%;
-                    .icon{
-                        font-size: 1.6rem;
-                        color: green;
-                        stroke: green;
-                        stroke-width: 2;
-                    }
-                    p{
-                        padding: 0;
-                        font-size: 1.6rem;
-                    }
-                }
-            }
-        }
-    }
-    .whole-main1 {
-        h1{
-            font-size: 2rem;
-            color: gray;
-            margin-bottom: 2rem;
-        }
-        margin: 4rem 7rem;
-        border-radius: 1rem;
-        width: 60%;
-        height: max-content;
-        border: 2px solid var(--bgBorder);
-        .particularContent {
-            width: 95%;
-            margin-top: 4rem;
-            height: 40vh;
-            background-color: white;
-            margin: 1rem 2rem;
-        }
-        }
-    }
+  }
 `;
