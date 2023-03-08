@@ -19,29 +19,15 @@ import FlightIcon from "@mui/icons-material/Flight";
 import HouseSidingIcon from "@mui/icons-material/HouseSiding";
 import img1 from "../../../public/car.jpg";
 import img2 from "../../../public/hotel.jpg";
+import img3 from '../../../public/assets/topdestination/G8.png'
+import img4 from "../../../public/assets/cardemo.png";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import LuggageIcon from '@mui/icons-material/Luggage';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 const PackageDetail = ({ data }) => {
-
-    const [isSticky, setIsSticky] = useState(false);
-
-    // useEffect(() => {
-    //     const handleScroll = () => {
-    //         const scrollTop = window.pageYOffset;
-    //         if (scrollTop > 200) {
-    //             setIsSticky(true);
-    //         } else {
-    //             setIsSticky(false);
-    //         }
-    //     };
-
-    //     window.addEventListener('scroll', handleScroll);
-
-    //     return () => {
-    //         window.removeEventListener('scroll', handleScroll);
-    //     };
-    // }, []);
 
     const [photosSelect, setPhotosSelect] = useState(1);
     const [singlePhoto, setSinglePhoto] = useState(0);
@@ -77,7 +63,6 @@ const PackageDetail = ({ data }) => {
             singlePhoto={singlePhoto}
             itineraryOptions={itineraryOptions}
             dayPlan={dayPlan}
-            isSticky={isSticky}
         >
             <div className="mainPackage">
                 <div className="mainDiv">
@@ -243,23 +228,23 @@ const PackageDetail = ({ data }) => {
                                         </h1>
                                     </div>
                                 </div>
-                                {/* <div className="item" onClick={() => setItineraryOptions(4)}>
-                                        <div className="roll" style={{ backgroundColor: itineraryOptions === 4 ? "white" : "#ecf7ff", border: itineraryOptions === 4 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 4 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 4 ? "500" : "100" }}>
-                                            <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>6</span>
-                                            <h1 style={{ fontWeight: itineraryOptions === 4 ? "900" : "100" }}>day plan</h1>
-                                        </div>
+                                <div className="item" onClick={() => setItineraryOptions(4)}>
+                                    <div className="roll" style={{ backgroundColor: itineraryOptions === 4 ? "white" : "#ecf7ff", border: itineraryOptions === 4 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 4 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 4 ? "500" : "100" }}>
+                                        <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>2</span>
+                                        <h1 style={{ fontWeight: itineraryOptions === 4 ? "900" : "100" }}>Transfer</h1>
                                     </div>
-                                    <div className="item" onClick={() => setItineraryOptions(5)}>
-                                        <div className="roll" style={{ backgroundColor: itineraryOptions === 5 ? "white" : "#ecf7ff", border: itineraryOptions === 5 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 5 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 5 ? "500" : "100" }}>
-                                            <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>6</span>
-                                            <h1 style={{ fontWeight: itineraryOptions === 5 ? "900" : "100" }}>day plan</h1>
-                                        </div>
-                                    </div> */}
+                                </div>
+                                <div className="item" onClick={() => setItineraryOptions(5)}>
+                                    <div className="roll" style={{ backgroundColor: itineraryOptions === 5 ? "white" : "#ecf7ff", border: itineraryOptions === 5 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 5 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 5 ? "500" : "100" }}>
+                                        <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>2</span>
+                                        <h1 style={{ fontWeight: itineraryOptions === 5 ? "900" : "100" }}>Flights</h1>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
                 </div>
-                <div className="dayPlanDetails">
+                {options === 1 && <div className="dayPlanDetails">
                     <div className="left">
                         <h1>Day Plan</h1>
                         <div className="box">
@@ -336,7 +321,7 @@ const PackageDetail = ({ data }) => {
                         </div>
                     </div>
                     <div className="right">
-                        <div className="title">
+                        {itineraryOptions === 1 && <><div className="title">
                             <div className="left1">
                                 <h1>Day 1 - Arrival in Agra</h1>
                             </div>
@@ -353,63 +338,431 @@ const PackageDetail = ({ data }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="car">
-                            <div className="title">
-                                <div className="east">
-                                    <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                            <div className="car2">
+                                <div className="title2">
+                                    <div className="east2">
+                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                    </div>
+                                    <div className="west2">
+                                        <button>Remove</button>
+                                    </div>
                                 </div>
-                                <div className="west">
-                                    <button>Remove</button>
-                                </div>
-                            </div>
-                            <div className="content">
-                                <div className="left">
-                                    <img src={img1} alt="" />
-                                </div>
-                                <div className="right">
-                                    <h1>Private Transfer</h1>
-                                    <p>
-                                        After your arrival at Bangkok Airport, you will be directly
-                                        transferred to your hotel in Pattaya by a private vehicle.
-                                        You should exit from Gate No. 10 Exit C and reach the pickup
-                                        point outside the airport as per the given flight timings.
-                                        The maximum waiting time will be 1.5 hours after flight
-                                        touchdown. The luggage limitation per person is 1 handbag
-                                        and 1 normal-sized trolley. In case you exceed the same,
-                                        additional charges for a separate vehicle will be levied.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="car1">
-                            <div className="title">
-                                <div className="east">
-                                    <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
-                                </div>
-                                <div className="west">
-                                    <button>Change</button>
-                                </div>
-                            </div>
-                            <div className="content1">
-                                <div className="left">
-                                    <img src={img2} alt="" />
-                                </div>
-                                <div className="south">
-                                    <div className="label">Resort</div>
-                                    <h1>
-                                        Mike Beach Resort, SHA Extra Plus - Holidays Selections{" "}
-                                    </h1>
-                                    <h3>North Pattaya</h3>
-                                    <p>120 m from Pattaya Beach</p>
-                                    <div className="date">
-                                        <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
-                                        <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
+                                <div className="content2">
+                                    <div className="left2">
+                                        <div className="image">
+                                            <img src={img3} alt="" />
+                                            <label htmlFor="">G8-286</label>
+                                        </div>
+                                        <div className="contentLeft">
+                                            <label htmlFor="">10:45</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>New Delhi</h5>
+                                        </div>
+                                        <div className="line"></div>
+                                        <div className="contentRight">
+                                            <label htmlFor="">13:30</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>Goa - Dabolin Airport</h5>
+                                        </div>
+                                    </div>
+                                    <div className="right2">
+                                        <h1>Private Transfer</h1>
+                                        <div className="downContent">
+                                            <div className="item">
+                                                <ShoppingBagIcon className="icon" />
+                                                <span>Cabin: </span>
+                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                            </div>
+                                            <div className="item">
+                                                <LuggageIcon className="icon" />
+                                                <span>Check In: </span>
+                                                <h4>15 Kg</h4>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <hr />
+                            <div className="car">
+                                <div className="title">
+                                    <div className="east">
+                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                    </div>
+                                    <div className="west">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content">
+                                    <div className="left">
+                                        <img src={img4} alt="" />
+                                    </div>
+                                    <div className="right">
+                                        <h1>Private Transfer</h1>
+                                        <p>
+                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div className="car1">
+                                <div className="title">
+                                    <div className="east">
+                                        <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
+                                    </div>
+                                    <div className="west">
+                                        <button>Change</button>
+                                    </div>
+                                </div>
+                                <div className="content1">
+                                    <div className="left">
+                                        <img src={img2} alt="" />
+                                    </div>
+                                    <div className="south">
+                                        <div className="label">Resort</div>
+                                        <h1>
+                                            Evoke Lifestyle Candolim
+                                        </h1>
+                                        <h3>North Pattaya</h3>
+                                        <p>120 m from Pattaya Beach</p>
+                                        <div className="date">
+                                            <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
+                                            <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="endofday">
+                                <div className="content">
+                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                </div>
+                            </div>
+                            <div className="title">
+                                <div className="left1">
+                                    <h1>Day 2 - Arrival in Agra</h1>
+                                </div>
+                            </div>
+                            <div className="daymeal">
+                                <div className="east">
+                                    <RestaurantIcon className="icon" />
+                                    <span>Day Meals</span>
+                                </div>
+                                <div className="west">
+                                    {/* <CheckIcon className="icon"/> */}
+                                    <span>Breakfast: </span>
+                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                </div>
+                            </div>
+                            <div className="endofday">
+                                <div className="content">
+                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                </div>
+                            </div>
+                            <div className="title">
+                                <div className="left1">
+                                    <h1>Day 3 - Arrival in Agra</h1>
+                                </div>
+                            </div>
+                            <div className="daymeal">
+                                <div className="east">
+                                    <RestaurantIcon className="icon" />
+                                    <span>Day Meals</span>
+                                </div>
+                                <div className="west">
+                                    {/* <CheckIcon className="icon"/> */}
+                                    <span>Breakfast: </span>
+                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                </div>
+                            </div>
+                            <div className="endofday">
+                                <div className="content">
+                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                </div>
+                            </div>
+                            <div className="title">
+                                <div className="left1">
+                                    <h1>Day 4 - Arrival in Agra</h1>
+                                </div>
+                            </div>
+                            <div className="daymeal">
+                                <div className="east">
+                                    <RestaurantIcon className="icon" />
+                                    <span>Day Meals</span>
+                                </div>
+                                <div className="west">
+                                    {/* <CheckIcon className="icon"/> */}
+                                    <span>Breakfast: </span>
+                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                </div>
+                            </div>
+                            <div className="endofday">
+                                <div className="content">
+                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                </div>
+                            </div>
+                            <div className="title">
+                                <div className="left1">
+                                    <h1>Day 5 - Arrival in Agra</h1>
+                                </div>
+                                <div className="right1">
+                                    <div className="item">INCLUDED</div>
+                                    <div className="item">
+                                        <FlightIcon />
+                                        <span>1 Flight</span>
+                                    </div>
+                                    <h2>|</h2>
+                                    <div className="item">
+                                        <HouseSidingIcon />
+                                        <span>1 Hotel</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="daymeal">
+                                <div className="east">
+                                    <RestaurantIcon className="icon" />
+                                    <span>Day Meals</span>
+                                </div>
+                                <div className="west">
+                                    {/* <CheckIcon className="icon"/> */}
+                                    <span>Breakfast: </span>
+                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                </div>
+                            </div>
+                            <div className="car">
+                                <div className="title">
+                                    <div className="east">
+                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                    </div>
+                                    <div className="west">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content">
+                                    <div className="left">
+                                        <img src={img1} alt="" />
+                                    </div>
+                                    <div className="right">
+                                        <h1>Private Transfer</h1>
+                                        <p>
+                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="car2">
+                                <div className="title2">
+                                    <div className="east2">
+                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                    </div>
+                                    <div className="west2">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content2">
+                                    <div className="left2">
+                                        <div className="image">
+                                            <img src={img3} alt="" />
+                                            <label htmlFor="">G8-286</label>
+                                        </div>
+                                        <div className="contentLeft">
+                                            <label htmlFor="">10:45</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>New Delhi</h5>
+                                        </div>
+                                        <div className="line"></div>
+                                        <div className="contentRight">
+                                            <label htmlFor="">13:30</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>Goa - Dabolin Airport</h5>
+                                        </div>
+                                    </div>
+                                    <div className="right2">
+                                        <h1>Private Transfer</h1>
+                                        <div className="downContent">
+                                            <div className="item">
+                                                <ShoppingBagIcon className="icon" />
+                                                <span>Cabin: </span>
+                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                            </div>
+                                            <div className="item">
+                                                <LuggageIcon className="icon" />
+                                                <span>Check In: </span>
+                                                <h4>15 Kg</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="endofday">
+                                <div className="content">
+                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                </div>
+                            </div></>}
+                        {itineraryOptions === 2 && <>
+                            <div className="car1">
+                                <div className="title">
+                                    <div className="east">
+                                        <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
+                                    </div>
+                                    <div className="west">
+                                        <button>Change</button>
+                                    </div>
+                                </div>
+                                <div className="content1">
+                                    <div className="left">
+                                        <img src={img2} alt="" />
+                                    </div>
+                                    <div className="south">
+                                        <div className="label">Resort</div>
+                                        <h1>
+                                            Evoke Lifestyle Candolim
+                                        </h1>
+                                        <h3>North Pattaya</h3>
+                                        <p>120 m from Pattaya Beach</p>
+                                        <div className="date">
+                                            <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
+                                            <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>}
+                        {itineraryOptions == 4 && <>
+                            <div className="car">
+                                <div className="title">
+                                    <div className="east">
+                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                    </div>
+                                    <div className="west">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content">
+                                    <div className="left">
+                                        <img src={img4} alt="" />
+                                    </div>
+                                    <div className="right">
+                                        <h1>Private Transfer</h1>
+                                        <p>
+                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="car">
+                                <div className="title">
+                                    <div className="east">
+                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                    </div>
+                                    <div className="west">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content">
+                                    <div className="left">
+                                        <img src={img1} alt="" />
+                                    </div>
+                                    <div className="right">
+                                        <h1>Private Transfer</h1>
+                                        <p>
+                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </>}
+                        {itineraryOptions === 5 && <>
+                            <div className="car2">
+                                <div className="title2">
+                                    <div className="east2">
+                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                    </div>
+                                    <div className="west2">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content2">
+                                    <div className="left2">
+                                        <div className="image">
+                                            <img src={img3} alt="" />
+                                            <label htmlFor="">G8-286</label>
+                                        </div>
+                                        <div className="contentLeft">
+                                            <label htmlFor="">10:45</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>New Delhi</h5>
+                                        </div>
+                                        <div className="line"></div>
+                                        <div className="contentRight">
+                                            <label htmlFor="">13:30</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>Goa - Dabolin Airport</h5>
+                                        </div>
+                                    </div>
+                                    <div className="right2">
+                                        <h1>Private Transfer</h1>
+                                        <div className="downContent">
+                                            <div className="item">
+                                                <ShoppingBagIcon className="icon" />
+                                                <span>Cabin: </span>
+                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                            </div>
+                                            <div className="item">
+                                                <LuggageIcon className="icon" />
+                                                <span>Check In: </span>
+                                                <h4>15 Kg</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="car2">
+                                <div className="title2">
+                                    <div className="east2">
+                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                    </div>
+                                    <div className="west2">
+                                        <button>Remove</button>
+                                    </div>
+                                </div>
+                                <div className="content2">
+                                    <div className="left2">
+                                        <div className="image">
+                                            <img src={img3} alt="" />
+                                            <label htmlFor="">G8-286</label>
+                                        </div>
+                                        <div className="contentLeft">
+                                            <label htmlFor="">10:45</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>New Delhi</h5>
+                                        </div>
+                                        <div className="line"></div>
+                                        <div className="contentRight">
+                                            <label htmlFor="">13:30</label>
+                                            <h4>Wed, 12 Apr</h4>
+                                            <h5>Goa - Dabolin Airport</h5>
+                                        </div>
+                                    </div>
+                                    <div className="right2">
+                                        <h1>Private Transfer</h1>
+                                        <div className="downContent">
+                                            <div className="item">
+                                                <ShoppingBagIcon className="icon" />
+                                                <span>Cabin: </span>
+                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                            </div>
+                                            <div className="item">
+                                                <LuggageIcon className="icon" />
+                                                <span>Check In: </span>
+                                                <h4>15 Kg</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>}
                     </div>
-                </div>
+                </div>}
             </div>
             {isPackagePhoto && (
                 <>
@@ -670,13 +1023,12 @@ const Section = styled.section`
     width: 100%;
     background-color: white;
     .dayPlanDetails {
-      position: ${props => props.isSticky ? "fixed" : "static"};
       width: 100%;
       max-width: 57%;
       margin-left: 10%;
-      height: 70vh;
+      height: max-content;
       display: flex;
-      box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+      box-shadow: 0 20px 30px 0px rgb(0, 0, 0, 0.1);
       .left {
         width: 100%;
         height: 100%;
@@ -722,14 +1074,21 @@ const Section = styled.section`
       .right {
         width: 100%;
         height: 100%;
+        border-left: 1px solid rgba(74, 74, 74,0.1);
         flex: 3;
+        hr{
+            margin: 0;
+            width: 100%;
+            color: rgba(74, 74, 74,0.1);
+            opacity: 0.1;
+        }
         .title {
           width: 100%;
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
           .left1 {
-            width: 30%;
+            width: max-content;
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -737,7 +1096,8 @@ const Section = styled.section`
               background-color: #f4d1ca;
               font-size: 1.5rem;
               padding: 1rem 2rem;
-              border-radius: 0.4rem;
+              border-top-right-radius: 0.6rem;
+              border-bottom-right-radius: 0.6rem;
               font-weight: 700;
             }
           }
@@ -762,7 +1122,76 @@ const Section = styled.section`
             }
           }
         }
+        .daymeal{
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 4rem;
+            padding: 2rem 5rem;
+            .east{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: .6rem;
+                .icon{
+                    color: #979797;
+                }
+                span{
+                    color: rgb(74, 74, 74);
+                    font-weight: 900;
+                    font-size: 1.5rem;
+                }
+            }
+            .west{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: .6rem;
+                .icon{
+                    color: #979797;
+                }
+                span{
+                    font-weight: 900;
+                    font-size: 1.2rem;
+                    color: rgb(74, 74, 74);
+                }
+                p{
+                    font-weight: 100;
+                    color: rgb(74, 74, 74);
+                    padding: 0;
+                    font-size: 1.2rem;
+                }
+            }
+        }
+        .endofday{
+            width: 100%;
+            padding: 2rem;
+        border-top: 1px solid rgba(74, 74, 74,0.1);
+        border-bottom: 1px solid rgba(74, 74, 74,0.1);
+            .content{
+                width: 100%;
+                border-radius: .5rem;
+            background-image: linear-gradient(259deg, rgba(204, 245, 242, 0.5019607843), rgba(212, 225, 158, 0.5019607843));
+            padding: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: rgb(74, 74, 74);
+            font-style: italic;
+            span{
+                color: rgb(74, 74, 74);
+                font-size: 1.4rem;
+                font-weight: 900;
+            }
+            }
+        }
         .car {
+            &:hover{
+                background-color: rgb(0, 140, 255,.04);
+                transition: all .2s ease-in-out;
+                cursor: pointer;
+            }
           width: 100%;
           height: max-content;
           padding: 2rem 1rem;
@@ -809,7 +1238,7 @@ const Section = styled.section`
               background-color: inherit;
               img {
                 width: 20rem;
-                height: 100%;
+                height: 10rem;
                 object-fit: cover;
               }
             }
@@ -828,8 +1257,154 @@ const Section = styled.section`
             }
           }
         }
+        .car2 {
+            &:hover{
+                background-color: rgb(0, 140, 255,.04);
+                transition: all .2s ease-in-out;
+                cursor: pointer;
+            }
+          width: 100%;
+          height: max-content;
+          padding: 2rem 4rem;
+          .title2 {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .east2 {
+              h1 {
+                padding: 1rem 2rem;
+                opacity: 0.8;
+                font-size: 1.4rem;
+                font-weight: 500;
+                color: rgb(74, 74, 74);
+              }
+            }
+            .west2 {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              button {
+                color: rgb(0, 140, 255);
+                font-weight: 900;
+                font-size: 1.3rem;
+                border: none;
+                cursor: pointer;
+                padding: 1rem 2rem;
+                margin-right: 2rem;
+                text-transform: uppercase;
+                background-color: inherit;
+              }
+            }
+          }
+          .content2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .left2 {
+              flex: 10;
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              background-color: inherit;
+              .image{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                gap: .5rem;
+                img {
+                width: 4rem;
+                height: 4rem;
+              }
+              }
+              .contentLeft{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding-left: 2rem;
+                width: 40%;
+                label{
+                    font-size: 1.7rem;
+                    font-weight: 900;
+                }
+                h4{
+                    font-size: 1.4rem;
+                    font-weight: 100;
+                }
+                h5{ 
+                    font-size: 1.1rem;
+                    font-weight: 100;
+                }
+              }
+              .line{
+                border-bottom: 1px solid black;
+                width: 10rem;
+              }
+              .contentRight{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                justify-content: flex-start;
+                padding-right: 2rem;
+                width: 50%;
+                label{
+                    font-size: 1.7rem;
+                    font-weight: 900;
+                }
+                h4{
+                    font-size: 1.4rem;
+                    font-weight: 100;
+                }
+                h5{
+                    font-size: 1.1rem;
+                    font-weight: 100;
+                }
+              }
+            }
+            .right2 {
+              flex: 4;
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              padding: 2rem;
+              h1 {
+                font-size: 1.4rem;
+              }
+              .downContent{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                .item{
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: .4rem;
+                    .icon{
+                        color: #003251;
+                    }
+                    span{
+                        font-weight: 500;
+                        font-size: 1.2rem;
+                        color: rgb(74, 74, 74);
+                    }
+                    h4{
+                        font-weight: 100;
+                    }
+                }
+              }
+            }
+          }
+        }
       }
       .car1 {
+        &:hover{
+                background-color: rgb(0, 140, 255,.04);
+                transition: all .2s ease-in-out;
+                cursor: pointer;
+            }
         width: 100%;
         height: max-content;
         padding: 2rem 1rem;
@@ -875,9 +1450,10 @@ const Section = styled.section`
             justify-content: flex-start;
             background-color: inherit;
             img {
-              width: 20rem;
-              height: 100%;
+              width: 25rem;
+              height: 14rem;
               object-fit: cover;
+              border-radius: .5rem;
             }
           }
           .south {
@@ -1114,7 +1690,7 @@ const Section = styled.section`
     height: max-content;
     .itinerary {
       width: 100%;
-      box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+      box-shadow: 0 0px 30px 0px rgb(0, 0, 0, 0.1);
       border-radius: 0.5rem;
       overflow: hidden;
       .menu {
