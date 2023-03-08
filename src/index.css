@@ -231,4 +231,7 @@ a{
     height: 50px;
   }
   
-  
+.react-datepicker__month{
+    font-size: 1.3rem;
+    font-weight: 900;
+}

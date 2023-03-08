@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Spinner from '../../../../components/users/Spinner'
+import TimePicker from 'react-time-picker';
 import {
     useFetchAllThemesQuery,
     useFetchOneThemeQuery,
@@ -20,8 +21,22 @@ import {
     useUpdateUserMutation,
 } from "../../../../store/services/adminUserService";
 import { useCreatePackageMutation } from "../../../../store/services/packageService";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AdminSubAddPackage = () => {
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
+    const [startTime, setStartTime] = useState('10:00');
+    const [endTime, setEndTime] = useState('12:00');
+
+    const handleStartTime = (newTime) => {
+        setTime(newTime);
+    };
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
     const [createPackage, response] = useCreatePackageMutation();
     console.log(response);
 
@@ -40,7 +55,7 @@ const AdminSubAddPackage = () => {
 
     const dispatch = useDispatch();
 
-    const [next, setNext] = useState(false);
+    const [next, setNext] = useState(1);
 
     const [state, setState] = useState({
         name: "",
@@ -48,7 +63,6 @@ const AdminSubAddPackage = () => {
         city: "",
         ending_point: "",
         state_name: "",
-        accommodations: "",
         destinations_covered: "",
         stars: 0,
         image1: "",
@@ -73,7 +87,6 @@ const AdminSubAddPackage = () => {
         formData.append('images', state.image5);
         formData.append('name', state.name);
         formData.append('destinations_covered', state.destinations_covered);
-        formData.append('accommodations', state.accommodations);
         formData.append('stars', state.stars);
         formData.append('state_name', state.state_name);
         formData.append('starting_point', state.starting_point);
@@ -97,11 +110,11 @@ const AdminSubAddPackage = () => {
     };
 
     const check = () => {
-        if (state.name && state.starting_point && state.city && state.ending_point && state.state_name && state.accommodations && state.destinations_covered && state.stars && state.image1 && state.image2 && state.image3 && state.image4 && state.image5 && state.theme_id)
+        if (state.name && state.starting_point && state.city && state.ending_point && state.state_name && state.destinations_covered && state.stars && state.image1 && state.image2 && state.image3 && state.image4 && state.image5 && state.theme_id)
             return false
         return true
     }
-    
+
     useEffect(() => {
         if (response?.isSuccess) {
             dispatch(setSuccess("User added Successfully"));
@@ -134,7 +147,7 @@ const AdminSubAddPackage = () => {
                             <form onSubmit={(e) => handleSubmit(e)} autoComplete="off">
                                 <table>
                                     <tbody>
-                                        {!next && (
+                                        {next === 1 && (
                                             <>
                                                 <tr>
                                                     <td>
@@ -212,18 +225,11 @@ const AdminSubAddPackage = () => {
                                                         />
                                                     </td>
                                                     <td>
-                                                        <label htmlFor="accommodations">Accommodations</label>
+                                                        <label htmlFor="date">Date</label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Possible Accommodations"
-                                                            name="accommodations"
-                                                            id="accommodations"
-                                                            value={state.accommodations}
-                                                            onChange={handleChange}
-                                                        />
+                                                        <DatePicker dateFormat="dd/MM/yyyy" selected={selectedDate} onChange={handleDateChange} />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -290,12 +296,12 @@ const AdminSubAddPackage = () => {
                                                         {/* <p>{state.image2.name}</p> */}
                                                     </td>
                                                 </tr>
-                                                <div className="container">
-                                                    <button onClick={() => setNext(true)}>Next</button>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(2)}>Next - 2</div>
                                                 </div>
                                             </>
                                         )}
-                                        {next && (
+                                        {next === 2 && (
                                             <>
                                                 <tr>
                                                     <td>
@@ -310,7 +316,6 @@ const AdminSubAddPackage = () => {
                                                             id="image3"
                                                             onChange={(e) => handleFileSelect(e, "image3")}
                                                         />
-                                                        <p>{state.image3.name}</p>
                                                     </td>
                                                     <td>
                                                         <label htmlFor="image5">Image 5</label>
@@ -324,7 +329,7 @@ const AdminSubAddPackage = () => {
                                                             id="image5"
                                                             onChange={(e) => handleFileSelect(e, "image5")}
                                                         />
-                                                        <p>{state.image5.name}</p>
+                                                        {/* <p>{state.image5.name}</p> */}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -340,7 +345,7 @@ const AdminSubAddPackage = () => {
                                                             id="image4"
                                                             onChange={(e) => handleFileSelect(e, "image4")}
                                                         />
-                                                        <p>{state.image4.name}</p>
+                                                        {/* <p>{state.image4.name}</p> */}
                                                     </td>
                                                     <td>
                                                         <label htmlFor="theme_id">Choose theme</label>
@@ -376,11 +381,350 @@ const AdminSubAddPackage = () => {
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <div className="container">
-                                                    <button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} className="hello1" type="submit">Submit</button>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(1)}>1 - Back</div>
                                                 </div>
-                                                <div className="container">
-                                                    <div className="hello" onClick={() => setNext(false)}>Back</div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(3)}>Next - 3</div>
+                                                </div>
+                                            </>
+                                        )}
+                                        {next === 3 && (
+                                            <>
+                                                <tr>
+                                                    <td style={{ width: "25rem" }}>
+                                                        <label htmlFor="packageDuration">Select Package Duration</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td colSpan="5" style={{ textAlign: "start", display: "flex" }}>
+                                                        <label htmlFor="2N/3D" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                            <input
+                                                                type="radio"
+                                                                name="packageDuration"
+                                                                id="2N/3D"
+                                                                value="2N/3D"
+                                                            />2N/3D
+                                                        </label>
+                                                        <label htmlFor="3N/4D" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                            <input
+                                                                type="radio"
+                                                                name="packageDuration"
+                                                                id="3N/4D"
+                                                                value="3N/4D"
+                                                            />3N/4D
+                                                        </label>
+                                                        <label htmlFor="5N/6D" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                            <input
+                                                                type="radio"
+                                                                name="packageDuration"
+                                                                id="5N/6D"
+                                                                value="5N/6D"
+                                                            />5N/6D
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="price">Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="price"
+                                                            id="price"
+                                                            value={state.price}
+                                                            onChange={handleChange}
+                                                            min="5000"
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="transfer">Transfer Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="transfer"
+                                                            id="transfer"
+                                                            value={state.transfer}
+                                                            onChange={handleChange}
+                                                            min="400"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Accomodation Details</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aname">Accomodation Name</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="aname"
+                                                            id="aname"
+                                                            value={state.aname}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="nearby">Near By</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="nearby"
+                                                            id="nearby"
+                                                            value={state.nearby}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aprice">Accomodation Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="aprice"
+                                                            id="aprice"
+                                                            value={state.aprice}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="astars">Stars</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="astars"
+                                                            id="astars"
+                                                            value={state.astars}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aprice">Accomodation Type</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <select name="atype" onChange={handleChange}>
+                                                            <option value="HOTEL">HOTEL</option>
+                                                            <option value="HOMESTAY">HOMESTAY</option>
+                                                            <option value="VILLA">VILLA</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="image6">Hotel Images</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="file"
+                                                            style={{ padding: "0" }}
+                                                            name="image6"
+                                                            id="image6"
+                                                            onChange={(e) => handleFileSelect(e, "image6")}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(2)}>2 - Back</div>
+                                                </div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(4)}>Next - 4</div>
+                                                </div>
+                                            </>
+                                        )}
+                                        {next === 4 && (
+                                            <>
+                                                <tr>
+                                                    <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Flight Details</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="bairport">Boarding Airport</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="bairport"
+                                                            id="bairport"
+                                                            value={state.bairport}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="dairport">Destination Airport</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="dairport"
+                                                            id="dairport"
+                                                            value={state.dairport}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="fno">Flight No</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="fno"
+                                                            id="fno"
+                                                            value={state.fno}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="stime">Starting Time</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <TimePicker onChange={handleStartTime} value={startTime} />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aprice">Accomodation Type</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <select name="atype" onChange={handleChange}>
+                                                            <option value="HOTEL">HOTEL</option>
+                                                            <option value="HOMESTAY">HOMESTAY</option>
+                                                            <option value="VILLA">VILLA</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="image6">Hotel Images</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="file"
+                                                            style={{ padding: "0" }}
+                                                            name="image6"
+                                                            id="image6"
+                                                            onChange={(e) => handleFileSelect(e, "image6")}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
+                                                </div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(5)}>Next - 5</div>
+                                                </div>
+                                            </>
+                                        )}
+                                        {next === 5 && (
+                                            <>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="image3">Image 3</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="file"
+                                                            style={{ padding: "0" }}
+                                                            name="image3"
+                                                            id="image3"
+                                                            onChange={(e) => handleFileSelect(e, "image3")}
+                                                        />
+                                                        {/* <p>{state.image3.name}</p> */}
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="image5">Image 5</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="file"
+                                                            style={{ padding: "0" }}
+                                                            name="image5"
+                                                            id="image5"
+                                                            onChange={(e) => handleFileSelect(e, "image5")}
+                                                        />
+                                                        {/* <p>{state.image5.name}</p> */}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="image4">Image 4</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="file"
+                                                            style={{ padding: "0" }}
+                                                            name="image4"
+                                                            id="image4"
+                                                            onChange={(e) => handleFileSelect(e, "image4")}
+                                                        />
+                                                        {/* <p>{state.image4.name}</p> */}
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="theme_id">Choose theme</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <select name="theme_id" onChange={handleChange}>
+                                                            {data?.map((theme) => (
+                                                                <option key={theme._id} value={theme._id}>{theme.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={6}>
+                                                        <div className="images-flex">
+                                                            {preview.image1 && <img src={preview.image1} alt={preview.image1.name} />}
+                                                            {preview.image2 && <img src={preview.image2} alt={preview.image2.name} />}
+                                                            {preview.image3 && <img src={preview.image3} alt={preview.image3.name} />}
+                                                            {preview.image4 && <img src={preview.image4} alt={preview.image4.name} />}
+                                                            {preview.image5 && <img src={preview.image5} alt={preview.image5.name} />}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={6}>
+                                                        <div className="images-flex1">
+                                                            {preview.image1 && <p>Image 1</p>}
+                                                            {preview.image2 && <p>Image 2</p>}
+                                                            {preview.image3 && <p>Image 3</p>}
+                                                            {preview.image4 && <p>Image 4</p>}
+                                                            {preview.image5 && <p>Image 5</p>}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(4)}>4 - Back</div>
+                                                </div>
+                                                <div className="right">
+                                                    <button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} className="hello" type="submit">Submit</button>
                                                 </div>
                                             </>
                                         )}
@@ -465,50 +809,48 @@ const Section = styled.div`
             table{
                 width: 100%;
                 tbody{
-                    .container{
-                        position: relative;
-                        button{
-                            position: absolute;
-                            right: -100rem;
-                            background-color: var(--bgLightAdmin);
-                            border: none;
-                            border-radius: var(--r1);
-                            cursor: pointer;
-                            font-size: var(--r1-5);
-                            color: var(--bgWhite);
-                            font-weight: 700;
-                            letter-spacing: 0.1rem;
-                            padding: var(--r1) var(--r3);
-                        }
+                    .left{
+                        position: fixed;
+                        bottom: 4.4rem;
+                        left: 25rem;
                         .hello{
-                            margin-top: 1.5rem;
-                            margin-left: 5rem;
-                            width: max-content;
-                            background-color: var(--bgLightAdmin);
-                            border: none;
-                            border-radius: var(--r1);
-                            cursor: pointer;
-                            font-size: var(--r1-5);
-                            color: var(--bgWhite);
-                            font-weight: 700;
-                            letter-spacing: 0.1rem;
-                            padding: var(--r1) var(--r3);
-                        }
-                        .hello1{
-                            margin-top: 1.5rem;
+                            padding: 1rem 3rem;
                             background-color: var(--bgYellow);
-                            border: none;
-                            border-radius: var(--r1);
+                            color: black;
+                            font-size: 1.4rem;
+                            border-radius: .4rem;
                             cursor: pointer;
-                            font-size: var(--r1-5);
-                            color: var(--bgVioletAdmin);
-                            font-weight: 700;
-                            letter-spacing: 0.1rem;
-                            padding: var(--r1) var(--r3);
+                            font-weight: 900;
+                        }
+                    }
+                    .right{
+                        position: fixed;
+                        bottom: 4rem;
+                        right: 10rem;
+                        .hello{
+                            padding: 1rem 3rem;
+                            background-color: var(--bgYellow);
+                            color: black;
+                            font-size: 1.4rem;
+                            border-radius: .4rem;
+                            cursor: pointer;
+                            font-weight: 900;
                         }
                     }
                     tr{
+                        .newTD{
+
+                        }
                         td{
+                            label{
+                                cursor: pointer;
+                                input[type="radio"] {
+                                    padding: 0;
+                                    margin: 0;
+                                    width: 2rem;
+                                    cursor: pointer;
+                                }
+                            }
                             .images-flex{
                                 display: flex;
                                 align-items: center;
