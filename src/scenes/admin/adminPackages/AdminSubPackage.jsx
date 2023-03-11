@@ -118,23 +118,23 @@ const AdminSubPackage = () => {
                 )
             }
         },
-        {
-            field: 'accommodations',
-            headerName: 'Available Accommodations',
-            width: 230,
-            renderCell: (params) => {
-                const accommodations = params.row.accommodations;
-                return (
-                    <ul style={{ display: "flex", gap: "1rem" }}>{
-                        accommodations.map((accommodation) => {
-                            return (
-                                <li style={{ listStyleType: "none" }}>• {accommodation}</li>
-                            )
-                        })
-                    }</ul>
-                )
-            }
-        },
+        // {
+        //     field: 'accommodations',
+        //     headerName: 'Available Accommodations',
+        //     width: 230,
+        //     renderCell: (params) => {
+        //         const accommodations = params.row.accommodations;
+        //         return (
+        //             <ul style={{ display: "flex", gap: "1rem" }}>{
+        //                 accommodations?.map((accommodation) => {
+        //                     return (
+        //                         <li style={{ listStyleType: "none" }}>• {accommodation}</li>
+        //                     )
+        //                 })
+        //             }</ul>
+        //         )
+        //     }
+        // },
         {
             field: 'stars',
             headerName: 'Stars',

@@ -26,8 +26,15 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import { useLocation } from 'react-router-dom';
 
 const PackageDetail = ({ data }) => {
+
+    const location = useLocation();
+    const myParam = location.state?.myParam;
+    console.log(myParam);
+
+    console.log(data);
 
     const [photosSelect, setPhotosSelect] = useState(1);
     const [singlePhoto, setSinglePhoto] = useState(0);
@@ -71,9 +78,9 @@ const PackageDetail = ({ data }) => {
                             <div className="package">
                                 <h3>{data?.name}</h3>
                                 <div className="info">
-                                    <div className="timeLimit">4N/5D</div>
+                                    <div className="timeLimit">{myParam}</div>
                                     <div className="flexPackage">Flexi Package</div>
-                                    <div className="timeCity">4N Goa</div>
+                                    <div className="timeCity">{myParam.slice(0, 2)} {data.ending_point}</div>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +172,7 @@ const PackageDetail = ({ data }) => {
                                         <span
                                             style={{ fontWeight: itineraryOptions ? "500" : "100" }}
                                         >
-                                            6
+                                            {myParam.slice(0, 1)}
                                         </span>
                                         <h1
                                             style={{
@@ -259,6 +266,15 @@ const PackageDetail = ({ data }) => {
                                         }}
                                     >
                                         24 Mar,Sun
+
+                                        {/* const date = new Date("Fri Mar 10 2023 23:17:15 GMT+0530 (India Standard Time)");
+
+                                        for (let i = 0; i < 5; i++) {
+                                            date.setDate(date.getDate() + 1);
+                                        }
+
+                                        console.log(date); // output: Wed Mar 15 2023 23:17:15 GMT+0530 (India Standard Time) */}
+
                                     </li>
                                 </ul>
                             </div>

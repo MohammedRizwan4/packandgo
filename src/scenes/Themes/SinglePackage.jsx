@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import StarIcon from "@mui/icons-material/Star";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TourIcon from '@mui/icons-material/Tour';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -16,8 +16,44 @@ const SinglePackage = ({ singlePackage }) => {
     const [packageMore, setPackageMore] = useState(false);
     console.log(packageMore);
 
+    const navigate = useNavigate();
+
+    const setPackageMoreHandle = () => {
+        if (singlePackage.details.length === 1) {
+            navigate(`/package/${singlePackage._id}`, { state: { myParam: singlePackage.details[0].duration } });
+            setPackageMore(!packageMore);
+        }
+        else {
+            setPackageMore(!packageMore);
+        }
+    }
+
+    const SingleDuration = (detail) => {
+        let detailDuration = detail.detail
+        return (
+            <Link to={`/package/${singlePackage._id}`}>
+                <div className="singleInfo">
+                    <div className="left">
+                        <label htmlFor="">{detailDuration.duration}</label>
+                        <p>{detailDuration.duration.split("")[0]} Nights/{detailDuration.duration.split("")[3]} Days</p>
+                    </div>
+                    <div className="right">
+                        <div className="info">
+                            <p>₹{detailDuration.price}</p>
+                            <h2>₹{detailDuration.price}</h2>
+                            <h4>per person</h4>
+                        </div>
+                        <div className="btn">
+                            <ChevronRightIcon className="icon" />
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        )
+    }
+
     return (
-        <Section packageMore={packageMore} onClick={() => !packageMore && setPackageMore(true)} className="items" style={{ cursor: packageMore ? "default" : "pointer",marginBottom: "2rem" }}>
+        <Section packageMore={packageMore} onClick={setPackageMoreHandle} className="items" style={{ cursor: packageMore ? "default" : "pointer", marginBottom: "2rem" }}>
             {/* <div className="optionText">
                 hello
             </div> */}
@@ -52,7 +88,7 @@ const SinglePackage = ({ singlePackage }) => {
                 </div>
                 <div className="logo">
                     <ApartmentIcon className="icon" />
-                    <p>2 Hotels</p>
+                    <p>1 Hotel</p>
                 </div>
                 <div className="logo">
                     <HikingIcon className="icon" />
@@ -75,8 +111,8 @@ const SinglePackage = ({ singlePackage }) => {
                         <li>North Goa Sightseeing</li>
                     </ul>
                     <div className="priceDetails">
-                        <h4>$30,763</h4>
-                        <span>₹<p>24,936</p></span>
+                        <h4>₹{singlePackage.details[0].price} </h4>
+                        <span>₹<p>{singlePackage.details[0].price}</p></span>
                         <p>per person</p>
                     </div>
                 </div>
@@ -85,63 +121,22 @@ const SinglePackage = ({ singlePackage }) => {
                 </div>
 
             </div>
-            {packageMore && <div className="moreInfo">
+            {packageMore && <div className="moreInfo" style={{ opacity: "1" }}>
                 <div className="packageName">
                     <p>{singlePackage.name}</p>
                     <CancelIcon className="icon" onClick={() => {
                         setPackageMore(!packageMore)
-                    }}/>
+                    }} />
                 </div>
                 <div className="infoContainer">
                     <h3>Please select an option</h3>
-                    <div className="singleInfo">
-                        <div className="left">
-                            <label htmlFor="">4N Goa</label>
-                            <p>4 Nights/5 Days</p>
-                        </div>
-                        <div className="right">
-                            <div className="info">
-                                <p>$27,593</p>
-                                <h2>$23,654</h2>
-                                <h4>per person</h4>
-                            </div>
-                            <div className="btn">
-                            <ChevronRightIcon className="icon"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="singleInfo">
-                        <div className="left">
-                            <label htmlFor="">4N Goa</label>
-                            <p>4 Nights/5 Days</p>
-                        </div>
-                        <div className="right">
-                            <div className="info">
-                                <p>$27,593</p>
-                                <h2>$23,654</h2>
-                                <h4>per person</h4>
-                            </div>
-                            <div className="btn">
-                            <ChevronRightIcon className="icon"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="singleInfo">
-                        <div className="left">
-                            <label htmlFor="">4N Goa</label>
-                            <p>4 Nights/5 Days</p>
-                        </div>
-                        <div className="right">
-                            <div className="info">
-                                <p>$27,593</p>
-                                <h2>$23,654</h2>
-                                <h4>per person</h4>
-                            </div>
-                            <div className="btn">
-                            <ChevronRightIcon className="icon"/>
-                            </div>
-                        </div>
-                    </div>
+                    {
+                        singlePackage?.details?.map((detail) => {
+                            return (
+                                <SingleDuration detail={detail} key={detail._id} />
+                            )
+                        })
+                    }
                 </div>
             </div>}
         </Section>
@@ -156,7 +151,7 @@ const Section = styled.div`
     height: max-content;
     position: relative;
     overflow: hidden;
-    /* opacity: ${props => props.packageMore ? "0.4" : "1"}; */
+    background-color: ${props => props.packageMore ? "rgba(0,0,0,0.7)" : "white"};
     /* box-shadow:  3px 3px 3px 3px rgba(100, 111, 111, 0.35); */
     /* border: 1px solid gray; */
     /* box-shadow: 0 0 50px #ccc;*/
@@ -208,8 +203,8 @@ const Section = styled.div`
             }
             .singleInfo{
                 box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); 
-                border-radius: .5rem;
-                padding: 1rem;
+                border-radius: .7rem;
+                padding: .5rem 1rem;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -243,7 +238,9 @@ const Section = styled.div`
                             text-decoration: line-through;
                         }
                         h2{
-                            font-size: 1.7rem;
+                            padding: 0;
+                            margin: 0;
+                            font-size: 1.5rem;
                             font-weight: 900;
                             color: rgb(74,74,74);
                         }
@@ -319,9 +316,10 @@ const Section = styled.div`
         height: 25rem;
         object-fit: cover;
         transition: transform 0.3s;
+        filter: ${props => props.packageMore ? "brightness(30%)" : "brightness(100%)"};
         :hover {
-          transform: scale(1.1);
-          transform-origin: 50% 50%;
+          transform: ${props => props.packageMore ? "" : "scale(1.1)"};
+          transform-origin: ${props => props.packageMore ? "" : "50% 50%"};
           cursor: pointer;
         }
       }
