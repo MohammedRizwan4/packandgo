@@ -23,6 +23,27 @@ const AdminSubPackage = () => {
     const columns = [
         { field: '_id', headerName: 'ID', width: 100 },
         {
+            field: 'edit',
+            headerName: 'Edit Package',
+            width: 150,
+            renderCell: (params) => {
+                return (
+                    <Link to={`/dashboard/update-package/${params.row._id}`} style={{ padding: "1rem 3rem", color: "var(--bgDarkViolet)", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "var(--bgYellow)", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Edit</Link>
+                )
+            }
+        },
+        {
+            field: 'delete',
+            headerName: 'Delete Package',
+            width: 150,
+            renderCell: (params) => {
+                const id = params.row._id;
+                return (
+                    <button onClick={(e) => handleDelete(e, id)} style={{ padding: "1rem 3rem", color: "white", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "red", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Delete</button>
+                )
+            }
+        },
+        {
             field: 'name',
             headerName: 'Package Name',
             width: 300,
@@ -145,28 +166,7 @@ const AdminSubPackage = () => {
                     <div>{stars}</div>
                 )
             }
-        },
-        {
-            field: 'edit',
-            headerName: 'Edit Package',
-            width: 150,
-            renderCell: (params) => {
-                return (
-                    <Link to={`/dashboard/update-package/${params.row._id}`} style={{ padding: "1rem 3rem", color: "var(--bgDarkViolet)", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "var(--bgYellow)", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Edit</Link>
-                )
-            }
-        },
-        {
-            field: 'delete',
-            headerName: 'Delete Package',
-            width: 150,
-            renderCell: (params) => {
-                const id = params.row._id;
-                return (
-                    <button onClick={(e) => handleDelete(e, id)} style={{ padding: "1rem 3rem", color: "white", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "red", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Delete</button>
-                )
-            }
-        },
+        }
     ];
 
 

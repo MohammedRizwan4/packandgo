@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Spinner from '../../../../components/users/Spinner'
+import TimePicker from 'react-time-picker';
 import {
     useFetchAllThemesQuery,
     useFetchOneThemeQuery,
@@ -19,49 +20,33 @@ import {
     useGetSingleUserQuery,
     useUpdateUserMutation,
 } from "../../../../store/services/adminUserService";
-import { useCreatePackageMutation, useFetchOnePackageQuery, useUpdatePackageMutation } from "../../../../store/services/packageService";
+import { useCreatePackageMutation, useFetchOnePackageQuery } from "../../../../store/services/packageService";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AdminSubEditPackage = () => {
 
-    const { data, isFetching } = useFetchAllThemesQuery();
-    const [updatePackage, response] = useUpdatePackageMutation();
-    console.log(data);
-
-    const [state, setState] = useState({
-        name: "",
-        starting_point: "",
-        city: "",
-        ending_point: "",
-        state_name: "",
-        accommodations: "",
-        destinations_covered: "",
-        stars: 0,
-        image1: "",
-        image2: "",
-        image3: "",
-        image4: "",
-        image5: "",
-        theme_id: ""
-    });
-
     const { id } = useParams();
     const { data: data1, isFetching: isFetching1 } = useFetchOnePackageQuery(id);
-    console.log(data1);
+    const fetchedPackage = data1?.package1;
+    console.log(fetchedPackage);
 
-    let themeId = ""
-    let theme = ""
+    const newDate = new Date(fetchedPackage?.date)
 
-    useEffect(() => {
-        setState(prev => ({ ...prev, ['name']: data1?.package1?.name }))
-        setState(prev => ({ ...prev, ['starting_point']: data1?.package1?.starting_point }))
-        setState(prev => ({ ...prev, ['city']: data1?.package1?.location?.city }))
-        setState(prev => ({ ...prev, ['ending_point']: data1?.package1?.ending_point }))
-        setState(prev => ({ ...prev, ['state_name']: data1?.package1?.location?.state_name }))
-        setState(prev => ({ ...prev, ['accommodations']: data1?.package1?.accommodations }))
-        setState(prev => ({ ...prev, ['destinations_covered']: data1?.package1?.destinations_covered }))
-        setState(prev => ({ ...prev, ['stars']: data1?.package1?.stars }))
+    const [selectedDate, setSelectedDate] = useState(fetchedPackage?.date ? newDate : new Date());
 
-    }, [data1?.package1])
+    const [startTime, setStartTime] = useState('10:00');
+    const [endTime, setEndTime] = useState('12:00');
+
+    const handleStartTime = (newTime) => {
+        setTime(newTime);
+    };
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+    const [createPackage, response] = useCreatePackageMutation();
+    console.log(response);
 
     const [preview, setPreview] = useState({
         image1: "",
@@ -71,11 +56,77 @@ const AdminSubEditPackage = () => {
         image5: "",
     });
 
+    const { data, isFetching } = useFetchAllThemesQuery();
+    console.log(data);
+    console.log(fetchedPackage);
+
+    const themeData = data?.find(item => item._id === fetchedPackage?.theme_id)
+    console.log(themeData);
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
 
-    const [next, setNext] = useState(false);
+    const [next, setNext] = useState(1);
+
+    const [state, setState] = useState({
+        name: "",
+        starting_point: "",
+        city: "",
+        ending_point: "",
+        state_name: "",
+        destinations_covered: "",
+        stars: 0,
+        image1: "",
+        image2: "",
+        image3: "",
+        image4: "",
+        image5: "",
+        image6: "",
+        image7: "",
+        image8: "",
+        theme_id: "",
+        packageDuration: "2N/3D",
+        price: 5000,
+        transfer: 400,
+        aname: "",
+        nearby: "",
+        aprice: "",
+        astars: 1,
+        atype: "HOTEL",
+        image6: "",
+        bairport: "",
+        dairport: "",
+        fno: "",
+        stime: "",
+        etime: "",
+        price_1: 5000,
+        transfer_1: 400,
+        aname_1: "",
+        nearby_1: "",
+        aprice_1: "",
+        astars_1: 1,
+        atype_1: "HOTEL",
+        bairport_1: "",
+        dairport_1: "",
+        fno_1: "",
+        stime_1: "",
+        etime_1: "",
+        price_2: 5000,
+        transfer_2: 400,
+        aname_2: "",
+        nearby_2: "",
+        aprice_2: "",
+        astars_2: 1,
+        atype_2: "HOTEL",
+        bairport_2: "",
+        dairport_2: "",
+        fno_2: "",
+        stime_2: "",
+        etime_2: ""
+    });
+
+    console.log(selectedDate);
 
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -84,48 +135,58 @@ const AdminSubEditPackage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        // formData.append('images', state.image1);
-        // formData.append('images', state.image2);
-        // formData.append('images', state.image3);
-        // formData.append('images', state.image4);
-        // formData.append('images', state.image5);
+        formData.append('images', state.image1);
+        formData.append('images', state.image2);
+        formData.append('images', state.image3);
+        formData.append('images', state.image4);
+        formData.append('images', state.image5);
+        formData.append('images', state.image6);
+        formData.append('images', state.image7);
+        formData.append('images', state.image8);
         formData.append('name', state.name);
-        formData.append('destinations_covered', state.destinations_covered);
-        formData.append('accommodations', state.accommodations);
-        formData.append('stars', state.stars);
-        formData.append('state_name', state.state_name);
         formData.append('starting_point', state.starting_point);
-        formData.append('ending_point', state.ending_point);
         formData.append('city', state.city);
+        formData.append('ending_point', state.ending_point);
+        formData.append('state_name', state.state_name);
+        formData.append('destinations_covered', state.destinations_covered);
+        formData.append('stars', state.stars);
+        formData.append('price', state.price);
+        formData.append('transfer', state.transfer);
+        formData.append('aname', state.aname);
+        formData.append('nearby', state.nearby);
+        formData.append('aprice', state.aprice);
+        formData.append('astars', state.astars);
+        formData.append('atype', state.atype);
+        formData.append('bairport', state.bairport);
+        formData.append('dairport', state.dairport);
+        formData.append('fno', state.fno);
+        formData.append('selectedDate', selectedDate);
         formData.append('theme_id', state.theme_id);
-        formData.append('id', id);
-        if (state.image1) {
-            formData.append('images', state.image1);
-            formData.append('image1path', data1?.package1?.images[0])
+        if (state.price_1 || state.transfer_1 || state.aname_1 || state.nearby_1 || state.aprice_1 || state.astars_1 || state.atype_1 || state.image6_1 || state.bairport_1 || state.dairport_1 || state.fno_1) {
+            formData.append('price_1', state.price_1);
+            formData.append('transfer_1', state.transfer_1);
+            formData.append('aname_1', state.aname_1);
+            formData.append('nearby_1', state.nearby_1);
+            formData.append('aprice_1', state.aprice_1);
+            formData.append('astars_1', state.astars_1);
+            formData.append('atype_1', state.atype_1);
+            formData.append('bairport_1', state.bairport_1);
+            formData.append('dairport_1', state.dairport_1);
+            formData.append('fno_1', state.fno_1);
         }
-        if (state.image2) {
-            formData.append('images', state.image2);
-            formData.append('image2path', data1?.package1?.images[1])
+        if (state.price_2 || state.transfer_2 || state.aname_2 || state.nearby_2 || state.aprice_2 || state.astars_2 || state.atype_2 || state.image6_2 || state.bairport_2 || state.dairport_2 || state.fno_2) {
+            formData.append('price_2', state.price_2);
+            formData.append('transfer_2', state.transfer_2);
+            formData.append('aname_2', state.aname_2);
+            formData.append('nearby_2', state.nearby_2);
+            formData.append('aprice_2', state.aprice_2);
+            formData.append('astars_2', state.astars_2);
+            formData.append('atype_2', state.atype_2);
+            formData.append('bairport_2', state.bairport_2);
+            formData.append('dairport_2', state.dairport_2);
+            formData.append('fno_2', state.fno_2);
         }
-        if (state.image3) {
-            formData.append('images', state.image3);
-            formData.append('image3path', data1?.package1?.images[2])
-        }
-        if (state.image4) {
-            formData.append('images', state.image4);
-            formData.append('image4path', data1?.package1?.images[3])
-        }
-        if (state.image5) {
-            formData.append('images', state.image5);
-            formData.append('image5path', data1?.package1?.images[4])
-        }
-        // if (state.image2) formData.append('images', state.image2);
-        // if (state.image3) formData.append('images', state.image3);
-        // if (state.image4) formData.append('images', state.image4);
-        // if (state.image5) formData.append('images', state.image5);
-        console.log(state);
-        console.log("hello", id);
-        updatePackage(formData)
+        createPackage(formData);
     };
 
     const handleFileSelect = (event, inputName) => {
@@ -141,29 +202,98 @@ const AdminSubEditPackage = () => {
     };
 
     const check = () => {
-        if (state.name && state.starting_point && state.city && state.ending_point && state.state_name && state.accommodations && state.destinations_covered && state.stars) {
+        if (state.name && state.starting_point && state.city && state.ending_point && state.state_name && state.destinations_covered && state.stars && state.image1 && state.image2 && state.image3 && state.image4 && state.image5 && state.image6 && state.theme_id && state.price && state.transfer && state.aname && state.nearby && state.aprice && state.astars && state.atype && state.image6 && state.bairport && state.dairport && state.fno) {
+            if (state.aname_1 || state.nearby_1 || state.aprice_1 || state.image7 || state.bairport_1 || state.dairport_1 || state.fno_1) {
+                if (state.price_1 && state.transfer_1 && state.aname_1 && state.nearby_1 && state.aprice_1 && state.astars_1 && state.atype_1 && state.image7 && state.bairport_1 && state.dairport_1 && state.fno_1) {
+
+                }
+                else {
+                    return true
+                }
+            }
+            if (state.aname_2 || state.nearby_2 || state.aprice_2 || state.image8 || state.bairport_2 || state.dairport_2 || state.fno_2) {
+                if (state.price_2 && state.transfer_2 && state.aname_2 && state.nearby_2 && state.aprice_2 && state.astars_2 && state.atype_2 && state.image8 && state.bairport_2 && state.dairport_2 && state.fno_2) {
+
+                }
+                else {
+                    return true
+                }
+            }
             return false;
         }
-        return true;
+        return true
     }
 
     useEffect(() => {
         if (response?.isSuccess) {
-            dispatch(setSuccess("Package Updated Successfully"));
+            dispatch(setSuccess("User added Successfully"));
             navigate("/dashboard/packages");
-            setTimeout(() => {
-                dispatch(clearMessage())
-            }, 3000);
         }
         if (response?.isError) {
             toast.error("Try again");
         }
     }, [response?.isSuccess]);
 
+    useEffect(() => {
+        setState(prev => ({ ...prev, ['name']: fetchedPackage?.name }))
+        setState(prev => ({ ...prev, ['starting_point']: fetchedPackage?.starting_point }))
+        setState(prev => ({ ...prev, ['ending_point']: fetchedPackage?.ending_point }))
+        setState(prev => ({ ...prev, ['city']: fetchedPackage?.location.city }))
+        setState(prev => ({ ...prev, ['state_name']: fetchedPackage?.location.state_name }))
+        setState(prev => ({ ...prev, ['destinations_covered']: fetchedPackage?.destinations_covered[0] }))
+        setState(prev => ({ ...prev, ['stars']: fetchedPackage?.stars }))
+
+        fetchedPackage?.details?.map((detail) => {
+            if (detail.duration === "2N/3D") {
+                setState(prev => ({ ...prev, ['price']: detail.price }))
+                setState(prev => ({ ...prev, ['transfer']: detail.transfer_price }))
+                setState(prev => ({ ...prev, ['aname']: detail.accommodations[0].name }))
+                setState(prev => ({ ...prev, ['atype']: detail.accommodations[0].acc_type }))
+                setState(prev => ({ ...prev, ['nearby']: detail.accommodations[0].nearby }))
+                setState(prev => ({ ...prev, ['aprice']: detail.accommodations[0].price }))
+                setState(prev => ({ ...prev, ['astars']: detail.accommodations[0].stars }))
+                setState(prev => ({ ...prev, ['bairport']: detail.flights[0].airport }))
+                setState(prev => ({ ...prev, ['dairport']: detail.flights[0].destination_airport }))
+                setState(prev => ({ ...prev, ['fno']: detail.flights[0].flightno }))
+            }
+            if (detail.duration === "5N/6D") {
+                console.log("hello");
+                setState(prev => ({ ...prev, ['price_2']: detail.price }))
+                setState(prev => ({ ...prev, ['transfer_2']: detail.transfer_price }))
+                setState(prev => ({ ...prev, ['aname_2']: detail.accommodations[0].name }))
+                setState(prev => ({ ...prev, ['atype_2']: detail.accommodations[0].acc_type }))
+                setState(prev => ({ ...prev, ['nearby_2']: detail.accommodations[0].nearby }))
+                setState(prev => ({ ...prev, ['aprice_2']: detail.accommodations[0].price }))
+                setState(prev => ({ ...prev, ['astars_2']: detail.accommodations[0].stars }))
+                setState(prev => ({ ...prev, ['bairport_2']: detail.flights[0].airport }))
+                setState(prev => ({ ...prev, ['dairport_2']: detail.flights[0].destination_airport }))
+                setState(prev => ({ ...prev, ['fno_2']: detail.flights[0].flightno }))
+            }
+            if (detail.duration === "3N/4D") {
+                console.log("hello");
+                setState(prev => ({ ...prev, ['price_1']: detail.price }))
+                setState(prev => ({ ...prev, ['transfer_1']: detail.transfer_price }))
+                setState(prev => ({ ...prev, ['aname_1']: detail.accommodations[0].name }))
+                setState(prev => ({ ...prev, ['atype_1']: detail.accommodations[0].acc_type }))
+                setState(prev => ({ ...prev, ['nearby_1']: detail.accommodations[0].nearby }))
+                setState(prev => ({ ...prev, ['aprice_1']: detail.accommodations[0].price }))
+                setState(prev => ({ ...prev, ['astars_1']: detail.accommodations[0].stars }))
+                setState(prev => ({ ...prev, ['bairport_1']: detail.flights[0].airport }))
+                setState(prev => ({ ...prev, ['dairport_1']: detail.flights[0].destination_airport }))
+                setState(prev => ({ ...prev, ['fno_1']: detail.flights[0].flightno }))
+            }
+        })
+    }, [data1])
+
     console.log(state);
 
     return (
         <>
+            <Toaster
+                toastOptions={{ style: { fontSize: "1.5rem" } }}
+                position="top-center"
+                reverseOrder={true}
+            />
             {!isFetching ? <Section>
                 <div className="add">
                     <Link to="/dashboard/packages">
@@ -174,10 +304,10 @@ const AdminSubEditPackage = () => {
                     <div className="wrapper">
                         <h3>Update Package</h3>
                         <div className="info">
-                            <form onSubmit={(e) => handleSubmit(e)} autoComplete="off" encType="multipart/form-data">
+                            <form onSubmit={(e) => handleSubmit(e)} autoComplete="off">
                                 <table>
                                     <tbody>
-                                        {!next && (
+                                        {next === 1 && (
                                             <>
                                                 <tr>
                                                     <td>
@@ -255,18 +385,11 @@ const AdminSubEditPackage = () => {
                                                         />
                                                     </td>
                                                     <td>
-                                                        <label htmlFor="accommodations">Accommodations</label>
+                                                        <label htmlFor="date">Date</label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Possible Accommodations"
-                                                            name="accommodations"
-                                                            id="accommodations"
-                                                            value={state.accommodations}
-                                                            onChange={handleChange}
-                                                        />
+                                                        <DatePicker dateFormat="dd/MM/yyyy" selected={selectedDate} onChange={handleDateChange} />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -333,12 +456,12 @@ const AdminSubEditPackage = () => {
                                                         {/* <p>{state.image2.name}</p> */}
                                                     </td>
                                                 </tr>
-                                                <div className="container">
-                                                    <button onClick={() => setNext(true)}>Next</button>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(2)}>Next - 2</div>
                                                 </div>
                                             </>
                                         )}
-                                        {next && (
+                                        {next === 2 && (
                                             <>
                                                 <tr>
                                                     <td>
@@ -353,7 +476,6 @@ const AdminSubEditPackage = () => {
                                                             id="image3"
                                                             onChange={(e) => handleFileSelect(e, "image3")}
                                                         />
-                                                        {/* <p>{state.image3.name}</p> */}
                                                     </td>
                                                     <td>
                                                         <label htmlFor="image5">Image 5</label>
@@ -390,7 +512,7 @@ const AdminSubEditPackage = () => {
                                                     </td>
                                                     <td>:</td>
                                                     <td>
-                                                        <select name="theme_id" defaultValue={data1?.package1?.theme_id} onChange={handleChange}>
+                                                        <select name="theme_id" onChange={handleChange} defaultValue={themeData?._id}>
                                                             {data?.map((theme) => (
                                                                 <option key={theme._id} value={theme._id}>{theme.name}</option>
                                                             ))}
@@ -400,33 +522,636 @@ const AdminSubEditPackage = () => {
                                                 <tr>
                                                     <td colSpan={6}>
                                                         <div className="images-flex">
-                                                            {preview.image1 ? <img src={preview.image1} alt={preview.image1.name} /> : <img src={`http://localhost:7800/${data1?.package1?.images[0]}`} />}
-                                                            {preview.image2 ? <img src={preview.image2} alt={preview.image2.name} /> : <img src={`http://localhost:7800/${data1?.package1?.images[1]}`} />}
-                                                            {preview.image3 ? <img src={preview.image3} alt={preview.image3.name} /> : <img src={`http://localhost:7800/${data1?.package1?.images[2]}`} />}
-                                                            {preview.image4 ? <img src={preview.image4} alt={preview.image4.name} /> : <img src={`http://localhost:7800/${data1?.package1?.images[3]}`} />}
-                                                            {preview.image5 ? <img src={preview.image5} alt={preview.image5.name} /> : <img src={`http://localhost:7800/${data1?.package1?.images[4]}`} />}
+                                                            {preview.image1 && <img src={preview.image1} alt={preview.image1.name} />}
+                                                            {preview.image2 && <img src={preview.image2} alt={preview.image2.name} />}
+                                                            {preview.image3 && <img src={preview.image3} alt={preview.image3.name} />}
+                                                            {preview.image4 && <img src={preview.image4} alt={preview.image4.name} />}
+                                                            {preview.image5 && <img src={preview.image5} alt={preview.image5.name} />}
                                                         </div>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colSpan={6}>
                                                         <div className="images-flex1">
-                                                            <p>Image 1</p>
-                                                            <p>Image 2</p>
-                                                            <p>Image 3</p>
-                                                            <p>Image 4</p>
-                                                            <p>Image 5</p>
+                                                            {preview.image1 && <p>Image 1</p>}
+                                                            {preview.image2 && <p>Image 2</p>}
+                                                            {preview.image3 && <p>Image 3</p>}
+                                                            {preview.image4 && <p>Image 4</p>}
+                                                            {preview.image5 && <p>Image 5</p>}
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <div className="container">
-                                                    <button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} className="hello1" type="submit">Submit</button>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(1)}>1 - Back</div>
                                                 </div>
-                                                <div className="container">
-                                                    <div className="hello" onClick={() => setNext(false)}>Back</div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(3)}>Next - 3</div>
                                                 </div>
                                             </>
                                         )}
+                                        {next === 3 && <tr>
+                                            <td style={{ width: "25rem" }}>
+                                                <b><label htmlFor="packageDuration" style={{ fontSize: "1.7rem", fontWeight: "900" }}>Select Package Duration</label></b>
+                                            </td>
+                                            <td>:</td>
+                                            <td colSpan="5" style={{ textAlign: "start", display: "flex", paddingTop: "1.5rem", paddingLeft: "2.5rem" }}>
+                                                <label htmlFor="2N/3D" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                    <input
+                                                        type="radio"
+                                                        name="packageDuration"
+                                                        id="2N/3D"
+                                                        value="2N/3D"
+                                                        onChange={handleChange}
+                                                        checked={state.packageDuration === "2N/3D"}
+                                                    />2N/3D
+                                                </label>
+                                                <label htmlFor="3N/4D" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                    <input
+                                                        type="radio"
+                                                        name="packageDuration"
+                                                        id="3N/4D"
+                                                        onChange={handleChange}
+                                                        value="3N/4D"
+                                                        checked={state.packageDuration === "3N/4D"}
+                                                    />3N/4D
+                                                </label>
+                                                <label htmlFor="5N/6D" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                    <input
+                                                        type="radio"
+                                                        name="packageDuration"
+                                                        id="5N/6D"
+                                                        onChange={handleChange}
+                                                        value="5N/6D"
+                                                        checked={state.packageDuration === "5N/6D"}
+                                                    />5N/6D
+                                                </label>
+                                            </td>
+                                        </tr>}
+                                        {state.packageDuration === "2N/3D" && <> {next === 3 && (
+                                            <>
+
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="price">Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="price"
+                                                            id="price"
+                                                            value={state.price}
+                                                            onChange={handleChange}
+                                                            min="5000"
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="transfer">Transfer Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="transfer"
+                                                            id="transfer"
+                                                            value={state.transfer}
+                                                            onChange={handleChange}
+                                                            min="400"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Accomodation Details</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aname">Accomodation Name</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="aname"
+                                                            id="aname"
+                                                            value={state.aname}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="nearby">Near By</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="nearby"
+                                                            id="nearby"
+                                                            value={state.nearby}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aprice">Accomodation Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="aprice"
+                                                            id="aprice"
+                                                            value={state.aprice}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="astars">Stars</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="astars"
+                                                            id="astars"
+                                                            value={state.astars}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="atype">Accomodation Type</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <select name="atype" onChange={handleChange}>
+                                                            <option value="HOTEL">HOTEL</option>
+                                                            <option value="HOMESTAY">HOMESTAY</option>
+                                                            <option value="VILLA">VILLA</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="bairport">Boarding Airport</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="bairport"
+                                                            id="bairport"
+                                                            value={state.bairport}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(2)}>2 - Back</div>
+                                                </div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(4)}>Next - 4</div>
+                                                </div>
+                                            </>
+                                        )}
+                                            {next === 4 && (
+                                                <>
+                                                    <tr>
+                                                        <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Flight Details</td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label htmlFor="dairport">Destination Airport</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="dairport"
+                                                                id="dairport"
+                                                                value={state.dairport}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <label htmlFor="fno">Flight No</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="fno"
+                                                                id="fno"
+                                                                value={state.fno}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label htmlFor="stime">Starting Time</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                        <td>
+                                                            <label htmlFor="etime">Ending Time</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                    </tr>
+                                                    <div className="left">
+                                                        <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
+                                                    </div>
+                                                    <div className="right">
+                                                        <button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} className="hello" type="submit">Submit</button>
+                                                    </div>
+                                                </>
+                                            )}</>}
+                                        {state.packageDuration === "3N/4D" && <> {next === 3 && (
+                                            <>
+
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="price_1">Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="price_1"
+                                                            id="price_1"
+                                                            value={state.price_1}
+                                                            onChange={handleChange}
+                                                            min="5000"
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="transfer_1">Transfer Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="transfer_1"
+                                                            id="transfer_1"
+                                                            value={state.transfer_1}
+                                                            onChange={handleChange}
+                                                            min="400"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Accomodation Details</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aname_1">Accomodation Name</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="aname_1"
+                                                            id="aname_1"
+                                                            value={state.aname_1}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="nearby_1">Near By</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="nearby_1"
+                                                            id="nearby_1"
+                                                            value={state.nearby_1}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aprice_1">Accomodation Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="aprice_1"
+                                                            id="aprice_1"
+                                                            value={state.aprice_1}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="astars_1">Stars</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="astars_1"
+                                                            id="astars_1"
+                                                            value={state.astars_1}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="atype_1">Accomodation Type</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <select name="atype_1" onChange={handleChange}>
+                                                            <option value="HOTEL">HOTEL</option>
+                                                            <option value="HOMESTAY">HOMESTAY</option>
+                                                            <option value="VILLA">VILLA</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="bairport_1">Boarding Airport</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="bairport_1"
+                                                            id="bairport_1"
+                                                            value={state.bairport_1}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(2)}>2 - Back</div>
+                                                </div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(4)}>Next - 4</div>
+                                                </div>
+                                            </>
+                                        )}
+                                            {next === 4 && (
+                                                <>
+                                                    <tr>
+                                                        <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Flight Details</td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label htmlFor="dairport_1">Destination Airport</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="dairport_1"
+                                                                id="dairport_1"
+                                                                value={state.dairport_1}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <label htmlFor="fno_1">Flight No</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="fno_1"
+                                                                id="fno_1"
+                                                                value={state.fno_1}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label htmlFor="stime">Starting Time</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                        <td>
+                                                            <label htmlFor="etime">Ending Time</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                    </tr>
+                                                    <div className="left">
+                                                        <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
+                                                    </div>
+                                                    <div className="right">
+                                                        <button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} className="hello" type="submit">Submit</button>
+                                                    </div>
+                                                </>
+                                            )}</>}
+                                        {state.packageDuration === "5N/6D" && <> {next === 3 && (
+                                            <>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="price_2">Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="price_2"
+                                                            id="price_2"
+                                                            value={state.price_2}
+                                                            onChange={handleChange}
+                                                            min="5000"
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="transfer_2">Transfer Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="transfer_2"
+                                                            id="transfer_2"
+                                                            value={state.transfer_2}
+                                                            onChange={handleChange}
+                                                            min="400"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Accomodation Details</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aname_2">Accomodation Name</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="aname_2"
+                                                            id="aname_2"
+                                                            value={state.aname_2}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="nearby_2">Near By</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="nearby_2"
+                                                            id="nearby_2"
+                                                            value={state.nearby_2}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="aprice_2">Accomodation Price</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="aprice_2"
+                                                            id="aprice_2"
+                                                            value={state.aprice_2}
+                                                            onChange={handleChange}
+                                                        // required pattern="^[2-9][0-9]{2}$|^1000$"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="astars_2">Stars</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            name="astars_2"
+                                                            id="astars_2"
+                                                            value={state.astars_2}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label htmlFor="atype_2">Accomodation Type</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <select name="atype_2" onChange={handleChange}>
+                                                            <option value="HOTEL">HOTEL</option>
+                                                            <option value="HOMESTAY">HOMESTAY</option>
+                                                            <option value="VILLA">VILLA</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label htmlFor="bairport_2">Boarding Airport</label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="bairport_2"
+                                                            id="bairport_2"
+                                                            value={state.bairport_2}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <div className="left">
+                                                    <div className="hello" onClick={() => setNext(2)}>2 - Back</div>
+                                                </div>
+                                                <div className="right">
+                                                    <div className="hello" onClick={() => setNext(4)}>Next - 4</div>
+                                                </div>
+                                            </>
+                                        )}
+                                            {next === 4 && (
+                                                <>
+                                                    <tr>
+                                                        <td colSpan={6} style={{ backgroundColor: "lightblue", borderRadius: ".6rem", fontSize: "1.7rem", padding: "1rem", fontWeight: "900", textTransform: "uppercase" }}>Flight Details</td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label htmlFor="dairport_2">Destination Airport</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="dairport_2"
+                                                                id="dairport_2"
+                                                                value={state.dairport_2}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <label htmlFor="fno_2">Flight No</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="fno_2"
+                                                                id="fno_2"
+                                                                value={state.fno_2}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label htmlFor="stime">Starting Time</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                        <td>
+                                                            <label htmlFor="etime">Ending Time</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                    </tr>
+                                                    <div className="left">
+                                                        <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
+                                                    </div>
+                                                    <div className="right">
+                                                        <button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} className="hello" type="submit">Submit</button>
+                                                    </div>
+                                                </>
+                                            )}</>}
                                     </tbody>
                                 </table>
                             </form>
@@ -508,50 +1233,48 @@ const Section = styled.div`
             table{
                 width: 100%;
                 tbody{
-                    .container{
-                        position: relative;
-                        button{
-                            position: absolute;
-                            right: -100rem;
-                            background-color: var(--bgLightAdmin);
-                            border: none;
-                            border-radius: var(--r1);
-                            cursor: pointer;
-                            font-size: var(--r1-5);
-                            color: var(--bgWhite);
-                            font-weight: 700;
-                            letter-spacing: 0.1rem;
-                            padding: var(--r1) var(--r3);
-                        }
+                    .left{
+                        position: fixed;
+                        bottom: 4.4rem;
+                        left: 25rem;
                         .hello{
-                            margin-top: 1.5rem;
-                            margin-left: 5rem;
-                            width: max-content;
-                            background-color: var(--bgLightAdmin);
-                            border: none;
-                            border-radius: var(--r1);
-                            cursor: pointer;
-                            font-size: var(--r1-5);
-                            color: var(--bgWhite);
-                            font-weight: 700;
-                            letter-spacing: 0.1rem;
-                            padding: var(--r1) var(--r3);
-                        }
-                        .hello1{
-                            margin-top: 1.5rem;
+                            padding: 1rem 3rem;
                             background-color: var(--bgYellow);
-                            border: none;
-                            border-radius: var(--r1);
+                            color: black;
+                            font-size: 1.4rem;
+                            border-radius: .4rem;
                             cursor: pointer;
-                            font-size: var(--r1-5);
-                            color: var(--bgVioletAdmin);
-                            font-weight: 700;
-                            letter-spacing: 0.1rem;
-                            padding: var(--r1) var(--r3);
+                            font-weight: 900;
+                        }
+                    }
+                    .right{
+                        position: fixed;
+                        bottom: 4rem;
+                        right: 10rem;
+                        .hello{
+                            padding: 1rem 3rem;
+                            background-color: var(--bgYellow);
+                            color: black;
+                            font-size: 1.4rem;
+                            border-radius: .4rem;
+                            cursor: pointer;
+                            font-weight: 900;
                         }
                     }
                     tr{
+                        .newTD{
+
+                        }
                         td{
+                            label{
+                                cursor: pointer;
+                                input[type="radio"] {
+                                    padding: 0;
+                                    margin: 0;
+                                    width: 2rem;
+                                    cursor: pointer;
+                                }
+                            }
                             .images-flex{
                                 display: flex;
                                 align-items: center;

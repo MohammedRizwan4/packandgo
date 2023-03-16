@@ -27,14 +27,17 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import { useLocation } from 'react-router-dom';
+import TimeToLeaveIcon from '@mui/icons-material/TimeToLeave';
 
 const PackageDetail = ({ data }) => {
 
-    const location = useLocation();
-    const myParam = location.state?.myParam;
+    const searchParams = new URLSearchParams(useLocation().search);
+    const myParam = searchParams.get('myParams');
     console.log(myParam);
+    const days = myParam?.slice(-2, -1);
+    console.log(days);
 
-    console.log(data);
+    const singleDetail = data.details.find(detail => detail.duration === myParam);
 
     const [photosSelect, setPhotosSelect] = useState(1);
     const [singlePhoto, setSinglePhoto] = useState(0);
@@ -42,7 +45,7 @@ const PackageDetail = ({ data }) => {
     const [options, setOptions] = useState(1);
     const [itineraryOptions, setItineraryOptions] = useState(1);
 
-    const [dayPlan, setDayPlan] = useState(1);
+    const [dayPlan, setDayPlan] = useState(0);
 
     const [like, setLike] = useState(false);
     const { isPackagePhoto } = useSelector((state) => state.toggleReducer);
@@ -63,6 +66,12 @@ const PackageDetail = ({ data }) => {
     const [arrow, setArrow] = useState(0);
     const [menu, setMenu] = useState(1);
 
+    const myArray = Array.from({ length: parseInt(days) }, (_, index) => index + 1);
+    console.log(myArray); // [1, 2, 3, 4, 5, 6]
+
+    console.log();
+
+
     return createPortal(
         <Section
             menu={menu}
@@ -80,7 +89,7 @@ const PackageDetail = ({ data }) => {
                                 <div className="info">
                                     <div className="timeLimit">{myParam}</div>
                                     <div className="flexPackage">Flexi Package</div>
-                                    <div className="timeCity">{myParam.slice(0, 2)} {data.ending_point}</div>
+                                    <div className="timeCity">{myParam?.slice(0, 2)} {data.ending_point}</div>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +181,7 @@ const PackageDetail = ({ data }) => {
                                         <span
                                             style={{ fontWeight: itineraryOptions ? "500" : "100" }}
                                         >
-                                            {myParam.slice(0, 1)}
+                                            {parseInt(myParam?.slice(0, 1)) + 1}
                                         </span>
                                         <h1
                                             style={{
@@ -255,109 +264,57 @@ const PackageDetail = ({ data }) => {
                     <div className="left">
                         <h1>Day Plan</h1>
                         <div className="box">
-                            <div className="item">
-                                <ul>
-                                    <li
-                                        onClick={() => setDayPlan(1)}
-                                        style={{
-                                            backgroundColor:
-                                                dayPlan === 1 ? "rgb(74, 74, 74)" : "white",
-                                            color: dayPlan === 1 ? "white" : "rgb(74, 74, 74)",
-                                        }}
-                                    >
-                                        24 Mar,Sun
-
-                                        {/* const date = new Date("Fri Mar 10 2023 23:17:15 GMT+0530 (India Standard Time)");
-
-                                        for (let i = 0; i < 5; i++) {
-                                            date.setDate(date.getDate() + 1);
-                                        }
-
-                                        console.log(date); // output: Wed Mar 15 2023 23:17:15 GMT+0530 (India Standard Time) */}
-
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="item">
-                                <ul>
-                                    <li
-                                        onClick={() => setDayPlan(2)}
-                                        style={{
-                                            backgroundColor:
-                                                dayPlan === 2 ? "rgb(74, 74, 74)" : "white",
-                                            color: dayPlan === 2 ? "white" : "rgb(74, 74, 74)",
-                                        }}
-                                    >
-                                        24 Mar,Sun
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="item">
-                                <ul>
-                                    <li
-                                        onClick={() => setDayPlan(3)}
-                                        style={{
-                                            backgroundColor:
-                                                dayPlan === 3 ? "rgb(74, 74, 74)" : "white",
-                                            color: dayPlan === 3 ? "white" : "rgb(74, 74, 74)",
-                                        }}
-                                    >
-                                        24 Mar,Sun
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="item">
-                                <ul>
-                                    <li
-                                        onClick={() => setDayPlan(4)}
-                                        style={{
-                                            backgroundColor:
-                                                dayPlan === 4 ? "rgb(74, 74, 74)" : "white",
-                                            color: dayPlan === 4 ? "white" : "rgb(74, 74, 74)",
-                                        }}
-                                    >
-                                        24 Mar,Sun
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="item">
-                                <ul>
-                                    <li
-                                        onClick={() => setDayPlan(5)}
-                                        style={{
-                                            backgroundColor:
-                                                dayPlan === 5 ? "rgb(74, 74, 74)" : "white",
-                                            color: dayPlan === 5 ? "white" : "rgb(74, 74, 74)",
-                                        }}
-                                    >
-                                        24 Mar,Sun
-                                    </li>
-                                </ul>
-                            </div>
+                            {
+                                myArray.map((data1, index) => {
+                                    const date = new Date(data?.date);
+                                    date?.setDate(date.getDate() + index);
+                                    return (
+                                        <div className="item">
+                                            <ul>
+                                                <li
+                                                    onClick={() => setDayPlan(index)}
+                                                    style={{
+                                                        backgroundColor:
+                                                            dayPlan === index ? "rgb(74, 74, 74)" : "white",
+                                                        color: dayPlan === index ? "white" : "rgb(74, 74, 74)",
+                                                    }}
+                                                >
+                                                    {date.toDateString().slice(0, 10)}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                     </div>
                     <div className="right">
                         {itineraryOptions === 1 && <><div className="title">
                             <div className="left1">
-                                <h1>Day 1 - Arrival in Agra</h1>
+                                <h1>Day 1 - Arrival in {data.starting_point} - {singleDetail?.flights[0]?.airport}</h1>
                             </div>
                             <div className="right1">
                                 <div className="item">INCLUDED</div>
                                 <div className="item">
                                     <FlightIcon />
-                                    <span>1 Flight</span>
+                                    <span>2 Flight</span>
                                 </div>
                                 <h2>|</h2>
                                 <div className="item">
                                     <HouseSidingIcon />
                                     <span>1 Hotel</span>
                                 </div>
+                                <h2>|</h2>
+                                <div className="item">
+                                    <TimeToLeaveIcon />
+                                    <span>2 Transfer</span>
+                                </div>
                             </div>
                         </div>
                             <div className="car2">
                                 <div className="title2">
                                     <div className="east2">
-                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                        <h1>Flight from {data.starting_point} to {data.ending_point} - {singleDetail?.flights[0].airport} 02h 45m</h1>
                                     </div>
                                     <div className="west2">
                                         <button>Remove</button>
@@ -367,16 +324,16 @@ const PackageDetail = ({ data }) => {
                                     <div className="left2">
                                         <div className="image">
                                             <img src={img3} alt="" />
-                                            <label htmlFor="">G8-286</label>
+                                            <label htmlFor="">{singleDetail?.flights[0].flightno}</label>
                                         </div>
                                         <div className="contentLeft">
-                                            <label htmlFor="">10:45</label>
+                                            <label htmlFor="">{singleDetail?.flights[0].startTime}</label>
                                             <h4>Wed, 12 Apr</h4>
                                             <h5>New Delhi</h5>
                                         </div>
                                         <div className="line"></div>
                                         <div className="contentRight">
-                                            <label htmlFor="">13:30</label>
+                                            <label htmlFor="">{singleDetail?.flights[0].endTime}</label>
                                             <h4>Wed, 12 Apr</h4>
                                             <h5>Goa - Dabolin Airport</h5>
                                         </div>
@@ -900,6 +857,7 @@ const Section = styled.section`
   box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
   background-color: #f2f2f2;
   position: relative;
+  margin-bottom: 5rem;
   .whole {
     width: 100%;
     height: 100vh;
@@ -1045,6 +1003,8 @@ const Section = styled.section`
       height: max-content;
       display: flex;
       box-shadow: 0 20px 30px 0px rgb(0, 0, 0, 0.1);
+      padding-bottom: 4rem;
+      border-radius: 1rem;
       .left {
         width: 100%;
         height: 100%;
@@ -1072,6 +1032,7 @@ const Section = styled.section`
             justify-content: flex-start;
             ul {
               margin-left: 1.6rem;
+              width: 100%;
               li {
                 font-size: 1.4rem;
                 list-style-type: none;
@@ -1118,7 +1079,7 @@ const Section = styled.section`
             }
           }
           .right1 {
-            width: 30%;
+            width: max-content;
             margin-top: 0.8rem;
             display: flex;
             align-items: center;
@@ -1515,6 +1476,7 @@ const Section = styled.section`
     background-color: white;
     height: 60vh;
     box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+    
     .header {
       width: 100%;
       max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};

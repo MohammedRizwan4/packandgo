@@ -18,9 +18,12 @@ const SinglePackage = ({ singlePackage }) => {
 
     const navigate = useNavigate();
 
+    console.log(singlePackage);
+
     const setPackageMoreHandle = () => {
-        if (singlePackage.details.length === 1) {
-            navigate(`/package/${singlePackage._id}`, { state: { myParam: singlePackage.details[0].duration } });
+        console.log(singlePackage?.details.length);
+        if (singlePackage?.details.length === 1) {
+            navigate(`/package/${singlePackage?._id}?myParams=${singlePackage?.details[0].duration}`);
             setPackageMore(!packageMore);
         }
         else {
@@ -31,7 +34,7 @@ const SinglePackage = ({ singlePackage }) => {
     const SingleDuration = (detail) => {
         let detailDuration = detail.detail
         return (
-            <Link to={`/package/${singlePackage._id}`}>
+            <Link to={`/package/${singlePackage._id}?myParams=${detailDuration.duration}`}>
                 <div className="singleInfo">
                     <div className="left">
                         <label htmlFor="">{detailDuration.duration}</label>
