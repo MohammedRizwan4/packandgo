@@ -20,7 +20,7 @@ import {
     useGetSingleUserQuery,
     useUpdateUserMutation,
 } from "../../../../store/services/adminUserService";
-import { useCreatePackageMutation, useFetchOnePackageQuery } from "../../../../store/services/packageService";
+import { useCreatePackageMutation, useFetchOnePackageQuery, useUpdatePackageMutation } from "../../../../store/services/packageService";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -45,7 +45,8 @@ const AdminSubEditPackage = () => {
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
-    const [createPackage, response] = useCreatePackageMutation();
+
+    const [updatePackage, response] = useUpdatePackageMutation();
     console.log(response);
 
     const [preview, setPreview] = useState({
@@ -87,12 +88,12 @@ const AdminSubEditPackage = () => {
         image8: "",
         theme_id: "",
         packageDuration: "2N/3D",
-        price: 5000,
-        transfer: 400,
+        price: 0,
+        transfer: 0,
         aname: "",
         nearby: "",
-        aprice: "",
-        astars: 1,
+        aprice: 0,
+        astars: 0,
         atype: "HOTEL",
         image6: "",
         bairport: "",
@@ -100,24 +101,24 @@ const AdminSubEditPackage = () => {
         fno: "",
         stime: "",
         etime: "",
-        price_1: 5000,
-        transfer_1: 400,
+        price_1: 0,
+        transfer_1: 0,
         aname_1: "",
         nearby_1: "",
-        aprice_1: "",
-        astars_1: 1,
+        aprice_1: 0,
+        astars_1: 0,
         atype_1: "HOTEL",
         bairport_1: "",
         dairport_1: "",
         fno_1: "",
         stime_1: "",
         etime_1: "",
-        price_2: 5000,
-        transfer_2: 400,
+        price_2: 0,
+        transfer_2: 0,
         aname_2: "",
         nearby_2: "",
-        aprice_2: "",
-        astars_2: 1,
+        aprice_2: 0,
+        astars_2: 0,
         atype_2: "HOTEL",
         bairport_2: "",
         dairport_2: "",
@@ -132,17 +133,53 @@ const AdminSubEditPackage = () => {
         setState({ ...state, [e.target.name]: e.target.value });
     };
 
+    console.log(fetchedPackage?.details[0].accommodations[0].images);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('images', state.image1);
-        formData.append('images', state.image2);
-        formData.append('images', state.image3);
-        formData.append('images', state.image4);
-        formData.append('images', state.image5);
-        formData.append('images', state.image6);
-        formData.append('images', state.image7);
-        formData.append('images', state.image8);
+        if (state.image1) {
+            formData.append('images', state.image1);
+            formData.append('image1path', fetchedPackage.images[0])
+        }
+        if (state.image2) {
+            formData.append('images', state.image2);
+            formData.append('image2path', fetchedPackage.images[1])
+        }
+        if (state.image3) {
+            formData.append('images', state.image3);
+            formData.append('image3path', fetchedPackage.images[2])
+        }
+        if (state.image4) {
+            formData.append('images', state.image4);
+            formData.append('image4path', fetchedPackage.images[3])
+        }
+        if (state.image5) {
+            formData.append('images', state.image5);
+            formData.append('image5path', fetchedPackage.images[4])
+        }
+        if (state.image6) {
+            formData.append('images', state.image6);
+            formData.append('image6path', fetchedPackage.details[0].accommodations[0].images)
+        }
+        if (state.image7) {
+            formData.append('images', state.image7);
+            fetchedPackage?.details?.map(detail => {
+                if (detail.duration === "3N/4D") {
+                    formData.append('image7path', detail.accommodations[0].images)
+                    console.log(detail.accommodations[0].images);
+                }
+            })
+        }
+        if (state.image8) {
+            formData.append('images', state.image8);
+            fetchedPackage?.details?.map(detail => {
+                if (detail.duration === "5N/6D") {
+                    formData.append('image8path', detail.accommodations[0].images)
+                    console.log(detail.accommodations[0].images);
+                }
+            })
+        }
         formData.append('name', state.name);
         formData.append('starting_point', state.starting_point);
         formData.append('city', state.city);
@@ -162,7 +199,8 @@ const AdminSubEditPackage = () => {
         formData.append('fno', state.fno);
         formData.append('selectedDate', selectedDate);
         formData.append('theme_id', state.theme_id);
-        if (state.price_1 || state.transfer_1 || state.aname_1 || state.nearby_1 || state.aprice_1 || state.astars_1 || state.atype_1 || state.image6_1 || state.bairport_1 || state.dairport_1 || state.fno_1) {
+        formData.append('id', id);
+        if (state.price_1 || state.transfer_1 || state.aname_1 || state.nearby_1 || state.aprice_1 || state.astars_1 || state.atype_1 || state.image7 || state.bairport_1 || state.dairport_1 || state.fno_1) {
             formData.append('price_1', state.price_1);
             formData.append('transfer_1', state.transfer_1);
             formData.append('aname_1', state.aname_1);
@@ -174,7 +212,7 @@ const AdminSubEditPackage = () => {
             formData.append('dairport_1', state.dairport_1);
             formData.append('fno_1', state.fno_1);
         }
-        if (state.price_2 || state.transfer_2 || state.aname_2 || state.nearby_2 || state.aprice_2 || state.astars_2 || state.atype_2 || state.image6_2 || state.bairport_2 || state.dairport_2 || state.fno_2) {
+        if (state.price_2 || state.transfer_2 || state.aname_2 || state.nearby_2 || state.aprice_2 || state.astars_2 || state.atype_2 || state.image8 || state.bairport_2 || state.dairport_2 || state.fno_2) {
             formData.append('price_2', state.price_2);
             formData.append('transfer_2', state.transfer_2);
             formData.append('aname_2', state.aname_2);
@@ -186,7 +224,7 @@ const AdminSubEditPackage = () => {
             formData.append('dairport_2', state.dairport_2);
             formData.append('fno_2', state.fno_2);
         }
-        createPackage(formData);
+        updatePackage(formData);
     };
 
     const handleFileSelect = (event, inputName) => {
@@ -202,17 +240,17 @@ const AdminSubEditPackage = () => {
     };
 
     const check = () => {
-        if (state.name && state.starting_point && state.city && state.ending_point && state.state_name && state.destinations_covered && state.stars && state.image1 && state.image2 && state.image3 && state.image4 && state.image5 && state.image6 && state.theme_id && state.price && state.transfer && state.aname && state.nearby && state.aprice && state.astars && state.atype && state.image6 && state.bairport && state.dairport && state.fno) {
-            if (state.aname_1 || state.nearby_1 || state.aprice_1 || state.image7 || state.bairport_1 || state.dairport_1 || state.fno_1) {
-                if (state.price_1 && state.transfer_1 && state.aname_1 && state.nearby_1 && state.aprice_1 && state.astars_1 && state.atype_1 && state.image7 && state.bairport_1 && state.dairport_1 && state.fno_1) {
+        if (state.name && state.starting_point && state.city && state.ending_point && state.state_name && state.destinations_covered && state.stars && state.theme_id && state.price && state.transfer && state.aname && state.nearby && state.aprice && state.astars && state.atype && state.bairport && state.dairport && state.fno) {
+            if (state.price_1 || state.transfer_1 || state.aname_1 || state.nearby_1 || state.aprice_1 || state.bairport_1 || state.dairport_1 || state.fno_1) {
+                if (state.price_1 && state.transfer_1 && state.aname_1 && state.nearby_1 && state.aprice_1 && state.astars_1 && state.atype_1 && state.bairport_1 && state.dairport_1 && state.fno_1) {
 
                 }
                 else {
                     return true
                 }
             }
-            if (state.aname_2 || state.nearby_2 || state.aprice_2 || state.image8 || state.bairport_2 || state.dairport_2 || state.fno_2) {
-                if (state.price_2 && state.transfer_2 && state.aname_2 && state.nearby_2 && state.aprice_2 && state.astars_2 && state.atype_2 && state.image8 && state.bairport_2 && state.dairport_2 && state.fno_2) {
+            if (state.price_2 || state.transfer_2 || state.aname_2 || state.nearby_2 || state.aprice_2 || state.bairport_2 || state.dairport_2 || state.fno_2) {
+                if (state.price_2 && state.transfer_2 && state.aname_2 && state.nearby_2 && state.aprice_2 && state.astars_2 && state.atype_2 && state.bairport_2 && state.dairport_2 && state.fno_2) {
 
                 }
                 else {
@@ -242,6 +280,7 @@ const AdminSubEditPackage = () => {
         setState(prev => ({ ...prev, ['state_name']: fetchedPackage?.location.state_name }))
         setState(prev => ({ ...prev, ['destinations_covered']: fetchedPackage?.destinations_covered[0] }))
         setState(prev => ({ ...prev, ['stars']: fetchedPackage?.stars }))
+        setState(prev => ({ ...prev, ['theme_id']: fetchedPackage?.theme_id }))
 
         fetchedPackage?.details?.map((detail) => {
             if (detail.duration === "2N/3D") {
@@ -768,6 +807,22 @@ const AdminSubEditPackage = () => {
                                                             {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label htmlFor="image6">Image 6</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="file"
+                                                                style={{ padding: "0" }}
+                                                                name="image6"
+                                                                id="image6"
+                                                                onChange={(e) => handleFileSelect(e, "image6")}
+                                                            />
+                                                            {/* <p>{state.image5.name}</p> */}
+                                                        </td>
+                                                    </tr>
                                                     <div className="left">
                                                         <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
                                                     </div>
@@ -956,6 +1011,22 @@ const AdminSubEditPackage = () => {
                                                             {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label htmlFor="image7">Image 7</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="file"
+                                                                style={{ padding: "0" }}
+                                                                name="image7"
+                                                                id="image7"
+                                                                onChange={(e) => handleFileSelect(e, "image7")}
+                                                            />
+                                                            {/* <p>{state.image5.name}</p> */}
+                                                        </td>
+                                                    </tr>
                                                     <div className="left">
                                                         <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
                                                     </div>
@@ -1142,6 +1213,22 @@ const AdminSubEditPackage = () => {
                                                         <td>:</td>
                                                         <td>
                                                             {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label htmlFor="image8">Image 8</label>
+                                                        </td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <input
+                                                                type="file"
+                                                                style={{ padding: "0" }}
+                                                                name="image8"
+                                                                id="image8"
+                                                                onChange={(e) => handleFileSelect(e, "image8")}
+                                                            />
+                                                            {/* <p>{state.image5.name}</p> */}
                                                         </td>
                                                     </tr>
                                                     <div className="left">

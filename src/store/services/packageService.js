@@ -70,7 +70,7 @@ const packageService = createApi({
             updatePackage: builder.mutation({
                 query: (data) => {
                     return {
-                        url: 'update-packagee',
+                        url: 'update-package',
                         method: "PUT",
                         body: data,
                     }
