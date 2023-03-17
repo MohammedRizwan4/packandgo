@@ -12,245 +12,43 @@ import img4 from '../images/4.jpg'
 import img5 from '../images/5.jpg'
 import 'swiper/css';
 import 'swiper/css/virtual';
+import { useFetchUniqueCityQuery } from "../../store/services/packageService";
+import { Link } from "react-router-dom";
 
 // import required modules
 const TopDestinations = () => {
-    const sliderSettings = {
-        300: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
-            slidesPerGroupSkip: 1,
-            spaceBetween: 30,
-        },
-        680: {
-            slidesPerView: 2,
-            spaceBetween: 30,
-            slidesPerGroupSkip: 2,
-            slidesPerGroup: 2,
-        },
-        1024: {
-            slidesPerView: 5,
-            slidesPerGroupSkip: 5,
-            slidesPerGroup: 5,
-            spaceBetween: 10,
-        },
-    };
+
+    const { data, isFetching } = useFetchUniqueCityQuery();
+    console.log(data);
 
     return (
         <Section>
             <h1>Top Destination</h1>
-            <div className="swipered">
-                <Swiper modules={[Virtual]} slidesPerView={6} virtual>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img2}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img3}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img4}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img5}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item">
-                            <div className="img">
-                                <img
-                                    src={img1}
-                                    loading="lazy"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="text">
-                                <h3>New Delhi</h3>
-                                <p>13 Packages</p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
+            <div className="swipered" style={{ margin: "0 7.5rem", width: "calc(100% - 15rem)" }}>
+                <Swiper modules={[Virtual]} slidesPerView={5} virtual>
+                    {
+                        data?.packages?.map((pack) => {
+                            return <>
+                                <SwiperSlide>
+                                    <Link to={`/city/${pack?._id}`}>
+                                        <div className="item">
+                                            <div className="img">
+                                                <img
+                                                    src={`http://localhost:7800/${pack?.image[0]}`}
+                                                    loading="lazy"
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div className="text">
+                                                <h3>{pack._id}</h3>
+                                                <p>{pack.count} Packages</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </SwiperSlide>
+                            </>
+                        })
+                    }
                 </Swiper>
             </div>
         </Section>
@@ -263,9 +61,10 @@ const Section = styled.section`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin: var(--r5) 0;
-  height: 60vh;
-  background-color: var(--bgLightSkin);
+  margin-top: var(--r3);
+  margin-bottom: 1.5rem;
+  height: max-content;
+  background-color: white;
   h1 {
     font-size: var(--r4);
     color: var(--bgBlack);
@@ -287,7 +86,7 @@ const Section = styled.section`
     padding-bottom: 3rem;
     cursor: pointer;
     overflow: hidden;
-    background-color: var(--bgLightSkin);
+    background-color: white;
     .img {
       width: var(--r18);
       height: var(--r18);

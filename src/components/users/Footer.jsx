@@ -60,15 +60,14 @@ export default Footer;
 
 const Foot = styled.footer`
     height: max-content;
-    width: 88vw;
+    width: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     padding: 3rem 10rem;
-    margin-bottom: 3rem;
     .footerItem{
         .footerItemHeading{
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 4rem;
             font-weight: 600;
             color: #232323;
@@ -77,14 +76,14 @@ const Foot = styled.footer`
         ul{
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.5rem;
             padding: 0;
             margin: 0;
             li {
                 list-style-type: none;
                 a{
                     color: #727272;
-                    font-size: 2rem;
+                    font-size: 1.7rem;
                     text-decoration: none;
                 }
             }

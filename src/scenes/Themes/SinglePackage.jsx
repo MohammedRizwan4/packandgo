@@ -150,8 +150,8 @@ export default SinglePackage;
 
 
 const Section = styled.div`
-    width: 37rem;
-    height: max-content;
+    width: 34rem;
+    height: 47rem;
     position: relative;
     overflow: hidden;
     background-color: ${props => props.packageMore ? "rgba(0,0,0,0.7)" : "white"};
@@ -171,7 +171,7 @@ const Section = styled.div`
         right: 0;
     } */
     .moreInfo{
-        width: 37rem;
+        width: 34rem;
         height: max-content;
         position: absolute;
         bottom: 0;
@@ -307,7 +307,7 @@ const Section = styled.div`
     .imgparent {
       overflow: hidden;
       display: block;
-      height: 50%;
+      height: 43%;
       width: calc(100% - 2rem);
       border-radius: 0.7rem 0.7rem 0 0;
       margin: 0 1rem;

@@ -84,12 +84,28 @@ const packageService = createApi({
                         method: "GET"
                     }
                 }
+            }),
+            fetchPackagesForHome: builder.query({
+                query: () => {
+                    return {
+                        url: `fetch-all-packages`,
+                        method: "GET"
+                    }
+                }
+            }),
+            fetchUniqueCity: builder.query({
+                query: () => {
+                    return {
+                        url: `fetch-cities`,
+                        method: "GET"
+                    }
+                }
             })
         }
     }
 })
 
-export const { useCreatePackageMutation, useFetchThemePackageQuery, useUpdatePackageMutation, useFetchAllPackagesQuery, useFetchOnePackageQuery, useDeletePackageMutation } = packageService;
+export const { useCreatePackageMutation, useFetchUniqueCityQuery, useFetchPackagesForHomeQuery, useFetchThemePackageQuery, useUpdatePackageMutation, useFetchAllPackagesQuery, useFetchOnePackageQuery, useDeletePackageMutation } = packageService;
 
 export default packageService;
 

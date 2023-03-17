@@ -20,6 +20,7 @@ import AdminAddPackage from "./scenes/admin/adminPackages/AddPackages/AdminAddPa
 import CreateTheme from "./scenes/admin/adminTheme/AddTheme/CreateTheme";
 import AdminEditPackage from "./scenes/admin/adminPackages/EditPackages/AdminEditPackage";
 import SubTheme from "./scenes/Themes/SubTheme";
+import City from "./scenes/city/City";
 
 const App = () => {
 
@@ -59,6 +60,7 @@ const App = () => {
                 <Route path="/contactus" element={<ContactUs />} />
                 <Route path="/aboutus" element={<AboutUs />} />
                 <Route path="/theme/:id" element={<SubTheme />} />
+                <Route path="/city/:name" element={<City />} />
                 <Route path="/package/:id" element={<Package />} />
             </Routes>
         </BrowserRouter>

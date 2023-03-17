@@ -14,6 +14,7 @@ import HikingIcon from '@mui/icons-material/Hiking';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import GridViewIcon from '@mui/icons-material/GridView';
 import SinglePackage from "./SinglePackage";
+import Footer from "../../components/users/Footer";
 
 const RegularTheme = ({ data, packages }) => {
 
@@ -30,54 +31,57 @@ const RegularTheme = ({ data, packages }) => {
     };
 
     return (
-        <Section>
-            <div className="searchContainer">
-                <div className="container">
-                    <div className="left">
-                        <div className="box">
-                            <label htmlFor="">Starting From</label>
-                            <input type="text" name="starting" value={state.starting} onChange={(e) => handleChange(e)} disabled />
+        <>
+            <Section>
+                <div className="searchContainer">
+                    <div className="container">
+                        <div className="left">
+                            <div className="box">
+                                <label htmlFor="">Starting From</label>
+                                <input type="text" name="starting" value={state.starting} onChange={(e) => handleChange(e)} disabled />
+                            </div>
+                            <div className="box">
+                                <label htmlFor="">Going to</label>
+                                <input type="text" name="destination" value={state.destination} disabled />
+                            </div>
+                            <div className="box">
+                                <label htmlFor="">Starting date</label>
+                                <input type="text" placeholder="Select" disabled />
+                            </div>
+                            <button>Search</button>
                         </div>
-                        <div className="box">
-                            <label htmlFor="">Going to</label>
-                            <input type="text" name="destination" value={state.destination} disabled />
+                        <div className="right">
+                            <GridViewIcon style={{ fontSize: "2.5rem", fontStyle: "italic" }} />
+                            Explore
                         </div>
-                        <div className="box">
-                            <label htmlFor="">Starting date</label>
-                            <input type="text" placeholder="Select" disabled />
-                        </div>
-                        <button>Search</button>
-                    </div>
-                    <div className="right">
-                        <GridViewIcon style={{ fontSize: "2.5rem", fontStyle: "italic" }} />
-                        Explore
-                    </div>
-                </div>
-            </div>
-            <div className="proImage">
-                <img src={`http://localhost:7800/${data?.theme?.image}`} alt="" />
-                <div className="container">
-                    <h1>{data?.theme?.name}</h1>
-                    <div className="totalPackages">
-                        for All ({packages ? packages.length : 0})
                     </div>
                 </div>
-                <p>{data?.theme?.description}</p>
-            </div>
-            <div style={{ margin: "0 15rem", width: "calc(100% - 30rem)" }}>
-                <Swiper modules={[Virtual]} slidesPerView={3} virtual>
-                    {
-                        packages?.map((singlePackage) => {
-                            return (
-                                <SwiperSlide key={singlePackage._id}>
-                                    <SinglePackage singlePackage={singlePackage}/>
-                                </SwiperSlide>
-                            )
-                        })
-                    }
-                </Swiper>
-            </div>
-        </Section>
+                <div className="proImage">
+                    <img src={`http://localhost:7800/${data?.theme?.image}`} alt="" />
+                    <div className="container">
+                        <h1>{data?.theme?.name}</h1>
+                        <div className="totalPackages">
+                            for All ({packages ? packages.length : 0})
+                        </div>
+                    </div>
+                    <p>{data?.theme?.description}</p>
+                </div>
+                <div style={{ margin: "0 3.75rem", width: "calc(100% - 7rem)" }}>
+                    <Swiper modules={[Virtual]} slidesPerView={4} virtual>
+                        {
+                            packages?.map((singlePackage) => {
+                                return (
+                                    <SwiperSlide key={singlePackage._id}>
+                                        <SinglePackage singlePackage={singlePackage} />
+                                    </SwiperSlide>
+                                )
+                            })
+                        }
+                    </Swiper>
+                </div>
+            </Section>
+            <Footer />
+        </>
     );
 };
 
@@ -85,14 +89,15 @@ export default RegularTheme;
 
 const Section = styled.section`
   display: flex;
-  height: 145vh;
-  background-color: var(--bgLightSkin);
+  height: max-content;
+  background-color: white;
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
   overflow: hidden;
   /* gap: var(--r2); */
   width: 100%;
+  margin-bottom: 2rem;
   .searchContainer{
     height: 10vh;
     width: 100%;
