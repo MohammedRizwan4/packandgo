@@ -20,6 +20,7 @@ const City = () => {
     console.log(data?.packages);
 
     const image = data?.packages?.filter((data) => data.location.city == name);
+    console.log(image);
 
     const { data1 } = useFetchUniqueCityQuery();
     console.log(data1);
@@ -54,7 +55,7 @@ const City = () => {
                 </div>
             </div>
             <div className="proImage">
-                <img src={`http://localhost:7800/${image[0].images[0]}`} alt="" />
+                { image && <img src={`http://localhost:7800/${image[0]?.images[0]}`} alt="" />}
                 <div className="container">
                     <h1>{name}</h1>
                     <div className="totalPackages">

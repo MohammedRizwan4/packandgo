@@ -8,12 +8,14 @@ import { useAuthLoginMutation } from "../store/services/authService";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
-import { setSuccess } from "../store/reducers/globalReducer";
+import { closeLogin, setSuccess } from "../store/reducers/globalReducer";
 import { setUserToken } from "../store/reducers/authReducer";
 
 // min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit.
 
 const Login = ({ loginOpen, setLoginOpen }) => {
+
+    const { register, login } = useSelector(state => state.globalReducer);
 
     const basicSchema = yup.object().shape({
         email: yup
@@ -29,6 +31,7 @@ const Login = ({ loginOpen, setLoginOpen }) => {
 
     const onSubmit = async (values, actions) => {
         loginData(values);
+        dispatch(closeLogin());
         // actions.resetForm();
     };
 
@@ -67,17 +70,12 @@ const Login = ({ loginOpen, setLoginOpen }) => {
     }, [response1?.isError]);
 
     return <>
-        <Toaster
-            toastOptions={{ style: { fontSize: "8px" } }}
-            position="top-center"
-            reverseOrder={true}
-        />
         <RegComponent>
             <div className="closeIcon">
                 <div className="title">Log In</div>
                 <HighlightOffIcon
                     className="icon"
-                    onClick={() => setLoginOpen(false)}
+                    onClick={() => dispatch(closeLogin())}
                 >
                     close
                 </HighlightOffIcon>
@@ -86,7 +84,7 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                 <form
                     className="inputs"
                     onSubmit={handleSubmit}
-                    // autoComplete="off"
+                // autoComplete="off"
                 >
                     <div className="input">
                         <label htmlFor="email">Email</label>

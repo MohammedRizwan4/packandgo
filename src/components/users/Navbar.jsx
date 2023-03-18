@@ -23,6 +23,19 @@ import Register from "../Register";
 import Login from "../Login";
 import { logout } from "../../store/reducers/authReducer";
 import { useFetchAllThemesQuery } from "../../store/services/themeService";
+import { closeLogin, closeRegister, setLogin, setRegister } from "../../store/reducers/globalReducer";
+
+
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import PersonAdd from '@mui/icons-material/PersonAdd';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
 
 const style = {
     position: 'absolute',
@@ -48,28 +61,41 @@ const style1 = {
 
 const Navbar = () => {
 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const { register, login } = useSelector(state => state.globalReducer);
+    console.log(register, login);
+
     const { data, isFetching } = useFetchAllThemesQuery();
     console.log(data);
 
-    const [open, setOpen] = useState(false);
-    const [loginOpen, setLoginOpen] = useState(false);
     const handleOpen = () => {
-        setOpen(true);
-        setLoginOpen(false);
+        dispatch(setRegister())
+        dispatch(closeLogin())
     }
+
     const handleLoginOpen = () => {
-        setLoginOpen(true);
-        setOpen(false)
+        dispatch(setLogin());
     }
-    const handleLoginClose = () => setLoginOpen(false);
-    const handleClose = () => setOpen(false);
+
+    const handleLoginClose = () => {
+        dispatch(closeLogin());
+    }
+
+    const handleClosed = () => closeRegister();
 
     const [openRegister, setOpenRegister] = useState(false);
     const { userToken, user } = useSelector((state) => state.authReducer);
 
     let token;
     const dispatch = useDispatch();
-
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -95,11 +121,11 @@ const Navbar = () => {
     return (
         <div className="mainNavbar">
             <Nav>
-                {/* <Toaster
+                <Toaster
                     toastOptions={{ style: { fontSize: "1.5rem" } }}
                     position="top-center"
                     reverseOrder={true}
-                /> */}
+                />
                 <div className="left">
                     <div className="logo">PACK&GO</div>
                 </div>
@@ -142,13 +168,48 @@ const Navbar = () => {
                         </ul>
                     </div>
                     {userToken ? (
-                        <div className="buttons"><button onClick={adminLogout}>LOGOUT</button></div>
+                        <div className="buttons">
+                            <Button
+                                id="fade-button"
+                                aria-controls={open ? 'fade-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleClick}
+                                style={{
+                                    backgroundColor: "var(--bgYellow)", '&:hover': {
+                                        color: "black"
+                                    }
+                                }}
+                            >
+                                Dashboard
+                            </Button>
+                            <Menu
+                                id="fade-menu"
+                                MenuListProps={{
+                                    'aria-labelledby': 'fade-button',
+                                }}
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                TransitionComponent={Fade}
+                                style={{ marginTop: "1rem" }}
+                            >
+                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>Profile</MenuItem>
+                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>My account</MenuItem>
+                                <Link to="/liked"> <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>Liked</MenuItem></Link>
+                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>My Bookings</MenuItem>
+                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={() => {
+                                    handleClose();
+                                    adminLogout();
+                                }}>Logout</MenuItem>
+                            </Menu>
+                        </div>
                     ) : (
                         <div className="buttons">
-                            <button onClick={handleOpen}>
+                            <button style={{ backgroundColor: "var(--bgYellow)" }} onClick={handleOpen}>
                                 REGISTER
                             </button>
-                            <button onClick={handleLoginOpen}>
+                            <button style={{ backgroundColor: "var(--bgYellow)" }} onClick={handleLoginOpen}>
                                 LOGIN
                             </button>
                         </div>
@@ -207,41 +268,32 @@ const Navbar = () => {
                         </ul>
                     </div>
                 )}
-                {/* <Register
-                    openRegister={openRegister}
-                    setOpenRegister={() => setOpenRegister(!openRegister)}
-                    setOpenLogin={() => setOpenLogin(true)}
-                />
-                <Login
-                    openLogin={openLogin}
-                    setOpenLogin={() => setOpenLogin(!openLogin)}
-                /> */}
             </Nav>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={open}
-                onClose={handleClose}
+                open={register}
+                onClose={handleClosed}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
                     timeout: 500,
                 }}
             >
-                <Fade in={open}>
+                <Fade in={register}>
                     <Box sx={style} style={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center"
                     }}>
-                        <Register open={open} setOpen={setOpen} />
+                        <Register />
                     </Box>
                 </Fade>
             </Modal>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={loginOpen}
+                open={login}
                 onClose={handleLoginClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
@@ -249,18 +301,13 @@ const Navbar = () => {
                     timeout: 500,
                 }}
             >
-                <Fade in={loginOpen}>
+                <Fade in={login}>
                     <Box sx={style1} style={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center"
                     }}>
-                        <Toaster
-                            toastOptions={{ style: { fontSize: "1.5rem" } }}
-                            position="top-center"
-                            reverseOrder={true}
-                        />
-                        <Login loginOpen={loginOpen} setLoginOpen={setLoginOpen} />
+                        <Login />
                     </Box>
                 </Fade>
             </Modal>
@@ -503,7 +550,7 @@ const Nav = styled.nav`
         font-weight: 600;
         color: var(--bgWhite);
         cursor: pointer;
-        background-color: var(--bgYellow);
+        background-color: var(--bgDarkBlue);
         border: none;
         border-radius: var(--r-75);
         &:hover {

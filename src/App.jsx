@@ -21,6 +21,8 @@ import CreateTheme from "./scenes/admin/adminTheme/AddTheme/CreateTheme";
 import AdminEditPackage from "./scenes/admin/adminPackages/EditPackages/AdminEditPackage";
 import SubTheme from "./scenes/Themes/SubTheme";
 import City from "./scenes/city/City";
+import LikePackages from "./scenes/liked/LikePackages";
+import UserPrivateRoute from "./scenes/routes/UserPrivateRoute";
 
 const App = () => {
 
@@ -62,6 +64,7 @@ const App = () => {
                 <Route path="/theme/:id" element={<SubTheme />} />
                 <Route path="/city/:name" element={<City />} />
                 <Route path="/package/:id" element={<Package />} />
+                <Route path="/liked" element={<UserPrivateRoute><LikePackages /></UserPrivateRoute>} />
             </Routes>
         </BrowserRouter>
     );

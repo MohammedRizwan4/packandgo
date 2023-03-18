@@ -7,7 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import "./PackageDetail.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createPortal } from "react-dom";
-import { setIsPackagePhoto } from "../../store/reducers/toggleReducer";
+import { setIsLogin, setIsPackagePhoto } from "../../store/reducers/toggleReducer";
 import Activity from "./Activity/Activity";
 import DayPlan from "./DayPlan/DayPlan";
 import location from "./location.jpg";
@@ -26,16 +26,30 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import TimeToLeaveIcon from '@mui/icons-material/TimeToLeave';
+import { useUserDisLikePackageMutation, useUserLikePackageMutation } from "../../store/services/authService";
+import { useGetSingleUserQuery } from "../../store/services/adminUserService";
+import { setLogin } from "../../store/reducers/globalReducer";
 
 const PackageDetail = ({ data }) => {
 
+    const { id: packId } = useParams();
+    const { user } = useSelector(state => state.authReducer);
+
+    const { data: userData, isFetching } = useGetSingleUserQuery(user?.id);
+    const [like, setLike] = useState(false);
+
+    useEffect(() => {
+        setLike(userData?.user[0]?.likes?.includes(packId))
+    }, [userData])
+
+    const [likePackage, response] = useUserLikePackageMutation();
+    const [dislikePackage, response1] = useUserDisLikePackageMutation();
+
     const searchParams = new URLSearchParams(useLocation().search);
     const myParam = searchParams.get('myParams');
-    console.log(myParam);
     const days = myParam?.slice(-2, -1);
-    console.log(days);
 
     const singleDetail = data.details.find(detail => detail.duration === myParam);
 
@@ -47,7 +61,8 @@ const PackageDetail = ({ data }) => {
 
     const [dayPlan, setDayPlan] = useState(0);
 
-    const [like, setLike] = useState(false);
+    console.log("hellllooooooooooooooooooo", userData?.user[0]?.likes?.includes(packId));
+    console.log(like);
     const { isPackagePhoto } = useSelector((state) => state.toggleReducer);
     const dispatch = useDispatch();
 
@@ -67,10 +82,6 @@ const PackageDetail = ({ data }) => {
     const [menu, setMenu] = useState(1);
 
     const myArray = Array.from({ length: parseInt(days) }, (_, index) => index + 1);
-    console.log(myArray); // [1, 2, 3, 4, 5, 6]
-
-    console.log();
-
 
     return createPortal(
         <Section
@@ -105,11 +116,25 @@ const PackageDetail = ({ data }) => {
                                 ))}
                             </div>
                             {like ? (
-                                <FavoriteIcon onClick={() => setLike(!like)} className="icon" />
+                                <FavoriteIcon onClick={() => {
+                                    const id = user.id;
+                                    dislikePackage({ id, packId });
+                                    setLike(!like);
+                                }
+                                } className="icon" />
                             ) : (
                                 <FavoriteBorderIcon
                                     className="icon"
-                                    onClick={() => setLike(!like)}
+                                    onClick={() => {
+                                        if (user) {
+                                            const id = user.id;
+                                            likePackage({ id, packId });
+                                            setLike(!like);
+                                        }
+                                        else {
+                                            dispatch(setLogin())
+                                        }
+                                    }}
                                 />
                             )}
                             <ShareIcon className="icon" />

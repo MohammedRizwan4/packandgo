@@ -55,11 +55,30 @@ const authService = createApi({
                         body: data
                     }
                 }
+            }),
+            userLikePackage: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: '/like/package',
+                        method: "POST",
+                        body: data
+                    }
+                }
+            }),
+            userDisLikePackage: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: '/dislike/package',
+                        method: "POST",
+                        body: data
+                    }
+                }
             })
         }
     }
 })
 
-export const { useAuthLoginMutation, useAuthRegisterMutation, useAdminAuthMutation } = authService;
+export const { useUserDisLikePackageMutation, useUserLikePackageMutation, useAuthLoginMutation, useAuthRegisterMutation, useAdminAuthMutation } = authService;
 
 export default authService;
+

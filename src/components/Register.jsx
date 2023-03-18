@@ -6,13 +6,13 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setSuccess } from "../store/reducers/globalReducer";
+import { closeLogin, closeRegister, setLogin, setSuccess } from "../store/reducers/globalReducer";
 import { useAuthRegisterMutation } from "../store/services/authService";
 import toast, { Toaster } from "react-hot-toast";
 import { setUserToken } from "../store/reducers/authReducer";
 
-const Register = ({ open, setOpen }) => {
-    const { isRegister } = useSelector((state) => state.toggleReducer);
+const Register = () => {
+    const { register, login } = useSelector(state => state.globalReducer);
 
     const [registerData, response] = useAuthRegisterMutation();
     console.log(response);
@@ -46,7 +46,8 @@ const Register = ({ open, setOpen }) => {
         // registerData(values)
         actions.resetForm();
         // response?.isSuccess ? navigate("/login") : navigate("/register");
-        setOpen(false);
+        dispatch(closeRegister());
+        dispatch(setLogin());
     };
 
     const {
@@ -106,7 +107,7 @@ const Register = ({ open, setOpen }) => {
         <RegComponent>
             <div className="closeIcon">
                 <div className="title">Register</div>
-                <HighlightOffIcon className="icon" onClick={() => setOpen(false)}>
+                <HighlightOffIcon className="icon" onClick={() => dispatch(closeRegister())}>
                     close
                 </HighlightOffIcon>
             </div>

@@ -12,50 +12,16 @@ import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import HikingIcon from '@mui/icons-material/Hiking';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import GridViewIcon from '@mui/icons-material/GridView';
 import SinglePackage from "./SinglePackage";
 import Footer from "../../components/users/Footer";
+import SearchBar from "../../components/users/SearchBar";
 
 const RegularTheme = ({ data, packages }) => {
-
-    const [state, setState] = useState({
-        starting: packages ? packages[1]?.starting_point : "",
-        destination: packages ? packages[1]?.ending_point : ""
-    })
-
-    const handleChange = e => {
-        setState(prevState => ({
-            ...prevState,
-            [e.target.name]: e.target.value
-        }));
-    };
 
     return (
         <>
             <Section>
-                <div className="searchContainer">
-                    <div className="container">
-                        <div className="left">
-                            <div className="box">
-                                <label htmlFor="">Starting From</label>
-                                <input type="text" name="starting" value={state.starting} onChange={(e) => handleChange(e)} disabled />
-                            </div>
-                            <div className="box">
-                                <label htmlFor="">Going to</label>
-                                <input type="text" name="destination" value={state.destination} disabled />
-                            </div>
-                            <div className="box">
-                                <label htmlFor="">Starting date</label>
-                                <input type="text" placeholder="Select" disabled />
-                            </div>
-                            <button>Search</button>
-                        </div>
-                        <div className="right">
-                            <GridViewIcon style={{ fontSize: "2.5rem", fontStyle: "italic" }} />
-                            Explore
-                        </div>
-                    </div>
-                </div>
+                <SearchBar packages={packages}/>
                 <div className="proImage">
                     <img src={`http://localhost:7800/${data?.theme?.image}`} alt="" />
                     <div className="container">
@@ -98,71 +64,6 @@ const Section = styled.section`
   /* gap: var(--r2); */
   width: 100%;
   margin-bottom: 2rem;
-  .searchContainer{
-    height: 10vh;
-    width: 100%;
-    background-color: rgb(10,34,61);
-    position: sticky;
-    .container{
-        max-width: 80%;
-        height: 10vh;
-        margin: auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .left{
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 1rem;
-            .box{
-                border-radius: .4rem;
-                background-color: rgba(255,255,255,.1);
-                height: 100%;
-                width: max-content;
-                width: 20rem;
-                padding: .3rem 1rem;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                justify-content: flex-start;
-                gap: .3rem;
-                label{
-                    color: rgb(0,140,255);
-                    font-size: 1.2rem;
-                    text-transform: uppercase;
-                }
-                input{
-                    border: none;
-                    outline: none;
-                    padding: .3rem .3rem;
-                    font-size: 1.6rem;
-                    font-weight: 500;
-                    background-color: rgba(255,255,255,0);
-                    color: white;
-                }
-            }
-            button{
-                font-size: 2rem;
-                padding: 1rem 5rem;
-                border-radius: 3rem;
-                font-weight: 900;
-                cursor: pointer;
-                text-transform: uppercase;
-                color: white;
-                background-image: linear-gradient(93deg,#53b2fe,#065af3),linear-gradient(93deg,#53b2fe,#065af3);
-            }
-        }
-        .right{
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            color: white;
-            cursor: pointer;
-        }
-    }
-  }
   .proImage{
     width: 100%;
     height: 35vh;
