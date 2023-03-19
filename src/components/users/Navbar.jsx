@@ -25,7 +25,6 @@ import { logout } from "../../store/reducers/authReducer";
 import { useFetchAllThemesQuery } from "../../store/services/themeService";
 import { closeLogin, closeRegister, setLogin, setRegister } from "../../store/reducers/globalReducer";
 
-
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -46,6 +45,7 @@ const style = {
     width: "80%",
     bgcolor: 'background.paper',
     boxShadow: 24,
+    outline: "none"
 };
 
 const style1 = {
@@ -56,12 +56,14 @@ const style1 = {
     height: "50%",
     width: "80%",
     bgcolor: 'background.paper',
-    boxShadow: 24,
+    outline: "none",
+    boxShadow: 24
 };
 
 const Navbar = () => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const navigate = useNavigate();
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -116,6 +118,7 @@ const Navbar = () => {
             },
         });
         dispatch(logout("login-token"));
+        navigate("/");
     }
 
     return (

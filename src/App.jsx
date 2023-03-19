@@ -23,6 +23,8 @@ import SubTheme from "./scenes/Themes/SubTheme";
 import City from "./scenes/city/City";
 import LikePackages from "./scenes/liked/LikePackages";
 import UserPrivateRoute from "./scenes/routes/UserPrivateRoute";
+import Booking from "./scenes/booking/Booking";
+import MyBookings from "./scenes/mybookings/MyBookings";
 
 const App = () => {
 
@@ -65,6 +67,8 @@ const App = () => {
                 <Route path="/city/:name" element={<City />} />
                 <Route path="/package/:id" element={<Package />} />
                 <Route path="/liked" element={<UserPrivateRoute><LikePackages /></UserPrivateRoute>} />
+                <Route path="/booking/:id" element={<UserPrivateRoute><Booking /></UserPrivateRoute>} />
+                <Route path="/mybookings" element={<UserPrivateRoute><MyBookings /></UserPrivateRoute>} />
             </Routes>
         </BrowserRouter>
     );

@@ -26,16 +26,19 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import { useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import TimeToLeaveIcon from '@mui/icons-material/TimeToLeave';
 import { useUserDisLikePackageMutation, useUserLikePackageMutation } from "../../store/services/authService";
 import { useGetSingleUserQuery } from "../../store/services/adminUserService";
-import { setLogin } from "../../store/reducers/globalReducer";
+import { addTravellers, decreaseAdult, decreaseChildren, decreaseRoom, setAdult, setChildren, setLogin, setRoom, updateTraveller } from "../../store/reducers/globalReducer";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const PackageDetail = ({ data }) => {
 
     const { id: packId } = useParams();
     const { user } = useSelector(state => state.authReducer);
+    const { adult, children, room } = useSelector(state => state.globalReducer);
+    const { travellers } = useSelector(state => state.globalReducer);
 
     const { data: userData, isFetching } = useGetSingleUserQuery(user?.id);
     const [like, setLike] = useState(false);
@@ -187,580 +190,644 @@ const PackageDetail = ({ data }) => {
                         </div>
                     </div>
                 </div>
-                <div className="restDiv" id="menu-bar">
-                    {options === 1 && (
-                        <div className="itinerary">
-                            <div className="menu">
-                                <div className="item" onClick={() => setItineraryOptions(1)}>
-                                    <div
-                                        className="roll"
-                                        style={{
-                                            backgroundColor:
-                                                itineraryOptions === 1 ? "white" : "#ecf7ff",
-                                            border:
-                                                itineraryOptions === 1 ? "1px solid #35a8ff" : "none",
-                                            color: itineraryOptions === 1 ? "#0a8cff" : "black",
-                                            fontWeight: itineraryOptions === 1 ? "500" : "100",
-                                        }}
-                                    >
-                                        <span
-                                            style={{ fontWeight: itineraryOptions ? "500" : "100" }}
-                                        >
-                                            {parseInt(myParam?.slice(0, 1)) + 1}
-                                        </span>
-                                        <h1
+                <div className="restWholeDiv">
+                    <div className="restDiv" id="menu-bar">
+                        {options === 1 && (
+                            <div className="itinerary">
+                                <div className="menu">
+                                    <div className="item" onClick={() => setItineraryOptions(1)}>
+                                        <div
+                                            className="roll"
                                             style={{
-                                                fontWeight: itineraryOptions === 1 ? "900" : "100",
+                                                backgroundColor:
+                                                    itineraryOptions === 1 ? "white" : "#ecf7ff",
+                                                border:
+                                                    itineraryOptions === 1 ? "1px solid #35a8ff" : "none",
+                                                color: itineraryOptions === 1 ? "#0a8cff" : "black",
+                                                fontWeight: itineraryOptions === 1 ? "500" : "100",
                                             }}
                                         >
-                                            day plan
-                                        </h1>
+                                            <span
+                                                style={{ fontWeight: itineraryOptions ? "500" : "100" }}
+                                            >
+                                                {parseInt(myParam?.slice(0, 1)) + 1}
+                                            </span>
+                                            <h1
+                                                style={{
+                                                    fontWeight: itineraryOptions === 1 ? "900" : "100",
+                                                }}
+                                            >
+                                                day plan
+                                            </h1>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="item" onClick={() => setItineraryOptions(2)}>
-                                    <div
-                                        className="roll"
-                                        style={{
-                                            backgroundColor:
-                                                itineraryOptions === 2 ? "white" : "#ecf7ff",
-                                            border:
-                                                itineraryOptions === 2 ? "1px solid #35a8ff" : "none",
-                                            color: itineraryOptions === 2 ? "#0a8cff" : "black",
-                                            fontWeight: itineraryOptions === 2 ? "500" : "100",
-                                        }}
-                                    >
-                                        <span
-                                            style={{ fontWeight: itineraryOptions ? "500" : "100" }}
-                                        >
-                                            1
-                                        </span>
-                                        <h1
+                                    <div className="item" onClick={() => setItineraryOptions(2)}>
+                                        <div
+                                            className="roll"
                                             style={{
-                                                fontWeight: itineraryOptions === 2 ? "900" : "100",
+                                                backgroundColor:
+                                                    itineraryOptions === 2 ? "white" : "#ecf7ff",
+                                                border:
+                                                    itineraryOptions === 2 ? "1px solid #35a8ff" : "none",
+                                                color: itineraryOptions === 2 ? "#0a8cff" : "black",
+                                                fontWeight: itineraryOptions === 2 ? "500" : "100",
                                             }}
                                         >
-                                            Hotel
-                                        </h1>
+                                            <span
+                                                style={{ fontWeight: itineraryOptions ? "500" : "100" }}
+                                            >
+                                                1
+                                            </span>
+                                            <h1
+                                                style={{
+                                                    fontWeight: itineraryOptions === 2 ? "900" : "100",
+                                                }}
+                                            >
+                                                Hotel
+                                            </h1>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="item" onClick={() => setItineraryOptions(3)}>
-                                    <div
-                                        className="roll"
-                                        style={{
-                                            backgroundColor:
-                                                itineraryOptions === 3 ? "white" : "#ecf7ff",
-                                            border:
-                                                itineraryOptions === 3 ? "1px solid #35a8ff" : "none",
-                                            color: itineraryOptions === 3 ? "#0a8cff" : "black",
-                                            fontWeight: itineraryOptions === 3 ? "500" : "100",
-                                        }}
-                                    >
-                                        <span
-                                            style={{ fontWeight: itineraryOptions ? "500" : "100" }}
-                                        >
-                                            3
-                                        </span>
-                                        <h1
+                                    <div className="item" onClick={() => setItineraryOptions(3)}>
+                                        <div
+                                            className="roll"
                                             style={{
-                                                fontWeight: itineraryOptions === 3 ? "900" : "100",
+                                                backgroundColor:
+                                                    itineraryOptions === 3 ? "white" : "#ecf7ff",
+                                                border:
+                                                    itineraryOptions === 3 ? "1px solid #35a8ff" : "none",
+                                                color: itineraryOptions === 3 ? "#0a8cff" : "black",
+                                                fontWeight: itineraryOptions === 3 ? "500" : "100",
                                             }}
                                         >
-                                            Activity
-                                        </h1>
+                                            <span
+                                                style={{ fontWeight: itineraryOptions ? "500" : "100" }}
+                                            >
+                                                3
+                                            </span>
+                                            <h1
+                                                style={{
+                                                    fontWeight: itineraryOptions === 3 ? "900" : "100",
+                                                }}
+                                            >
+                                                Activity
+                                            </h1>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="item" onClick={() => setItineraryOptions(4)}>
-                                    <div className="roll" style={{ backgroundColor: itineraryOptions === 4 ? "white" : "#ecf7ff", border: itineraryOptions === 4 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 4 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 4 ? "500" : "100" }}>
-                                        <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>2</span>
-                                        <h1 style={{ fontWeight: itineraryOptions === 4 ? "900" : "100" }}>Transfer</h1>
+                                    <div className="item" onClick={() => setItineraryOptions(4)}>
+                                        <div className="roll" style={{ backgroundColor: itineraryOptions === 4 ? "white" : "#ecf7ff", border: itineraryOptions === 4 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 4 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 4 ? "500" : "100" }}>
+                                            <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>2</span>
+                                            <h1 style={{ fontWeight: itineraryOptions === 4 ? "900" : "100" }}>Transfer</h1>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="item" onClick={() => setItineraryOptions(5)}>
-                                    <div className="roll" style={{ backgroundColor: itineraryOptions === 5 ? "white" : "#ecf7ff", border: itineraryOptions === 5 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 5 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 5 ? "500" : "100" }}>
-                                        <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>2</span>
-                                        <h1 style={{ fontWeight: itineraryOptions === 5 ? "900" : "100" }}>Flights</h1>
+                                    <div className="item" onClick={() => setItineraryOptions(5)}>
+                                        <div className="roll" style={{ backgroundColor: itineraryOptions === 5 ? "white" : "#ecf7ff", border: itineraryOptions === 5 ? "1px solid #35a8ff" : "none", color: itineraryOptions === 5 ? "#0a8cff" : "black", fontWeight: itineraryOptions === 5 ? "500" : "100" }}>
+                                            <span style={{ fontWeight: itineraryOptions ? "500" : "100" }}>2</span>
+                                            <h1 style={{ fontWeight: itineraryOptions === 5 ? "900" : "100" }}>Flights</h1>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
-                </div>
-                {options === 1 && <div className="dayPlanDetails">
-                    <div className="left">
-                        <h1>Day Plan</h1>
-                        <div className="box">
-                            {
-                                myArray.map((data1, index) => {
-                                    const date = new Date(data?.date);
-                                    date?.setDate(date.getDate() + index);
-                                    return (
+                        )}
+                        {options === 1 && <div className="dayPlanDetails">
+                            <div className="left">
+                                <h1>Day Plan</h1>
+                                <div className="box">
+                                    {
+                                        myArray.map((data1, index) => {
+                                            const date = new Date(data?.date);
+                                            date?.setDate(date.getDate() + index);
+                                            return (
+                                                <div className="item">
+                                                    <ul>
+                                                        <li
+                                                            onClick={() => setDayPlan(index)}
+                                                            style={{
+                                                                backgroundColor:
+                                                                    dayPlan === index ? "rgb(74, 74, 74)" : "white",
+                                                                color: dayPlan === index ? "white" : "rgb(74, 74, 74)",
+                                                            }}
+                                                        >
+                                                            {date.toDateString().slice(0, 10)}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </div>
+                            <div className="right">
+                                {itineraryOptions === 1 && <><div className="title">
+                                    <div className="left1">
+                                        <h1>Day 1 - Arrival in {data.starting_point} - {singleDetail?.flights[0]?.airport}</h1>
+                                    </div>
+                                    <div className="right1">
+                                        <div className="item">INCLUDED</div>
                                         <div className="item">
-                                            <ul>
-                                                <li
-                                                    onClick={() => setDayPlan(index)}
-                                                    style={{
-                                                        backgroundColor:
-                                                            dayPlan === index ? "rgb(74, 74, 74)" : "white",
-                                                        color: dayPlan === index ? "white" : "rgb(74, 74, 74)",
-                                                    }}
-                                                >
-                                                    {date.toDateString().slice(0, 10)}
-                                                </li>
-                                            </ul>
+                                            <FlightIcon />
+                                            <span>2 Flight</span>
                                         </div>
-                                    )
-                                })
-                            }
+                                        <h2>|</h2>
+                                        <div className="item">
+                                            <HouseSidingIcon />
+                                            <span>1 Hotel</span>
+                                        </div>
+                                        <h2>|</h2>
+                                        <div className="item">
+                                            <TimeToLeaveIcon />
+                                            <span>2 Transfer</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div className="car2">
+                                        <div className="title2">
+                                            <div className="east2">
+                                                <h1>Flight from {data.starting_point} to {data.ending_point} - {singleDetail?.flights[0].airport} 02h 45m</h1>
+                                            </div>
+                                            <div className="west2">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content2">
+                                            <div className="left2">
+                                                <div className="image">
+                                                    <img src={img3} alt="" />
+                                                    <label htmlFor="">{singleDetail?.flights[0].flightno}</label>
+                                                </div>
+                                                <div className="contentLeft">
+                                                    <label htmlFor="">{singleDetail?.flights[0].startTime}</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>New Delhi</h5>
+                                                </div>
+                                                <div className="line"></div>
+                                                <div className="contentRight">
+                                                    <label htmlFor="">{singleDetail?.flights[0].endTime}</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>Goa - Dabolin Airport</h5>
+                                                </div>
+                                            </div>
+                                            <div className="right2">
+                                                <h1>Private Transfer</h1>
+                                                <div className="downContent">
+                                                    <div className="item">
+                                                        <ShoppingBagIcon className="icon" />
+                                                        <span>Cabin: </span>
+                                                        <h4>7 Kgs ( 1 peice only )</h4>
+                                                    </div>
+                                                    <div className="item">
+                                                        <LuggageIcon className="icon" />
+                                                        <span>Check In: </span>
+                                                        <h4>15 Kg</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className="car">
+                                        <div className="title">
+                                            <div className="east">
+                                                <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                            </div>
+                                            <div className="west">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content">
+                                            <div className="left">
+                                                <img src={img4} alt="" />
+                                            </div>
+                                            <div className="right">
+                                                <h1>Private Transfer</h1>
+                                                <p>
+                                                    Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className="car1">
+                                        <div className="title">
+                                            <div className="east">
+                                                <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
+                                            </div>
+                                            <div className="west">
+                                                <button>Change</button>
+                                            </div>
+                                        </div>
+                                        <div className="content1">
+                                            <div className="left">
+                                                <img src={img2} alt="" />
+                                            </div>
+                                            <div className="south">
+                                                <div className="label">Resort</div>
+                                                <h1>
+                                                    Evoke Lifestyle Candolim
+                                                </h1>
+                                                <h3>North Pattaya</h3>
+                                                <p>120 m from Pattaya Beach</p>
+                                                <div className="date">
+                                                    <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
+                                                    <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="endofday">
+                                        <div className="content">
+                                            <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                        </div>
+                                    </div>
+                                    <div className="title">
+                                        <div className="left1">
+                                            <h1>Day 2 - Arrival in Agra</h1>
+                                        </div>
+                                    </div>
+                                    <div className="daymeal">
+                                        <div className="east">
+                                            <RestaurantIcon className="icon" />
+                                            <span>Day Meals</span>
+                                        </div>
+                                        <div className="west">
+                                            {/* <CheckIcon className="icon"/> */}
+                                            <span>Breakfast: </span>
+                                            <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                        </div>
+                                    </div>
+                                    <div className="endofday">
+                                        <div className="content">
+                                            <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                        </div>
+                                    </div>
+                                    <div className="title">
+                                        <div className="left1">
+                                            <h1>Day 3 - Arrival in Agra</h1>
+                                        </div>
+                                    </div>
+                                    <div className="daymeal">
+                                        <div className="east">
+                                            <RestaurantIcon className="icon" />
+                                            <span>Day Meals</span>
+                                        </div>
+                                        <div className="west">
+                                            {/* <CheckIcon className="icon"/> */}
+                                            <span>Breakfast: </span>
+                                            <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                        </div>
+                                    </div>
+                                    <div className="endofday">
+                                        <div className="content">
+                                            <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                        </div>
+                                    </div>
+                                    <div className="title">
+                                        <div className="left1">
+                                            <h1>Day 4 - Arrival in Agra</h1>
+                                        </div>
+                                    </div>
+                                    <div className="daymeal">
+                                        <div className="east">
+                                            <RestaurantIcon className="icon" />
+                                            <span>Day Meals</span>
+                                        </div>
+                                        <div className="west">
+                                            {/* <CheckIcon className="icon"/> */}
+                                            <span>Breakfast: </span>
+                                            <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                        </div>
+                                    </div>
+                                    <div className="endofday">
+                                        <div className="content">
+                                            <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                        </div>
+                                    </div>
+                                    <div className="title">
+                                        <div className="left1">
+                                            <h1>Day 5 - Arrival in Agra</h1>
+                                        </div>
+                                        <div className="right1">
+                                            <div className="item">INCLUDED</div>
+                                            <div className="item">
+                                                <FlightIcon />
+                                                <span>1 Flight</span>
+                                            </div>
+                                            <h2>|</h2>
+                                            <div className="item">
+                                                <HouseSidingIcon />
+                                                <span>1 Hotel</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="daymeal">
+                                        <div className="east">
+                                            <RestaurantIcon className="icon" />
+                                            <span>Day Meals</span>
+                                        </div>
+                                        <div className="west">
+                                            {/* <CheckIcon className="icon"/> */}
+                                            <span>Breakfast: </span>
+                                            <p> Included at Evoke Lifestyle Candolim , Goa</p>
+                                        </div>
+                                    </div>
+                                    <div className="car">
+                                        <div className="title">
+                                            <div className="east">
+                                                <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                            </div>
+                                            <div className="west">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content">
+                                            <div className="left">
+                                                <img src={img1} alt="" />
+                                            </div>
+                                            <div className="right">
+                                                <h1>Private Transfer</h1>
+                                                <p>
+                                                    Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="car2">
+                                        <div className="title2">
+                                            <div className="east2">
+                                                <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                            </div>
+                                            <div className="west2">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content2">
+                                            <div className="left2">
+                                                <div className="image">
+                                                    <img src={img3} alt="" />
+                                                    <label htmlFor="">G8-286</label>
+                                                </div>
+                                                <div className="contentLeft">
+                                                    <label htmlFor="">10:45</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>New Delhi</h5>
+                                                </div>
+                                                <div className="line"></div>
+                                                <div className="contentRight">
+                                                    <label htmlFor="">13:30</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>Goa - Dabolin Airport</h5>
+                                                </div>
+                                            </div>
+                                            <div className="right2">
+                                                <h1>Private Transfer</h1>
+                                                <div className="downContent">
+                                                    <div className="item">
+                                                        <ShoppingBagIcon className="icon" />
+                                                        <span>Cabin: </span>
+                                                        <h4>7 Kgs ( 1 peice only )</h4>
+                                                    </div>
+                                                    <div className="item">
+                                                        <LuggageIcon className="icon" />
+                                                        <span>Check In: </span>
+                                                        <h4>15 Kg</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="endofday">
+                                        <div className="content">
+                                            <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
+                                        </div>
+                                    </div></>}
+                                {itineraryOptions === 2 && <>
+                                    <div className="car1">
+                                        <div className="title">
+                                            <div className="east">
+                                                <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
+                                            </div>
+                                            <div className="west">
+                                                <button>Change</button>
+                                            </div>
+                                        </div>
+                                        <div className="content1">
+                                            <div className="left">
+                                                <img src={img2} alt="" />
+                                            </div>
+                                            <div className="south">
+                                                <div className="label">Resort</div>
+                                                <h1>
+                                                    Evoke Lifestyle Candolim
+                                                </h1>
+                                                <h3>North Pattaya</h3>
+                                                <p>120 m from Pattaya Beach</p>
+                                                <div className="date">
+                                                    <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
+                                                    <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>}
+                                {itineraryOptions == 4 && <>
+                                    <div className="car">
+                                        <div className="title">
+                                            <div className="east">
+                                                <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                            </div>
+                                            <div className="west">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content">
+                                            <div className="left">
+                                                <img src={img4} alt="" />
+                                            </div>
+                                            <div className="right">
+                                                <h1>Private Transfer</h1>
+                                                <p>
+                                                    Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="car">
+                                        <div className="title">
+                                            <div className="east">
+                                                <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
+                                            </div>
+                                            <div className="west">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content">
+                                            <div className="left">
+                                                <img src={img1} alt="" />
+                                            </div>
+                                            <div className="right">
+                                                <h1>Private Transfer</h1>
+                                                <p>
+                                                    Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>}
+                                {itineraryOptions === 5 && <>
+                                    <div className="car2">
+                                        <div className="title2">
+                                            <div className="east2">
+                                                <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                            </div>
+                                            <div className="west2">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content2">
+                                            <div className="left2">
+                                                <div className="image">
+                                                    <img src={img3} alt="" />
+                                                    <label htmlFor="">G8-286</label>
+                                                </div>
+                                                <div className="contentLeft">
+                                                    <label htmlFor="">10:45</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>New Delhi</h5>
+                                                </div>
+                                                <div className="line"></div>
+                                                <div className="contentRight">
+                                                    <label htmlFor="">13:30</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>Goa - Dabolin Airport</h5>
+                                                </div>
+                                            </div>
+                                            <div className="right2">
+                                                <h1>Private Transfer</h1>
+                                                <div className="downContent">
+                                                    <div className="item">
+                                                        <ShoppingBagIcon className="icon" />
+                                                        <span>Cabin: </span>
+                                                        <h4>7 Kgs ( 1 peice only )</h4>
+                                                    </div>
+                                                    <div className="item">
+                                                        <LuggageIcon className="icon" />
+                                                        <span>Check In: </span>
+                                                        <h4>15 Kg</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="car2">
+                                        <div className="title2">
+                                            <div className="east2">
+                                                <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
+                                            </div>
+                                            <div className="west2">
+                                                <button>Remove</button>
+                                            </div>
+                                        </div>
+                                        <div className="content2">
+                                            <div className="left2">
+                                                <div className="image">
+                                                    <img src={img3} alt="" />
+                                                    <label htmlFor="">G8-286</label>
+                                                </div>
+                                                <div className="contentLeft">
+                                                    <label htmlFor="">10:45</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>New Delhi</h5>
+                                                </div>
+                                                <div className="line"></div>
+                                                <div className="contentRight">
+                                                    <label htmlFor="">13:30</label>
+                                                    <h4>Wed, 12 Apr</h4>
+                                                    <h5>Goa - Dabolin Airport</h5>
+                                                </div>
+                                            </div>
+                                            <div className="right2">
+                                                <h1>Private Transfer</h1>
+                                                <div className="downContent">
+                                                    <div className="item">
+                                                        <ShoppingBagIcon className="icon" />
+                                                        <span>Cabin: </span>
+                                                        <h4>7 Kgs ( 1 peice only )</h4>
+                                                    </div>
+                                                    <div className="item">
+                                                        <LuggageIcon className="icon" />
+                                                        <span>Check In: </span>
+                                                        <h4>15 Kg</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>}
+                            </div>
+                        </div>}
+                    </div>
+                    <div className="newWholeDiv">
+                        <div className="firstDiv">
+                            <div className="leftclass">
+                                <h5>$76,877</h5>
+                                <div className="merge">
+                                    <h4>$54,655</h4>
+                                    <h6>&nbsp;per person*</h6>
+                                </div>
+                                <h3>*Excluding Applicable taxes</h3>
+                            </div>
+                            <div className="rightclass">
+                                <div className="off">
+                                    30% OFF
+                                </div>
+                            </div>
+                        </div>
+                        <div className="secondDiv">
+                            <CalendarMonthIcon style={{ fontSize: "2rem", color: "rgb(74, 74, 74)" }} />
+                            <h4>16 Apr - 20 Apr</h4>
+                        </div>
+                        <div className="thirdDiv">
+                            <h2>Details</h2>
+                            <h3>Travellers</h3>
+                            <div className="travellerDiv">
+                                <h3>Adult</h3>
+                                <div className="right">
+                                    <div className="one" onClick={() => dispatch(decreaseAdult())}>-</div>
+                                    <div className="two">{adult}</div>
+                                    <div className="one" onClick={() => {
+                                        dispatch(setAdult())
+                                        dispatch(addTravellers())
+                                        }}>+</div>
+                                </div>
+                            </div>
+                            <div className="travellerDiv">
+                                <h3>Children</h3>
+                                <div className="right">
+                                    <div className="one" onClick={() => {
+                                        dispatch(decreaseChildren())
+                                    }}>-</div>
+                                    <div className="two">{children}</div>
+                                    <div className="one" onClick={() => {
+                                        dispatch(setChildren())
+                                        dispatch(addTravellers())
+                                        }}>+</div>
+                                </div>
+                            </div>
+                            <div className="travellerDiv">
+                                <h3>Room</h3>
+                                <div className="right">
+                                    <div className="one" onClick={() => dispatch(decreaseRoom())}>-</div>
+                                    <div className="two">{room}</div>
+                                    <div className="one" onClick={() => dispatch(setRoom())}>+</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="fourthDiv">
+                            <Link to={`/booking/${packId}`}>
+                                <button>Proceed to Book Online</button>
+                            </Link>
                         </div>
                     </div>
-                    <div className="right">
-                        {itineraryOptions === 1 && <><div className="title">
-                            <div className="left1">
-                                <h1>Day 1 - Arrival in {data.starting_point} - {singleDetail?.flights[0]?.airport}</h1>
-                            </div>
-                            <div className="right1">
-                                <div className="item">INCLUDED</div>
-                                <div className="item">
-                                    <FlightIcon />
-                                    <span>2 Flight</span>
-                                </div>
-                                <h2>|</h2>
-                                <div className="item">
-                                    <HouseSidingIcon />
-                                    <span>1 Hotel</span>
-                                </div>
-                                <h2>|</h2>
-                                <div className="item">
-                                    <TimeToLeaveIcon />
-                                    <span>2 Transfer</span>
-                                </div>
-                            </div>
-                        </div>
-                            <div className="car2">
-                                <div className="title2">
-                                    <div className="east2">
-                                        <h1>Flight from {data.starting_point} to {data.ending_point} - {singleDetail?.flights[0].airport} 02h 45m</h1>
-                                    </div>
-                                    <div className="west2">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content2">
-                                    <div className="left2">
-                                        <div className="image">
-                                            <img src={img3} alt="" />
-                                            <label htmlFor="">{singleDetail?.flights[0].flightno}</label>
-                                        </div>
-                                        <div className="contentLeft">
-                                            <label htmlFor="">{singleDetail?.flights[0].startTime}</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>New Delhi</h5>
-                                        </div>
-                                        <div className="line"></div>
-                                        <div className="contentRight">
-                                            <label htmlFor="">{singleDetail?.flights[0].endTime}</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>Goa - Dabolin Airport</h5>
-                                        </div>
-                                    </div>
-                                    <div className="right2">
-                                        <h1>Private Transfer</h1>
-                                        <div className="downContent">
-                                            <div className="item">
-                                                <ShoppingBagIcon className="icon" />
-                                                <span>Cabin: </span>
-                                                <h4>7 Kgs ( 1 peice only )</h4>
-                                            </div>
-                                            <div className="item">
-                                                <LuggageIcon className="icon" />
-                                                <span>Check In: </span>
-                                                <h4>15 Kg</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div className="car">
-                                <div className="title">
-                                    <div className="east">
-                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
-                                    </div>
-                                    <div className="west">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content">
-                                    <div className="left">
-                                        <img src={img4} alt="" />
-                                    </div>
-                                    <div className="right">
-                                        <h1>Private Transfer</h1>
-                                        <p>
-                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div className="car1">
-                                <div className="title">
-                                    <div className="east">
-                                        <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
-                                    </div>
-                                    <div className="west">
-                                        <button>Change</button>
-                                    </div>
-                                </div>
-                                <div className="content1">
-                                    <div className="left">
-                                        <img src={img2} alt="" />
-                                    </div>
-                                    <div className="south">
-                                        <div className="label">Resort</div>
-                                        <h1>
-                                            Evoke Lifestyle Candolim
-                                        </h1>
-                                        <h3>North Pattaya</h3>
-                                        <p>120 m from Pattaya Beach</p>
-                                        <div className="date">
-                                            <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
-                                            <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="endofday">
-                                <div className="content">
-                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
-                                </div>
-                            </div>
-                            <div className="title">
-                                <div className="left1">
-                                    <h1>Day 2 - Arrival in Agra</h1>
-                                </div>
-                            </div>
-                            <div className="daymeal">
-                                <div className="east">
-                                    <RestaurantIcon className="icon" />
-                                    <span>Day Meals</span>
-                                </div>
-                                <div className="west">
-                                    {/* <CheckIcon className="icon"/> */}
-                                    <span>Breakfast: </span>
-                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
-                                </div>
-                            </div>
-                            <div className="endofday">
-                                <div className="content">
-                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
-                                </div>
-                            </div>
-                            <div className="title">
-                                <div className="left1">
-                                    <h1>Day 3 - Arrival in Agra</h1>
-                                </div>
-                            </div>
-                            <div className="daymeal">
-                                <div className="east">
-                                    <RestaurantIcon className="icon" />
-                                    <span>Day Meals</span>
-                                </div>
-                                <div className="west">
-                                    {/* <CheckIcon className="icon"/> */}
-                                    <span>Breakfast: </span>
-                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
-                                </div>
-                            </div>
-                            <div className="endofday">
-                                <div className="content">
-                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
-                                </div>
-                            </div>
-                            <div className="title">
-                                <div className="left1">
-                                    <h1>Day 4 - Arrival in Agra</h1>
-                                </div>
-                            </div>
-                            <div className="daymeal">
-                                <div className="east">
-                                    <RestaurantIcon className="icon" />
-                                    <span>Day Meals</span>
-                                </div>
-                                <div className="west">
-                                    {/* <CheckIcon className="icon"/> */}
-                                    <span>Breakfast: </span>
-                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
-                                </div>
-                            </div>
-                            <div className="endofday">
-                                <div className="content">
-                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
-                                </div>
-                            </div>
-                            <div className="title">
-                                <div className="left1">
-                                    <h1>Day 5 - Arrival in Agra</h1>
-                                </div>
-                                <div className="right1">
-                                    <div className="item">INCLUDED</div>
-                                    <div className="item">
-                                        <FlightIcon />
-                                        <span>1 Flight</span>
-                                    </div>
-                                    <h2>|</h2>
-                                    <div className="item">
-                                        <HouseSidingIcon />
-                                        <span>1 Hotel</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="daymeal">
-                                <div className="east">
-                                    <RestaurantIcon className="icon" />
-                                    <span>Day Meals</span>
-                                </div>
-                                <div className="west">
-                                    {/* <CheckIcon className="icon"/> */}
-                                    <span>Breakfast: </span>
-                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
-                                </div>
-                            </div>
-                            <div className="car">
-                                <div className="title">
-                                    <div className="east">
-                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
-                                    </div>
-                                    <div className="west">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content">
-                                    <div className="left">
-                                        <img src={img1} alt="" />
-                                    </div>
-                                    <div className="right">
-                                        <h1>Private Transfer</h1>
-                                        <p>
-                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="car2">
-                                <div className="title2">
-                                    <div className="east2">
-                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
-                                    </div>
-                                    <div className="west2">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content2">
-                                    <div className="left2">
-                                        <div className="image">
-                                            <img src={img3} alt="" />
-                                            <label htmlFor="">G8-286</label>
-                                        </div>
-                                        <div className="contentLeft">
-                                            <label htmlFor="">10:45</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>New Delhi</h5>
-                                        </div>
-                                        <div className="line"></div>
-                                        <div className="contentRight">
-                                            <label htmlFor="">13:30</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>Goa - Dabolin Airport</h5>
-                                        </div>
-                                    </div>
-                                    <div className="right2">
-                                        <h1>Private Transfer</h1>
-                                        <div className="downContent">
-                                            <div className="item">
-                                                <ShoppingBagIcon className="icon" />
-                                                <span>Cabin: </span>
-                                                <h4>7 Kgs ( 1 peice only )</h4>
-                                            </div>
-                                            <div className="item">
-                                                <LuggageIcon className="icon" />
-                                                <span>Check In: </span>
-                                                <h4>15 Kg</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="endofday">
-                                <div className="content">
-                                    <span> End Of Day - &nbsp;</span> Spend time at Leisure or add an activity to your day
-                                </div>
-                            </div></>}
-                        {itineraryOptions === 2 && <>
-                            <div className="car1">
-                                <div className="title">
-                                    <div className="east">
-                                        <h1>Check-in to Hotel in North Pattaya @ 2 PM</h1>
-                                    </div>
-                                    <div className="west">
-                                        <button>Change</button>
-                                    </div>
-                                </div>
-                                <div className="content1">
-                                    <div className="left">
-                                        <img src={img2} alt="" />
-                                    </div>
-                                    <div className="south">
-                                        <div className="label">Resort</div>
-                                        <h1>
-                                            Evoke Lifestyle Candolim
-                                        </h1>
-                                        <h3>North Pattaya</h3>
-                                        <p>120 m from Pattaya Beach</p>
-                                        <div className="date">
-                                            <CalendarTodayIcon style={{ fontSize: "1.3rem" }} />
-                                            <p>Thu, 30 Mar 2023 - Mon, 3 Apr 2023</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>}
-                        {itineraryOptions == 4 && <>
-                            <div className="car">
-                                <div className="title">
-                                    <div className="east">
-                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
-                                    </div>
-                                    <div className="west">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content">
-                                    <div className="left">
-                                        <img src={img4} alt="" />
-                                    </div>
-                                    <div className="right">
-                                        <h1>Private Transfer</h1>
-                                        <p>
-                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="car">
-                                <div className="title">
-                                    <div className="east">
-                                        <h1>Transfer from Airport to hotel in Pattaya 2 hrs</h1>
-                                    </div>
-                                    <div className="west">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content">
-                                    <div className="left">
-                                        <img src={img1} alt="" />
-                                    </div>
-                                    <div className="right">
-                                        <h1>Private Transfer</h1>
-                                        <p>
-                                            Travel comfortably in a private vehicle from Goa Airport to your hotel in Goa. Note: The pick-up timing is subject to your flight arrival and shall be communicated to you by the local vendor. There will be non stop-overs allowed during this transfer
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </>}
-                        {itineraryOptions === 5 && <>
-                            <div className="car2">
-                                <div className="title2">
-                                    <div className="east2">
-                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
-                                    </div>
-                                    <div className="west2">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content2">
-                                    <div className="left2">
-                                        <div className="image">
-                                            <img src={img3} alt="" />
-                                            <label htmlFor="">G8-286</label>
-                                        </div>
-                                        <div className="contentLeft">
-                                            <label htmlFor="">10:45</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>New Delhi</h5>
-                                        </div>
-                                        <div className="line"></div>
-                                        <div className="contentRight">
-                                            <label htmlFor="">13:30</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>Goa - Dabolin Airport</h5>
-                                        </div>
-                                    </div>
-                                    <div className="right2">
-                                        <h1>Private Transfer</h1>
-                                        <div className="downContent">
-                                            <div className="item">
-                                                <ShoppingBagIcon className="icon" />
-                                                <span>Cabin: </span>
-                                                <h4>7 Kgs ( 1 peice only )</h4>
-                                            </div>
-                                            <div className="item">
-                                                <LuggageIcon className="icon" />
-                                                <span>Check In: </span>
-                                                <h4>15 Kg</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="car2">
-                                <div className="title2">
-                                    <div className="east2">
-                                        <h1>Flight from New Delhi to Goa - Dabolim Airport 02h 45m</h1>
-                                    </div>
-                                    <div className="west2">
-                                        <button>Remove</button>
-                                    </div>
-                                </div>
-                                <div className="content2">
-                                    <div className="left2">
-                                        <div className="image">
-                                            <img src={img3} alt="" />
-                                            <label htmlFor="">G8-286</label>
-                                        </div>
-                                        <div className="contentLeft">
-                                            <label htmlFor="">10:45</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>New Delhi</h5>
-                                        </div>
-                                        <div className="line"></div>
-                                        <div className="contentRight">
-                                            <label htmlFor="">13:30</label>
-                                            <h4>Wed, 12 Apr</h4>
-                                            <h5>Goa - Dabolin Airport</h5>
-                                        </div>
-                                    </div>
-                                    <div className="right2">
-                                        <h1>Private Transfer</h1>
-                                        <div className="downContent">
-                                            <div className="item">
-                                                <ShoppingBagIcon className="icon" />
-                                                <span>Cabin: </span>
-                                                <h4>7 Kgs ( 1 peice only )</h4>
-                                            </div>
-                                            <div className="item">
-                                                <LuggageIcon className="icon" />
-                                                <span>Check In: </span>
-                                                <h4>15 Kg</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>}
-                    </div>
-                </div>}
+                </div>
             </div>
             {isPackagePhoto && (
                 <>
@@ -882,7 +949,6 @@ const Section = styled.section`
   box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
   background-color: #f2f2f2;
   position: relative;
-  margin-bottom: 5rem;
   .whole {
     width: 100%;
     height: 100vh;
@@ -1021,20 +1087,220 @@ const Section = styled.section`
     height: max-content;
     width: 100%;
     background-color: white;
+    background-color: rgb(229,229,229);
+
+  .mainDiv {
+    width: 100%;
+    background-color: white;
+    height: 60vh;
+    box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
+    .header {
+      width: 100%;
+      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
+      margin: auto;
+      padding: 2rem 2rem;
+      height: 10rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      background-color: white;
+      .left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        .stars {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .package {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: 0.4rem;
+          h3 {
+            font-size: 3rem;
+            color: var(--bgDarkAdmin);
+            font-weight: 700;
+          }
+          .info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            .timeLimit {
+              padding: 0.3rem 0.5rem;
+              background-color: #26b5a9;
+              color: white;
+              font-weight: 900;
+              border-radius: 0.3rem;
+            }
+            .flexPackage {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.2rem;
+              padding: 0.3rem 0.5rem;
+              background-color: black;
+              border-radius: 0.3rem;
+              color: white;
+              font-weight: 900;
+            }
+            .timeCity {
+              font-size: 1.7rem;
+              font-weight: 700;
+              color: rgb(74, 74, 74);
+            }
+          }
+        }
+      }
+      .right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        .icon {
+          font-size: 2.3rem;
+          color: black;
+          opacity: 0.7;
+          cursor: pointer;
+        }
+        .bookingTitle {
+          padding: 1rem 2rem;
+          cursor: pointer;
+          font-size: 1.7rem;
+          outline: none;
+          border: none;
+          background-image: linear-gradient(93deg, #53b2fe, #065af3),
+            linear-gradient(93deg, #53b2fe, #065af3);
+          color: white;
+          font-weight: 600;
+          border-radius: 2rem;
+        }
+      }
+    }
+    .is-sticky {
+      position: fixed;
+      top: 10px;
+      z-index: 999;
+      animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
+    }
+    .images {
+      width: 100%;
+      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
+      margin: 0 auto;
+      /* margin-bottom: 1rem; */
+      cursor: pointer;
+      display: grid;
+      height: 35vh;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 50% 50%;
+      grid-template-areas:
+        "image1 image2 image3"
+        "image1 image4 image5";
+      grid-column-gap: 1rem;
+      grid-row-gap: 1rem;
+      img {
+        border-radius: 0.3rem;
+      }
+      .image1 {
+        .image {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-top-left-radius: 0.5rem;
+          border-bottom-left-radius: 0.5rem;
+        }
+        grid-area: image1;
+        height: 100%;
+        width: 100%;
+      }
+      .image2 {
+        grid-area: image2;
+
+        .image {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+      .image3 {
+        grid-area: image3;
+
+        .image {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-top-right-radius: 0.5rem;
+        }
+      }
+      .image4 {
+        grid-area: image4;
+
+        .image {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+      .image5 {
+        grid-area: image5;
+
+        .image {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-bottom-right-radius: 0.5rem;
+        }
+      }
+    }
+    .menu {
+      width: 100%;
+      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
+      margin: 0 auto;
+      height: max-content;
+      display: flex;
+      margin-top: 1.5rem;
+      align-items: center;
+      justify-content: flex-start;
+      .singleTitle {
+        padding: 2rem 3rem;
+        font-size: 1.7rem;
+        color: #008cff;
+        cursor: pointer;
+        border-bottom: 0.4rem solid white;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+    }
+  }
+  .restWholeDiv{
+    display: flex;
+    width: calc(100% - 10%);
+    gap: 4rem;
+    .restDiv {
+        flex: 2.4;
+        margin-left: 11%;
+        margin-top: 3rem;
+        background-color: white;
+        margin-bottom: 5rem;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
     .dayPlanDetails {
       width: 100%;
-      max-width: 57%;
-      margin-left: 10%;
       height: max-content;
       display: flex;
       box-shadow: 0 20px 30px 0px rgb(0, 0, 0, 0.1);
       padding-bottom: 4rem;
       border-radius: 1rem;
       .left {
+          flex: .7;
         width: 100%;
         height: 100%;
-        background-color: white;
-        flex: 0.7;
+        width: 15rem;
         padding: 0.5rem 1rem;
         h1 {
           font-size: 2rem;
@@ -1056,7 +1322,7 @@ const Section = styled.section`
             align-items: center;
             justify-content: flex-start;
             ul {
-              margin-left: 1.6rem;
+              /* margin-left: 1.6rem; */
               width: 100%;
               li {
                 font-size: 1.4rem;
@@ -1496,201 +1762,6 @@ const Section = styled.section`
       }
     }
   }
-  .mainDiv {
-    width: 100%;
-    background-color: white;
-    height: 60vh;
-    box-shadow: 0 2px 30px 0px rgb(0, 0, 0, 0.1);
-    
-    .header {
-      width: 100%;
-      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
-      margin: auto;
-      padding: 2rem 2rem;
-      height: 10rem;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      background-color: white;
-      .left {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        .stars {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .package {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          justify-content: flex-start;
-          gap: 0.4rem;
-          h3 {
-            font-size: 3rem;
-            color: var(--bgDarkAdmin);
-            font-weight: 700;
-          }
-          .info {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.5rem;
-            .timeLimit {
-              padding: 0.3rem 0.5rem;
-              background-color: #26b5a9;
-              color: white;
-              font-weight: 900;
-              border-radius: 0.3rem;
-            }
-            .flexPackage {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 0.2rem;
-              padding: 0.3rem 0.5rem;
-              background-color: black;
-              border-radius: 0.3rem;
-              color: white;
-              font-weight: 900;
-            }
-            .timeCity {
-              font-size: 1.7rem;
-              font-weight: 700;
-              color: rgb(74, 74, 74);
-            }
-          }
-        }
-      }
-      .right {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.5rem;
-        .icon {
-          font-size: 2.3rem;
-          color: black;
-          opacity: 0.7;
-          cursor: pointer;
-        }
-        .bookingTitle {
-          padding: 1rem 2rem;
-          cursor: pointer;
-          font-size: 1.7rem;
-          outline: none;
-          border: none;
-          background-image: linear-gradient(93deg, #53b2fe, #065af3),
-            linear-gradient(93deg, #53b2fe, #065af3);
-          color: white;
-          font-weight: 600;
-          border-radius: 2rem;
-        }
-      }
-    }
-    .is-sticky {
-      position: fixed;
-      top: 10px;
-      z-index: 999;
-      animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
-    }
-    .images {
-      width: 100%;
-      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
-      margin: 0 auto;
-      /* margin-bottom: 1rem; */
-      cursor: pointer;
-      display: grid;
-      height: 35vh;
-      grid-template-columns: 2fr 1fr 1fr;
-      grid-template-rows: 50% 50%;
-      grid-template-areas:
-        "image1 image2 image3"
-        "image1 image4 image5";
-      grid-column-gap: 1rem;
-      grid-row-gap: 1rem;
-      img {
-        border-radius: 0.3rem;
-      }
-      .image1 {
-        .image {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-          border-top-left-radius: 0.5rem;
-          border-bottom-left-radius: 0.5rem;
-        }
-        grid-area: image1;
-        height: 100%;
-        width: 100%;
-      }
-      .image2 {
-        grid-area: image2;
-
-        .image {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-        }
-      }
-      .image3 {
-        grid-area: image3;
-
-        .image {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-          border-top-right-radius: 0.5rem;
-        }
-      }
-      .image4 {
-        grid-area: image4;
-
-        .image {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-        }
-      }
-      .image5 {
-        grid-area: image5;
-
-        .image {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-          border-bottom-right-radius: 0.5rem;
-        }
-      }
-    }
-    .menu {
-      width: 100%;
-      max-width: ${(props) => (props.isPackagePhoto ? "100%" : "80%")};
-      margin: 0 auto;
-      height: max-content;
-      display: flex;
-      margin-top: 1.5rem;
-      align-items: center;
-      justify-content: flex-start;
-      .singleTitle {
-        padding: 2rem 3rem;
-        font-size: 1.7rem;
-        color: #008cff;
-        cursor: pointer;
-        border-bottom: 0.4rem solid white;
-        text-transform: uppercase;
-        font-weight: 900;
-      }
-    }
-  }
-  .restDiv {
-    width: 100%;
-    max-width: 57%;
-    margin-left: 10%;
-    margin-top: 3rem;
-    background-color: inherit;
-    height: max-content;
     .itinerary {
       width: 100%;
       box-shadow: 0 0px 30px 0px rgb(0, 0, 0, 0.1);
@@ -1728,5 +1799,143 @@ const Section = styled.section`
         }
       }
     }
+  }
+  .newWholeDiv{
+    flex: 1;
+    height: max-content;
+    box-shadow: 0 10px 30px 0px rgb(0, 0, 0, 0.1);
+    margin-top: 3rem;
+    .firstDiv{
+        width: 100%;
+        background-color: rgb(234,245,255);
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+        .leftclass{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            h5{
+                color: rgb(74, 74, 74);
+                text-decoration: line-through;
+                font-size: 1rem;
+                font-weight: 100;
+            }
+            .merge{
+                display: flex;
+                align-items: center;
+                h4{
+                    font-size: 2rem;
+                    color: black;
+                    padding: 0;
+                }
+                h6{
+                    font-size: 1.2rem;
+                    font-weight: 100;
+                }
+            }
+            h3{
+                padding: 0;
+                font-size: 1.2rem;
+                font-weight: 100;
+            }
+        }
+        .rightclass{
+            .off{
+                padding: .3rem .5rem;
+                background-color: rgb(255,85,78);
+                color: white;
+                border-radius: .3rem;
+            }
+        }
+    }
+    .secondDiv{
+        border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 1.3rem 2rem;
+        background-color: white;
+        gap: 1rem;
+        h4{
+            font-size: 1.5rem;
+            color: rgb(74, 74, 74);
+        }
+    }
+    .thirdDiv{
+        width: 100%;
+        border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+        background-color: white;
+        padding: 1.3rem 2rem;
+        h2{
+            font-size: 2rem;
+            color: rgb(74, 74, 74);
+        }
+        h3{
+            font-size: 1.7rem;
+            color: rgb(74, 74, 74);
+            margin-top: 2rem;
+        }
+        .travellerDiv{
+            display: flex;
+            justify-content: space-between;
+            margin-top: .6rem;
+            align-items: center;
+            h3{
+                color: rgb(74, 74, 74,0.7);
+                margin: 0;
+                font-size: 1.5rem;
+            }
+            .right{
+                display: flex;
+                justify-content: flex-end;
+                gap: 1rem;
+                align-items: center;
+                color: rgb(74, 74, 74);
+                .one{
+                    font-size: 2rem;
+                    padding: .1rem 1rem;
+                    border-radius: 1rem;
+                    cursor: pointer;
+                    border: 1px solid rgba(212, 225, 158, 0.5019607843);
+                    transition: all 0.2s ease-in-out;
+                    &:hover{
+                        border: 1px solid black;
+                    }
+                }
+                .two{
+                    font-size: 1.7rem;
+                    width: 1.8rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+    .fourthDiv{
+        width: 100%;
+        padding: 1.3rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        button{
+            padding: .8rem 1.3rem;
+            cursor: pointer;
+            background: linear-gradient(to right,rgb(79,173,254), rgb(11,95,243));
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 900;
+            border: none;
+            outline: none;
+            border-radius: 0.6rem;
+        }
+    }
+  }
   }
 `;
