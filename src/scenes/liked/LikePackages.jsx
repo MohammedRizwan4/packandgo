@@ -7,7 +7,6 @@ const LikePackages = () => {
     return (
         <div>
             <Navbar />
-            <SearchBar />
             <LikeSub />
         </div>
     );

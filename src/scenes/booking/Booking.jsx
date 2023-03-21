@@ -30,7 +30,6 @@ const Booking = () => {
 
     const check = () => {
         const allTravellersFilled = travellers.every(traveller => traveller.email && traveller.mcode && traveller.mobile && traveller.gender);
-        console.log(allTravellersFilled, "hjvjhvujvjk v");
         return allTravellersFilled;
     };
 
@@ -75,7 +74,7 @@ const Booking = () => {
                                     <h1>1. Traveller Details - </h1>
                                     <span>1 Room | 2 Adults</span>
                                 </div>
-                                {myArray.map((traveller,index) => {
+                                {travellers.map((traveller, index) => {
                                     return <Traveller traveller={traveller} index={index} />;
                                 })}
                             </div>
@@ -133,7 +132,7 @@ const Booking = () => {
                                             className="one"
                                             onClick={() => {
                                                 dispatch(decreaseAdult())
-                                                dispatch(removeTraveller())
+                                                dispatch(removeTraveller({type: "adult"}))
                                             }}
                                         >
                                             -
@@ -141,7 +140,7 @@ const Booking = () => {
                                         <div className="two">{adult}</div>
                                         <div className="one" onClick={() => {
                                             dispatch(setAdult())
-                                            dispatch(addTravellers())
+                                            dispatch(addTravellers({ type: "adult" }))
                                         }}>
                                             +
                                         </div>
@@ -154,7 +153,7 @@ const Booking = () => {
                                             className="one"
                                             onClick={() => {
                                                 dispatch(decreaseChildren())
-                                                dispatch(removeTraveller())
+                                                dispatch(removeTraveller({type: "children"}))
                                                 console.log("hsbchjsdbchjsdbcnsdc shjdv hsjd v")
                                             }}
                                         >
@@ -165,7 +164,7 @@ const Booking = () => {
                                             className="one"
                                             onClick={() => {
                                                 dispatch(setChildren())
-                                                dispatch(addTravellers())
+                                                dispatch(addTravellers({ type: "children" }))
                                             }}
                                         >
                                             +

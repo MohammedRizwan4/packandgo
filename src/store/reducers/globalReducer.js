@@ -10,8 +10,15 @@ const globalReducer = createSlice({
         children: 0,
         room: 1,
         travelDetail: false,
-        travellers: [{ email: "", mcode: "", mobile: "", gender: "" }],
-        activeTraveller: 0
+        travellers: [{ email: "", mcode: "", mobile: "", gender: "", type: "adult" }],
+        activeTraveller: 0,
+        price: 0,
+        totalPrice: 0,
+        goingTransfer: 1,
+        returningTransfer: 1,
+        goingFlight: 1,
+        returningFlight: 1,
+        actualPrice: 0
     },
     reducers: {
         setSuccess: (state, action) => {
@@ -100,16 +107,29 @@ const globalReducer = createSlice({
             state.travelDetail = false;
         },
         addTravellers: (state, action) => {
+            const { type } = action.payload;
             state.travellers.push({
                 email: "",
                 mcode: "",
                 mobile: "",
-                gender: ""
+                gender: "",
+                type
             })
         },
-        removeTraveller: (state) => {
-            if (state.travellers.length >= 2) {
-                state.travellers = state.travellers.slice(0, -1);
+        removeTraveller: (state, action) => {
+            const { type } = action.payload;
+            const index = state.travellers.findIndex((traveller) => traveller.type === type);
+            const adultCount = state.travellers.filter((traveller) => traveller.type === "adult").length;
+            const childrenCount = state.travellers.filter((traveller) => traveller.type === "children").length;
+
+            if (type === "adult" && adultCount > 1) {
+                if (index !== -1) {
+                    state.travellers.splice(index, 1);
+                }
+            } else if (type === "children" && childrenCount > 0) {
+                if (index !== -1) {
+                    state.travellers.splice(index, 1);
+                }
             }
         },
         updateTraveller: (state, action) => {
@@ -121,13 +141,50 @@ const globalReducer = createSlice({
         },
         setActiveTraveller: (state, action) => {
             const { index } = action.payload;
-            console.log(index, "hbjsadabhsabkbas icbsujibsawjc");
             state.activeTraveller = index;
-        }
+        },
+        setPrice: (state, action) => {
+            state.price = action.payload
+        },
+        setTotalPrice: (state, action) => {
+            state.totalPrice = action.payload
+        },
+        setGoingTransfer: (state, action) => {
+            state.goingTransfer = action.payload;
+            if(action.payload === 0) {
+                state.price = state.price - 200
+            }else{
+                state.price = state.price + 200
+            }
+        },
+        setReturningTransfer: (state, action) => {
+            state.returningTransfer = action.payload;
+            if(action.payload === 0) {
+                state.price = state.price - 200
+            }else{
+                state.price = state.price + 200
+            }
+        },
+        setGoingFlight: (state, action) => {
+            state.goingFlight = action.payload;
+            if(action.payload === 0) {
+                state.price = state.price - 1400
+            }else{
+                state.price = state.price + 1400
+            }
+        },
+        setReturningFlight: (state, action) => {
+            state.returningFlight = action.payload
+            if(action.payload === 0) {
+                state.price = state.price - 1400
+            }else{
+                state.price = state.price + 1400
+            }
+        },
     }
 })
 
-export const { removeTraveller, setActiveTraveller, updateTraveller, addTravellers, setTravelDetail, decreaseTravelDetail, setChildren, decreaseChildren, setRoom, decreaseRoom, setAdult, decreaseAdult, setSuccess, clearMessage, setLogin, setRegister, closeLogin, closeRegister } = globalReducer.actions;
+export const { setGoingFlight, setReturningFlight, setReturningTransfer, setGoingTransfer, setPrice, setTotalPrice, removeTraveller, setActiveTraveller, updateTraveller, addTravellers, setTravelDetail, decreaseTravelDetail, setChildren, decreaseChildren, setRoom, decreaseRoom, setAdult, decreaseAdult, setSuccess, clearMessage, setLogin, setRegister, closeLogin, closeRegister } = globalReducer.actions;
 
 export default globalReducer.reducer;
 

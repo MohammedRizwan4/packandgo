@@ -23,15 +23,14 @@ const style = {
 
 const Traveller = ({ traveller, index }) => {
 
-    const { travellers,travelDetail } = useSelector(state => state.globalReducer);
+    const { travellers, travelDetail } = useSelector(state => state.globalReducer);
 
     const check = () => {
-        if(travellers[index].email && travellers[index].mcode && travellers[index].mobile && travellers[index].gender) {
+        if (travellers[index].email && travellers[index].mcode && travellers[index].mobile && travellers[index].gender) {
             return true;
         }
         return false
     }
-
 
     const dispatch = useDispatch();
 
@@ -39,15 +38,15 @@ const Traveller = ({ traveller, index }) => {
         <>
             <div className="traveller" onClick={() => {
                 dispatch(setTravelDetail())
-                dispatch(setActiveTraveller({index}))
+                dispatch(setActiveTraveller({ index }))
             }}>
                 <img src={img1} alt="" />
                 <div className="name">
-                    <h4>Traveller {traveller}</h4>
-                    <h2>Add Traveller</h2>
+                    <h4>Traveller {index + 1}</h4>
+                    <h2>{traveller.mcode ? traveller.mcode : "Add Traveller"}</h2>
                 </div>
                 <div className="desc">
-                    <p>ADULT - should be above 18 years</p>
+                    <p>{traveller?.type.toUpperCase()} - should be {traveller.type === "children" ? "below" : "above"} 18 years</p>
                 </div>
                 {check() && <div className="profile">
                     <div className="circle"><CheckOutlinedIcon style={{ color: "green", fontSize: ".7rem", fontWeight: "900" }} /></div>

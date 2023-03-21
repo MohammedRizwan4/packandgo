@@ -7,12 +7,10 @@ import { decreaseTravelDetail, setActiveTraveller, updateTraveller } from '../..
 
 const TravellerModal = () => {
     const { travelDetail, travellers, activeTraveller } = useSelector(state => state.globalReducer);
-    console.log(travellers);
 
     const dispatch = useDispatch();
 
     const [state, setState] = useState(travellers[activeTraveller]);
-    console.log(state);
 
     const handleUpdateTraveller = e => {
         const { name, value } = e.target;
@@ -23,11 +21,13 @@ const TravellerModal = () => {
         setState(travellers[activeTraveller]);
     }, [activeTraveller])
 
-    console.log(travellers);
 
     const handleSubmit = () => {
         dispatch(updateTraveller({ index: activeTraveller, email: state.email, mcode: state.mcode, mobile: state.mobile, gender: state.gender }))
-        check3() && dispatch(decreaseTravelDetail());
+        if (check3()) {
+            dispatch(decreaseTravelDetail());
+            console.log("sahbhjabcajsbc hsbc hsakcbsahcjkbaschjsabckiabcshaybcyujdschbsdhjcjs");
+        }
     }
 
     const check = () => {
@@ -52,6 +52,12 @@ const TravellerModal = () => {
         return allTravellersFilled;
     };
 
+    // useEffect(() => {
+    //     if(travelDetail && check3()) {
+    //         dispatch(decreaseTravelDetail());
+    //     }
+    // },[travelDetail])
+
     return (
         <Section>
             <div className="firstDiv">
@@ -67,9 +73,9 @@ const TravellerModal = () => {
             <div className="list">
                 {
                     travellers?.map((traveller, index) => {
-                        const got = activeTraveller == index ;
+                        const got = activeTraveller == index;
                         return (
-                            <div style={{backgroundColor: got ? "rgb(234,245,255)" : ""}} className="box" onClick={() => dispatch(setActiveTraveller({ index }))}>
+                            <div style={{ backgroundColor: got ? "rgb(234,245,255)" : "" }} className="box" onClick={() => dispatch(setActiveTraveller({ index }))}>
                                 <Person2OutlinedIcon style={{ color: "rgb(50,162,254)", fontSize: "2rem", cursor: "pointer" }} />
                                 <h3>Adult {index + 1}</h3>
                             </div>

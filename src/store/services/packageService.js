@@ -100,12 +100,20 @@ const packageService = createApi({
                         method: "GET"
                     }
                 }
+            }),
+            fetchAllLikedPackages: builder.query({
+                query: (id) => {
+                    return {
+                        url: `liked-packages/${id}`,
+                        method: "GET"
+                    }
+                }
             })
         }
     }
 })
 
-export const { useCreatePackageMutation, useFetchUniqueCityQuery, useFetchPackagesForHomeQuery, useFetchThemePackageQuery, useUpdatePackageMutation, useFetchAllPackagesQuery, useFetchOnePackageQuery, useDeletePackageMutation } = packageService;
+export const { useCreatePackageMutation, useFetchAllLikedPackagesQuery, useFetchUniqueCityQuery, useFetchPackagesForHomeQuery, useFetchThemePackageQuery, useUpdatePackageMutation, useFetchAllPackagesQuery, useFetchOnePackageQuery, useDeletePackageMutation } = packageService;
 
 export default packageService;
 
