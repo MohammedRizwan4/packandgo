@@ -1,12 +1,12 @@
 import { Fade, Modal } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import img1 from './download1.jfif';
 import Backdrop from '@mui/material/Backdrop';
 import Register from '../../components/Register';
 import TravellerModal from './TravellerModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { decreaseTravelDetail, setActiveTraveller, setTravelDetail } from '../../store/reducers/globalReducer';
+import { clearMessage, decreaseTravelDetail, setActiveTraveller, setSuccess, setTravelDetail } from '../../store/reducers/globalReducer';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 
 const style = {
@@ -33,6 +33,8 @@ const Traveller = ({ traveller, index }) => {
     }
 
     const dispatch = useDispatch();
+
+    
 
     return (
         <>

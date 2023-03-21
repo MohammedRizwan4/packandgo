@@ -26,7 +26,8 @@ const globalReducer = createSlice({
             state.success = action.payload;
         },
         clearMessage: (state) => {
-            state.success = "";
+            console.log("objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject");
+            state.success = null;
         },
         setLogin: (state, action) => {
             state.login = true;

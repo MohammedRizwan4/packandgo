@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import { useDispatch, useSelector } from 'react-redux';
-import { decreaseTravelDetail, setActiveTraveller, updateTraveller } from '../../store/reducers/globalReducer';
+import { clearMessage, decreaseTravelDetail, setActiveTraveller, setSuccess, updateTraveller } from '../../store/reducers/globalReducer';
 
 const TravellerModal = () => {
     const { travelDetail, travellers, activeTraveller } = useSelector(state => state.globalReducer);
@@ -23,6 +23,8 @@ const TravellerModal = () => {
 
 
     const handleSubmit = () => {
+        dispatch(clearMessage());
+        dispatch(setSuccess("Traveller added Successfully"));
         dispatch(updateTraveller({ index: activeTraveller, email: state.email, mcode: state.mcode, mobile: state.mobile, gender: state.gender }))
         if (check3()) {
             dispatch(decreaseTravelDetail());

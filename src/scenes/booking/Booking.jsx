@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../../components/users/Navbar";
 import PublicIcon from "@mui/icons-material/Public";
@@ -7,19 +7,49 @@ import { useDispatch, useSelector } from "react-redux";
 import Traveller from "./Traveller";
 import {
     addTravellers,
+    clearMessage,
     decreaseAdult,
     decreaseChildren,
     decreaseRoom,
     removeTraveller,
     setAdult,
     setChildren,
+    setPrice,
     setRoom,
+    setSuccess,
 } from "../../store/reducers/globalReducer";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { useGetSingleUserQuery } from "../../store/services/adminUserService";
+import { useFetchOnePackageQuery } from "../../store/services/packageService";
 
 const Booking = () => {
-    const { adult, children, room, travellers } = useSelector((state) => state.globalReducer);
+    
+    const { adult, children, room, travellers, price } = useSelector((state) => state.globalReducer);
+    const [state, setState] = useState({
+        email: "",
+        mcode: "",
+        mobile: "",
+        spMessage: ""
+    });
+
+    const { user } = useSelector((state) => state.authReducer);
+
+    const { id } = useParams();
+    const userId = user.id;
+
+    const handleSubmit = () => {
+        console.log({ state, travellers, id, userId, totalPrice });
+    }
+
+    const inputChangeHandler = (e) => {
+        setState(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
+    }
+
+    console.log(state);
+
+    const [adultCount, setAdultCount] = useState(false);
+    const [childrenCount, setChildrenCount] = useState(false);
     console.log(travellers);
     const dispatch = useDispatch();
     const totalPeople = adult + children;
@@ -28,10 +58,151 @@ const Booking = () => {
         (_, index) => index + 1
     );
 
+
+    const { data, isFetching } = useFetchOnePackageQuery(id)
+
+    const adultPrice = price; // actual price for adults
+    const childPrice = price * 0.85; // actual price minus 15% for children
+    const totalPrice = (adultPrice * adult) + (childPrice * children)
+
+    useEffect(() => {
+        if (adultCount) {
+            dispatch(clearMessage());
+            dispatch(setSuccess("adult Added"));
+
+            const interval = setTimeout(() => {
+                dispatch(clearMessage());
+            }, 2000);
+
+            return () => clearTimeout(interval);
+        } else {
+            dispatch(clearMessage());
+            dispatch(setSuccess("adult removed"));
+
+            const interval = setTimeout(() => {
+                dispatch(clearMessage());
+            }, 1000);
+
+            return () => clearTimeout(interval);
+        }
+    }, [adultCount]);
+
+    useEffect(() => {
+        if (childrenCount) {
+            dispatch(clearMessage());
+            dispatch(setSuccess("Children Added"));
+
+            const interval = setTimeout(() => {
+                dispatch(clearMessage());
+            }, 2000);
+
+            return () => clearTimeout(interval);
+        } else {
+            dispatch(clearMessage());
+            dispatch(setSuccess("Children removed"));
+
+            const interval = setTimeout(() => {
+                dispatch(clearMessage());
+            }, 1000);
+
+            return () => clearTimeout(interval);
+        }
+    }, [childrenCount]);
+
+
     const check = () => {
         const allTravellersFilled = travellers.every(traveller => traveller.email && traveller.mcode && traveller.mobile && traveller.gender);
-        return allTravellersFilled;
+        const { email, mcode, mobile, spMessage } = state;
+        const allFieldsFilled = email && mcode && mobile && spMessage;
+        return allTravellersFilled && allFieldsFilled;
     };
+
+    const searchParams = new URLSearchParams(useLocation().search);
+    const { id: packId } = useParams();
+    const myParam = searchParams.get("myParam");
+    const skipDays = parseInt(myParam) - 1;
+    console.log(skipDays);
+    const days = myParam?.slice(-2, -1);
+
+    const singleDetail = data?.packages1?.packages1?.packages1?.packages1?.details?.find(
+        (detail) => detail.duration === myParam
+    );
+
+    const myArray1 = Array.from(
+        { length: parseInt(days) },
+        (_, index) => index + 1
+    );
+
+    const daysArray = Array.from(
+        { length: parseInt(skipDays) },
+        (_, index) => index + 1
+    );
+
+    const startDate = new Date(data?.package1.date);
+
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 4);
+
+    const formattedEndDate = endDate.getDate() + " " + getMonthName1(endDate.getMonth());
+    const formattedStartDate = startDate.getDate() + " " + getMonthName1(startDate.getMonth());
+
+    console.log(formattedEndDate); // output: "22 Mar"
+
+    console.log({ data, myParam });
+
+    useEffect(() => {
+        if (data && myParam) {
+            let price1 = data?.package1?.details?.find(
+                (detail) => detail.duration === myParam
+            )?.price;
+            price1 = price1 - (price1 * 4) / 100;
+            console.log("price: ", price1);
+            dispatch(setPrice(price === 0 ? price1 : price));
+        }
+    }, [data, myParam]);
+
+    const firstDate = `${startDate.getDate()} ${getMonthName(
+        startDate.getMonth()
+    )}`; // Format the first date as "DD Month"
+    const lastDate = `${endDate.getDate()} ${getMonthName(endDate.getMonth())}`; // Format the last date as "DD Month"
+
+    const firstDateWhole = startDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+    }); // Format the first date as "ddd Mon DD"
+    const lastDateWhole = endDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+    }); // Format the last date as "ddd Mon DD"
+
+    function getMonthName1(month) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return monthNames[month];
+    }
+
+    function getMonthName(monthIndex) {
+        const monthNames = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        return monthNames[monthIndex];
+    }
+
+    console.log({ firstDateWhole, lastDateWhole, firstDate, lastDate });
+    console.log(data);
 
     return (
         <Section>
@@ -58,21 +229,21 @@ const Booking = () => {
                                     <h5>4N Goa</h5>
                                 </div>
                                 <div className="dates">
-                                    <span>Apr 16, 2023</span>
+                                    <span>{firstDateWhole} 2023</span>
                                     <h3>------</h3>
                                     <h4>5N/6D</h4>
                                     <h3>------</h3>
-                                    <span>Apr 20, 2023 / From New Delhi</span>
+                                    <span>{lastDateWhole} 2023 / From {data?.package1?.location?.city}</span>
                                     <div>|</div>
                                     <h5>
-                                        <b style={{ color: "black" }}>1 Room</b> - 2 Adult
+                                        <b style={{ color: "black" }}>{room} Room</b> - {adult} Adult - {children} Children
                                     </h5>
                                 </div>
                             </div>
                             <div className="secondDiv">
                                 <div className="title">
                                     <h1>1. Traveller Details - </h1>
-                                    <span>1 Room | 2 Adults</span>
+                                    <span>{room} Room | {adult} Adults | {children} Children</span>
                                 </div>
                                 {travellers.map((traveller, index) => {
                                     return <Traveller traveller={traveller} index={index} />;
@@ -83,22 +254,22 @@ const Booking = () => {
                                 <form>
                                     <div className="content">
                                         <label htmlFor="">Email</label>
-                                        <input type="text" placeholder="Eg. john.doe@gmail.com" />
+                                        <input type="text" placeholder="Eg. john.doe@gmail.com" name="email" value={state.email} onChange={(e) => inputChangeHandler(e)} />
                                     </div>
                                     <div className="content">
                                         <label htmlFor="">Mobile Code</label>
-                                        <input type="text" />
+                                        <input type="text" name="mcode" value={state.mcode} onChange={(e) => inputChangeHandler(e)} />
                                     </div>
                                     <div className="content">
                                         <label htmlFor="">Mobile</label>
-                                        <input type="text" placeholder="Eg. 96203 37826" />
+                                        <input type="text" name="mobile" value={state.mobile} placeholder="Eg. 96203 37826" onChange={(e) => inputChangeHandler(e)} />
                                     </div>
                                 </form>
                                 <hr />
                                 <h1>Special Requests</h1>
                                 <div className="content">
                                     <label htmlFor="">Special Requests</label>
-                                    <input type="text" placeholder="Enter Special Requests" />
+                                    <input type="text" value={state.spMessage} name="spMessage" placeholder="Enter Special Requests" onChange={(e) => inputChangeHandler(e)} />
                                 </div>
                             </div>
                         </div>
@@ -107,7 +278,7 @@ const Booking = () => {
                                 <div className="leftclass">
                                     <h5>$76,877</h5>
                                     <div className="merge">
-                                        <h4>$54,655</h4>
+                                        <h4>{"₹" + totalPrice.toLocaleString("en-IN")}</h4>
                                         <h6>&nbsp;per person*</h6>
                                     </div>
                                     <h3>*Excluding Applicable taxes</h3>
@@ -120,7 +291,7 @@ const Booking = () => {
                                 <CalendarMonthIcon
                                     style={{ fontSize: "2rem", color: "rgb(74, 74, 74)" }}
                                 />
-                                <h4>16 Apr - 20 Apr</h4>
+                                <h4>{formattedStartDate} - {formattedEndDate}</h4>
                             </div>
                             <div className="thirdDiv1">
                                 <h2>Details</h2>
@@ -132,7 +303,8 @@ const Booking = () => {
                                             className="one"
                                             onClick={() => {
                                                 dispatch(decreaseAdult())
-                                                dispatch(removeTraveller({type: "adult"}))
+                                                dispatch(removeTraveller({ type: "adult" }))
+                                                setAdultCount(false);
                                             }}
                                         >
                                             -
@@ -141,6 +313,7 @@ const Booking = () => {
                                         <div className="one" onClick={() => {
                                             dispatch(setAdult())
                                             dispatch(addTravellers({ type: "adult" }))
+                                            setAdultCount(true)
                                         }}>
                                             +
                                         </div>
@@ -153,8 +326,8 @@ const Booking = () => {
                                             className="one"
                                             onClick={() => {
                                                 dispatch(decreaseChildren())
-                                                dispatch(removeTraveller({type: "children"}))
-                                                console.log("hsbchjsdbchjsdbcnsdc shjdv hsjd v")
+                                                dispatch(removeTraveller({ type: "children" }))
+                                                setChildrenCount(false)
                                             }}
                                         >
                                             -
@@ -165,6 +338,7 @@ const Booking = () => {
                                             onClick={() => {
                                                 dispatch(setChildren())
                                                 dispatch(addTravellers({ type: "children" }))
+                                                setChildrenCount(true)
                                             }}
                                         >
                                             +
@@ -191,7 +365,7 @@ const Booking = () => {
                             </div>
                             <div className="fourthDiv1">
                                 <Link to={`/mybookings`}>
-                                    <button disabled={!check()} className={!check() ? "check" : ""}>Proceed to Book Online</button>
+                                    <button disabled={!check()} className={!check() ? "check" : ""} onClick={handleSubmit}>Proceed to Book Online</button>
                                 </Link>
                             </div>
                         </div>

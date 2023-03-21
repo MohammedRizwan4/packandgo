@@ -7,72 +7,74 @@ import Spinner from "../../components/users/Spinner";
 import { useFetchOnePackageQuery } from "../../store/services/packageService";
 import PackageDetail from './PackageDetail'
 import GridViewIcon from '@mui/icons-material/GridView';
+import { toast, Toaster } from "react-hot-toast";
+import { clearMessage } from "../../store/reducers/globalReducer";
 
 const Package = () => {
 
-        const { id } = useParams();
-        const { data, isFetching } = useFetchOnePackageQuery(id)
-        console.log(data);
+    const { id } = useParams();
+    const { data, isFetching } = useFetchOnePackageQuery(id)
+    console.log(data);
 
-        const { isPackagePhoto } = useSelector((state) => state.toggleReducer);
-        const dispatch = useDispatch();
+    const { isPackagePhoto } = useSelector((state) => state.toggleReducer);
+    const dispatch = useDispatch();
 
-        const [state, setState] = useState({
-            starting: data?.package1?.starting_point ? data?.package1?.starting_point : "",
-            destination: data?.package1?.starting_point ? data?.package1?.ending_point : ""
-        })
+    const [state, setState] = useState({
+        starting: data?.package1?.starting_point ? data?.package1?.starting_point : "",
+        destination: data?.package1?.starting_point ? data?.package1?.ending_point : ""
+    })
 
-        useEffect(() => {
-            if (data) {
-                setState(prev => ({ ...prev, ['starting']: data?.package1?.starting_point }))
-                setState(prev => ({ ...prev, ['destination']: data?.package1?.ending_point }))
-            }
-        }, [data]);
+    useEffect(() => {
+        if (data) {
+            setState(prev => ({ ...prev, ['starting']: data?.package1?.starting_point }))
+            setState(prev => ({ ...prev, ['destination']: data?.package1?.ending_point }))
+        }
+    }, [data]);
 
-        const handleChange = e => {
-            setState(prevState => ({
-                ...prevState,
-                [e.target.name]: e.target.value
-            }));
-        };
-
-        return (
-            <Section isPackagePhoto={isPackagePhoto}>
-                {!isPackagePhoto && <><Navbar />
-                    <div className="searchContainer">
-                        <div className="container">
-                            <div className="left">
-                                <div className="box">
-                                    <label htmlFor="">Starting From</label>
-                                    <input type="text" name="starting" value={state.starting} onChange={(e) => handleChange(e)} disabled />
-                                </div>
-                                <div className="box">
-                                    <label htmlFor="">Going to</label>
-                                    <input type="text" name="destination" value={state.destination} disabled />
-                                </div>
-                                <div className="box">
-                                    <label htmlFor="">Starting date</label>
-                                    <input type="text" placeholder="Select" disabled />
-                                </div>
-                                <button>Search</button>
+    const handleChange = e => {
+        setState(prevState => ({
+            ...prevState,
+            [e.target.name]: e.target.value
+        }));
+    };
+    
+    return (
+        <Section isPackagePhoto={isPackagePhoto}>
+            {!isPackagePhoto && <><Navbar />
+                <div className="searchContainer">
+                    <div className="container">
+                        <div className="left">
+                            <div className="box">
+                                <label htmlFor="">Starting From</label>
+                                <input type="text" name="starting" value={state.starting} onChange={(e) => handleChange(e)} disabled />
                             </div>
-                            <div className="right">
-                                <GridViewIcon style={{ fontSize: "2.5rem", fontStyle: "italic" }} />
-                                Explore
+                            <div className="box">
+                                <label htmlFor="">Going to</label>
+                                <input type="text" name="destination" value={state.destination} disabled />
                             </div>
+                            <div className="box">
+                                <label htmlFor="">Starting date</label>
+                                <input type="text" placeholder="Select" disabled />
+                            </div>
+                            <button>Search</button>
+                        </div>
+                        <div className="right">
+                            <GridViewIcon style={{ fontSize: "2.5rem", fontStyle: "italic" }} />
+                            Explore
                         </div>
                     </div>
-                </>}
-                {isFetching ? <div style={{ marginTop: "3rem" }}>
-                    <Spinner />
-                </div> : <PackageDetail data={data?.package1} />}
-            </Section>
-        );
-    };
+                </div>
+            </>}
+            {isFetching ? <div style={{ marginTop: "3rem" }}>
+                <Spinner />
+            </div> : <PackageDetail data={data?.package1} />}
+        </Section>
+    );
+};
 
-    export default Package;
+export default Package;
 
-    const Section = styled.div`
+const Section = styled.div`
     .searchContainer{
     height: 10vh;
     width: 100%;

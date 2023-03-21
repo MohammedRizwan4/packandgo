@@ -13,55 +13,59 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Register from "../Register";
 import Login from "../Login";
 import { logout } from "../../store/reducers/authReducer";
 import { useFetchAllThemesQuery } from "../../store/services/themeService";
-import { closeLogin, closeRegister, setLogin, setRegister } from "../../store/reducers/globalReducer";
+import {
+    closeLogin,
+    closeRegister,
+    setLogin,
+    setRegister,
+} from "../../store/reducers/globalReducer";
 
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
 
 const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     height: "80%",
     width: "80%",
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     boxShadow: 24,
-    outline: "none"
+    outline: "none",
 };
 
 const style1 = {
-    position: 'absolute',
-    top: '40%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     height: "50%",
     width: "80%",
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     outline: "none",
-    boxShadow: 24
+    boxShadow: 24,
 };
 
 const Navbar = () => {
-
     const [anchorEl, setAnchorEl] = React.useState(null);
     const navigate = useNavigate();
     const open = Boolean(anchorEl);
@@ -72,24 +76,24 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
-    const { register, login } = useSelector(state => state.globalReducer);
+    const { register, login } = useSelector((state) => state.globalReducer);
     console.log(register, login);
 
     const { data, isFetching } = useFetchAllThemesQuery();
     console.log(data);
 
     const handleOpen = () => {
-        dispatch(setRegister())
-        dispatch(closeLogin())
-    }
+        dispatch(setRegister());
+        dispatch(closeLogin());
+    };
 
     const handleLoginOpen = () => {
         dispatch(setLogin());
-    }
+    };
 
     const handleLoginClose = () => {
         dispatch(closeLogin());
-    }
+    };
 
     const handleClosed = () => closeRegister();
 
@@ -119,16 +123,11 @@ const Navbar = () => {
         });
         dispatch(logout("login-token"));
         navigate("/");
-    }
+    };
 
     return (
         <div className="mainNavbar">
             <Nav>
-                <Toaster
-                    toastOptions={{ style: { fontSize: "1.5rem" } }}
-                    position="top-center"
-                    reverseOrder={true}
-                />
                 <div className="left">
                     <div className="logo">PACK&GO</div>
                 </div>
@@ -147,12 +146,15 @@ const Navbar = () => {
                                         <ul>
                                             {data?.map((theme, index) => {
                                                 return (
-                                                    <Link to={`/theme/${theme._id}`} style={{ margin: "0", padding: "0" }}>
+                                                    <Link
+                                                        to={`/theme/${theme._id}`}
+                                                        style={{ margin: "0", padding: "0" }}
+                                                    >
                                                         <li>
                                                             <a href="#">{theme.name}</a>
                                                         </li>
                                                     </Link>
-                                                )
+                                                );
                                             })}
                                         </ul>
                                     </div>
@@ -174,14 +176,15 @@ const Navbar = () => {
                         <div className="buttons">
                             <Button
                                 id="fade-button"
-                                aria-controls={open ? 'fade-menu' : undefined}
+                                aria-controls={open ? "fade-menu" : undefined}
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
+                                aria-expanded={open ? "true" : undefined}
                                 onClick={handleClick}
                                 style={{
-                                    backgroundColor: "var(--bgYellow)", '&:hover': {
-                                        color: "black"
-                                    }
+                                    backgroundColor: "var(--bgYellow)",
+                                    "&:hover": {
+                                        color: "black",
+                                    },
                                 }}
                             >
                                 Dashboard
@@ -189,7 +192,7 @@ const Navbar = () => {
                             <Menu
                                 id="fade-menu"
                                 MenuListProps={{
-                                    'aria-labelledby': 'fade-button',
+                                    "aria-labelledby": "fade-button",
                                 }}
                                 anchorEl={anchorEl}
                                 open={open}
@@ -197,22 +200,86 @@ const Navbar = () => {
                                 TransitionComponent={Fade}
                                 style={{ marginTop: "1rem" }}
                             >
-                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>My account</MenuItem>
-                                <Link to="/liked"> <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>Liked</MenuItem></Link>
-                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={handleClose}>My Bookings</MenuItem>
-                                <MenuItem sx={{ width: "14rem", color: "var(--bgDarkBlue)", fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} onClick={() => {
-                                    handleClose();
-                                    adminLogout();
-                                }}>Logout</MenuItem>
+                                <MenuItem
+                                    sx={{
+                                        width: "14rem",
+                                        color: "var(--bgDarkBlue)",
+                                        fontSize: 18,
+                                        fontWeight: 700,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                    }}
+                                    onClick={handleClose}
+                                >
+                                    Profile
+                                </MenuItem>
+                                <MenuItem
+                                    sx={{
+                                        width: "14rem",
+                                        color: "var(--bgDarkBlue)",
+                                        fontSize: 18,
+                                        fontWeight: 700,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                    }}
+                                    onClick={handleClose}
+                                >
+                                    My account
+                                </MenuItem>
+                                <Link to="/liked">
+                                    {" "}
+                                    <MenuItem
+                                        sx={{
+                                            width: "14rem",
+                                            color: "var(--bgDarkBlue)",
+                                            fontSize: 18,
+                                            fontWeight: 700,
+                                            fontFamily: "'DM Sans', sans-serif",
+                                        }}
+                                        onClick={handleClose}
+                                    >
+                                        Liked
+                                    </MenuItem>
+                                </Link>
+                                <MenuItem
+                                    sx={{
+                                        width: "14rem",
+                                        color: "var(--bgDarkBlue)",
+                                        fontSize: 18,
+                                        fontWeight: 700,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                    }}
+                                    onClick={handleClose}
+                                >
+                                    My Bookings
+                                </MenuItem>
+                                <MenuItem
+                                    sx={{
+                                        width: "14rem",
+                                        color: "var(--bgDarkBlue)",
+                                        fontSize: 18,
+                                        fontWeight: 700,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                    }}
+                                    onClick={() => {
+                                        handleClose();
+                                        adminLogout();
+                                    }}
+                                >
+                                    Logout
+                                </MenuItem>
                             </Menu>
                         </div>
                     ) : (
                         <div className="buttons">
-                            <button style={{ backgroundColor: "var(--bgYellow)" }} onClick={handleOpen}>
+                            <button
+                                style={{ backgroundColor: "var(--bgYellow)" }}
+                                onClick={handleOpen}
+                            >
                                 REGISTER
                             </button>
-                            <button style={{ backgroundColor: "var(--bgYellow)" }} onClick={handleLoginOpen}>
+                            <button
+                                style={{ backgroundColor: "var(--bgYellow)" }}
+                                onClick={handleLoginOpen}
+                            >
                                 LOGIN
                             </button>
                         </div>
@@ -284,11 +351,14 @@ const Navbar = () => {
                 }}
             >
                 <Fade in={register}>
-                    <Box sx={style} style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}>
+                    <Box
+                        sx={style}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <Register />
                     </Box>
                 </Fade>
@@ -305,11 +375,14 @@ const Navbar = () => {
                 }}
             >
                 <Fade in={login}>
-                    <Box sx={style1} style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}>
+                    <Box
+                        sx={style1}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <Login />
                     </Box>
                 </Fade>
@@ -319,7 +392,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
 
 const bounceAnimation = keyframes`
   0% {
@@ -380,9 +452,9 @@ const Nav = styled.nav`
         transform-origin: bottom;
       }
       .bounce:hover {
-            animation-name: bounce;
-            animation-timing-function: ease;
-        }
+        animation-name: bounce;
+        animation-timing-function: ease;
+      }
       #theme:hover + .theme_big,
       .hide:hover {
         display: block;
@@ -458,13 +530,13 @@ const Nav = styled.nav`
       font-weight: 600;
       color: var(--bgLightSkin);
       padding: var(--r-75) var(--r2);
-      letter-spacing: .15rem;
+      letter-spacing: 0.15rem;
       &:hover {
         background-color: var(--bgWhite);
         color: var(--bgDarkBlue);
-        box-shadow: -2px -1px 30px -2px rgba(0,0,0,0.48);
-        -webkit-box-shadow: -2px -1px 30px -2px rgba(0,0,0,0.48);
-        -moz-box-shadow: -2px -1px 30px -2px rgba(0,0,0,0.48);
+        box-shadow: -2px -1px 30px -2px rgba(0, 0, 0, 0.48);
+        -webkit-box-shadow: -2px -1px 30px -2px rgba(0, 0, 0, 0.48);
+        -moz-box-shadow: -2px -1px 30px -2px rgba(0, 0, 0, 0.48);
         transition: all 0.2s ease-out;
         cursor: pointer;
         border-radius: var(--r2);
@@ -485,8 +557,8 @@ const Nav = styled.nav`
         justify-content: center;
         align-items: center;
         gap: var(--r2);
-        #theme:hover .theme_big{
-            display: block;
+        #theme:hover .theme_big {
+          display: block;
         }
         li {
           list-style-type: none;
@@ -503,24 +575,24 @@ const Nav = styled.nav`
             height: 37vh;
             width: 28rem;
             background-color: var(--bgDarkBlue);
-            ul{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
+            ul {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              width: 100%;
+              li {
                 width: 100%;
-                li{
-                    width: 100%;
-                    &:hover{
-                        border-radius: var(--r2);
-                        background-color: var(--bgYellow);
-                    }
-                    a{
-                        width: 100%;
-                        color: var(--bgWhite);
-                        padding: var(--r1) var(--r5);
-                    }
+                &:hover {
+                  border-radius: var(--r2);
+                  background-color: var(--bgYellow);
                 }
+                a {
+                  width: 100%;
+                  color: var(--bgWhite);
+                  padding: var(--r1) var(--r5);
+                }
+              }
             }
           }
           a {
@@ -532,7 +604,7 @@ const Nav = styled.nav`
             height: 100%;
             padding: var(--r2-5) var(--r1-25);
             font-size: var(--r1-5);
-            letter-spacing: .15rem;
+            letter-spacing: 0.15rem;
             font-weight: 500;
             &:hover {
               color: var(--bgYellow);
@@ -681,5 +753,3 @@ const Nav = styled.nav`
     }
   }
 `;
-
-

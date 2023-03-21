@@ -38,6 +38,7 @@ import {
 import { useGetSingleUserQuery } from "../../store/services/adminUserService";
 import {
     addTravellers,
+    clearMessage,
     decreaseAdult,
     decreaseChildren,
     decreaseRoom,
@@ -51,29 +52,45 @@ import {
     setReturningFlight,
     setReturningTransfer,
     setRoom,
+    setSuccess,
     updateTraveller,
 } from "../../store/reducers/globalReducer";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { toast, Toaster } from "react-hot-toast";
 
 const PackageDetail = ({ data }) => {
-
-    const { price, totalPrice, goingTransfer, returningTransfer, goingFlight, returningFlight } = useSelector(state => state.globalReducer);
+    const {
+        price,
+        totalPrice,
+        goingTransfer,
+        returningTransfer,
+        goingFlight,
+        returningFlight,
+    } = useSelector((state) => state.globalReducer);
 
     const handleFlightRemove = (type) => {
         if (type === "starting") {
-            goingFlight === 0 ? dispatch(setGoingFlight(1)) : dispatch(setGoingFlight(0));
+            goingFlight === 0
+                ? dispatch(setGoingFlight(1))
+                : dispatch(setGoingFlight(0));
         } else if (type === "ending") {
-            returningFlight === 0 ? dispatch(setReturningFlight(1)) : dispatch(setReturningFlight(0));
+            returningFlight === 0
+                ? dispatch(setReturningFlight(1))
+                : dispatch(setReturningFlight(0));
         }
-    }
+    };
 
     const handleTransferRemove = (type) => {
         if (type === "starting") {
-            goingTransfer === 0 ? dispatch(setGoingTransfer(1)) : dispatch(setGoingTransfer(0));
+            goingTransfer === 0
+                ? dispatch(setGoingTransfer(1))
+                : dispatch(setGoingTransfer(0));
         } else if (type === "ending") {
-            returningTransfer === 0 ? dispatch(setReturningTransfer(1)) : dispatch(setReturningTransfer(0));
+            returningTransfer === 0
+                ? dispatch(setReturningTransfer(1))
+                : dispatch(setReturningTransfer(0));
         }
-    }
+    };
 
     const searchParams = new URLSearchParams(useLocation().search);
     const { id: packId } = useParams();
@@ -96,36 +113,63 @@ const PackageDetail = ({ data }) => {
         (_, index) => index + 1
     );
 
-
     const startDate = new Date(data?.date); // First date
-    const endDate = new Date(startDate.getTime() + ((myArray.length - 1) * 24 * 60 * 60 * 1000)); // Last date
+    const endDate = new Date(
+        startDate.getTime() + (myArray.length - 1) * 24 * 60 * 60 * 1000
+    ); // Last date
 
-    const firstDate = `${startDate.getDate()} ${getMonthName(startDate.getMonth())}`; // Format the first date as "DD Month"
+    const firstDate = `${startDate.getDate()} ${getMonthName(
+        startDate.getMonth()
+    )}`; // Format the first date as "DD Month"
     const lastDate = `${endDate.getDate()} ${getMonthName(endDate.getMonth())}`; // Format the last date as "DD Month"
 
-    const firstDateWhole = startDate.toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' }); // Format the first date as "ddd Mon DD"
-    const lastDateWhole = endDate.toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' }); // Format the last date as "ddd Mon DD"
-
+    const firstDateWhole = startDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+    }); // Format the first date as "ddd Mon DD"
+    const lastDateWhole = endDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+    }); // Format the last date as "ddd Mon DD"
 
     function getMonthName(monthIndex) {
         const monthNames = [
-            "January", "February", "March", "April", "May", "June", "July",
-            "August", "September", "October", "November", "December"
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
         ];
         return monthNames[monthIndex];
     }
 
+    const { adult, children, room } = useSelector((state) => state.globalReducer);
+    const adultPrice = price; // actual price for adults
+    const childPrice = price * 0.85; // actual price minus 15% for children
+    const totalPrice1 = (adultPrice * adult) + (childPrice * children)
+    console.log({price});
+
     useEffect(() => {
         if (data && myParam) {
-            let price = data.details.find(detail => detail.duration === myParam)?.price;
-            price = price - ((price * 4) / 100)
-            console.log("price: ", price);
-            dispatch(setPrice(price));
+            let price1 = data?.package1?.details?.find(
+                (detail) => detail.duration === myParam
+            )?.price;
+            price1 = price1 - (price1 * 4) / 100;
+            console.log("price: ", price1);
+            dispatch(setPrice(price === 0 ? price1 : price));
         }
-    }, [data, myParam])
+    }, [data, myParam]);
 
     const { user } = useSelector((state) => state.authReducer);
-    const { adult, children, room } = useSelector((state) => state.globalReducer);
     const { travellers } = useSelector((state) => state.globalReducer);
 
     const { data: userData, isFetching } = useGetSingleUserQuery(user?.id);
@@ -137,6 +181,16 @@ const PackageDetail = ({ data }) => {
 
     const [likePackage, response] = useUserLikePackageMutation();
     const [dislikePackage, response1] = useUserDisLikePackageMutation();
+
+    useEffect(() => {
+        dispatch(clearMessage());
+        dispatch(setSuccess("Package Liked Successfully"));
+    }, [response]);
+
+    useEffect(() => {
+        dispatch(clearMessage());
+        dispatch(setSuccess("Package DisLiked Successfully"));
+    }, [response1]);
 
 
     const [photosSelect, setPhotosSelect] = useState(1);
@@ -375,7 +429,9 @@ const PackageDetail = ({ data }) => {
                                             <span
                                                 style={{ fontWeight: itineraryOptions ? "500" : "100" }}
                                             >
-                                                {goingTransfer + returningTransfer == 0 ? "No" : goingTransfer + returningTransfer}
+                                                {goingTransfer + returningTransfer == 0
+                                                    ? "No"
+                                                    : goingTransfer + returningTransfer}
                                             </span>
                                             <h1
                                                 style={{
@@ -401,7 +457,9 @@ const PackageDetail = ({ data }) => {
                                             <span
                                                 style={{ fontWeight: itineraryOptions ? "500" : "100" }}
                                             >
-                                                {goingFlight + returningFlight == 0 ? "No" : goingFlight + returningFlight}
+                                                {goingFlight + returningFlight == 0
+                                                    ? "No"
+                                                    : goingFlight + returningFlight}
                                             </span>
                                             <h1
                                                 style={{
@@ -461,7 +519,12 @@ const PackageDetail = ({ data }) => {
                                                     <div className="item">INCLUDED</div>
                                                     <div className="item">
                                                         <FlightIcon />
-                                                        <span>{goingFlight + returningFlight == 0 ? "No" : goingFlight + returningFlight} Flights</span>
+                                                        <span>
+                                                            {goingFlight + returningFlight == 0
+                                                                ? "No"
+                                                                : goingFlight + returningFlight}{" "}
+                                                            Flights
+                                                        </span>
                                                     </div>
                                                     <h2>|</h2>
                                                     <div className="item">
@@ -471,122 +534,158 @@ const PackageDetail = ({ data }) => {
                                                     <h2>|</h2>
                                                     <div className="item">
                                                         <TimeToLeaveIcon />
-                                                        <span>{goingTransfer + returningTransfer == 0 ? "No" : goingTransfer + returningTransfer} Transfer</span>
+                                                        <span>
+                                                            {goingTransfer + returningTransfer == 0
+                                                                ? "No"
+                                                                : goingTransfer + returningTransfer}{" "}
+                                                            Transfer
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            {goingFlight ? <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.starting_point} to{" "}
-                                                            {data.location.city} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("starting")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content2">
-                                                    <div className="left2">
-                                                        <div className="image">
-                                                            <img src={img3} alt="" />
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].flightno}
-                                                            </label>
+                                            {goingFlight ? (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.starting_point} to{" "}
+                                                                {data.location.city} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
                                                         </div>
-                                                        <div className="contentLeft">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].startTime}
-                                                            </label>
-                                                            <h4>{firstDateWhole}</h4>
-                                                            <h5>{data.starting_point}</h5>
-                                                        </div>
-                                                        <div className="line"></div>
-                                                        <div className="contentRight">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].endTime}
-                                                            </label>
-                                                            <h4>{firstDateWhole}</h4>
-                                                            <h5>{data.location.city} - {data.details[0].flights[0].airport}</h5>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("starting")}
+                                                            >
+                                                                Remove
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="right2">
-                                                        <h1>Private Transfer</h1>
-                                                        <div className="downContent">
-                                                            <div className="item">
-                                                                <ShoppingBagIcon className="icon" />
-                                                                <span>Cabin: </span>
-                                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                                    <div className="content2">
+                                                        <div className="left2">
+                                                            <div className="image">
+                                                                <img src={img3} alt="" />
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].flightno}
+                                                                </label>
                                                             </div>
-                                                            <div className="item">
-                                                                <LuggageIcon className="icon" />
-                                                                <span>Check In: </span>
-                                                                <h4>15 Kg</h4>
+                                                            <div className="contentLeft">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].startTime}
+                                                                </label>
+                                                                <h4>{firstDateWhole}</h4>
+                                                                <h5>{data.starting_point}</h5>
+                                                            </div>
+                                                            <div className="line"></div>
+                                                            <div className="contentRight">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].endTime}
+                                                                </label>
+                                                                <h4>{firstDateWhole}</h4>
+                                                                <h5>
+                                                                    {data.location.city} -{" "}
+                                                                    {data.details[0].flights[0].airport}
+                                                                </h5>
                                                             </div>
                                                         </div>
+                                                        <div className="right2">
+                                                            <h1>Private Transfer</h1>
+                                                            <div className="downContent">
+                                                                <div className="item">
+                                                                    <ShoppingBagIcon className="icon" />
+                                                                    <span>Cabin: </span>
+                                                                    <h4>7 Kgs ( 1 peice only )</h4>
+                                                                </div>
+                                                                <div className="item">
+                                                                    <LuggageIcon className="icon" />
+                                                                    <span>Check In: </span>
+                                                                    <h4>15 Kg</h4>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div> : <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.starting_point} to{" "}
-                                                            {data.location.city} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("starting")}>Add Flight</button>
+                                            ) : (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.starting_point} to{" "}
+                                                                {data.location.city} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("starting")}
+                                                            >
+                                                                Add Flight
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            )}
                                             <hr />
-                                            {goingTransfer ? <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Airport to hotel in {data.ending_point}  - 30 minutes
-                                                        </h1>
+                                            {goingTransfer ? (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Airport to hotel in{" "}
+                                                                {data.ending_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("starting")}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("starting")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content">
-                                                    <div className="left">
-                                                        <img src={img4} alt="" />
-                                                    </div>
-                                                    <div className="right">
-                                                        <h1>Private Transfer</h1>
-                                                        <p>
-                                                            Travel comfortably in a private vehicle from Goa
-                                                            Airport to your hotel in Goa. Note: The pick-up
-                                                            timing is subject to your flight arrival and shall
-                                                            be communicated to you by the local vendor. There
-                                                            will be non stop-overs allowed during this
-                                                            transfer
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div> : <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Airport to hotel in {data.ending_point}  - 30 minutes
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("starting")}>Add transfer</button>
+                                                    <div className="content">
+                                                        <div className="left">
+                                                            <img src={img4} alt="" />
+                                                        </div>
+                                                        <div className="right">
+                                                            <h1>Private Transfer</h1>
+                                                            <p>
+                                                                Travel comfortably in a private vehicle from Goa
+                                                                Airport to your hotel in Goa. Note: The pick-up
+                                                                timing is subject to your flight arrival and
+                                                                shall be communicated to you by the local
+                                                                vendor. There will be non stop-overs allowed
+                                                                during this transfer
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            ) : (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Airport to hotel in{" "}
+                                                                {data.ending_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("starting")}
+                                                            >
+                                                                Add transfer
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                             <hr />
                                             <div className="car1">
                                                 <div className="title">
                                                     <div className="east">
-                                                        <h1>Check-in to Hotel in {data.ending_point} @ 2 PM</h1>
+                                                        <h1>
+                                                            Check-in to Hotel in {data.ending_point} @ 2 PM
+                                                        </h1>
                                                     </div>
                                                     <div className="west">
                                                         <button>Change</button>
@@ -616,38 +715,44 @@ const PackageDetail = ({ data }) => {
                                                     Leisure or add an activity to your day
                                                 </div>
                                             </div>
-                                            {
-                                                daysArray.map((day, index) => {
-                                                    return (
-                                                        <>
-                                                            <div className="title">
-                                                                <div className="left1">
-                                                                    <h1>Day {index + 2} - Arrival in Agra</h1>
-                                                                </div>
+                                            {daysArray.map((day, index) => {
+                                                return (
+                                                    <>
+                                                        <div className="title">
+                                                            <div className="left1">
+                                                                <h1>Day {index + 2} - Arrival in Agra</h1>
                                                             </div>
-                                                            <div className="daymeal">
-                                                                <div className="east">
-                                                                    <RestaurantIcon className="icon" />
-                                                                    <span>Day Meals</span>
-                                                                </div>
-                                                                <div className="west">
-                                                                    {/* <CheckIcon className="icon"/> */}
-                                                                    <span>Breakfast: </span>
-                                                                    <p> Included at {data.details?.map((detail, index) => {
-                                                                        return detail.duration === myParam ? data.details[index].accommodations[0].name : ""
-                                                                    })} , {data.ending_point}</p>
-                                                                </div>
+                                                        </div>
+                                                        <div className="daymeal">
+                                                            <div className="east">
+                                                                <RestaurantIcon className="icon" />
+                                                                <span>Day Meals</span>
                                                             </div>
-                                                            <div className="endofday">
-                                                                <div className="content">
-                                                                    <span> End Of Day - &nbsp;</span> Spend time at
-                                                                    Leisure or add an activity to your day
-                                                                </div>
+                                                            <div className="west">
+                                                                {/* <CheckIcon className="icon"/> */}
+                                                                <span>Breakfast: </span>
+                                                                <p>
+                                                                    {" "}
+                                                                    Included at{" "}
+                                                                    {data.details?.map((detail, index) => {
+                                                                        return detail.duration === myParam
+                                                                            ? data.details[index].accommodations[0]
+                                                                                .name
+                                                                            : "";
+                                                                    })}{" "}
+                                                                    , {data.ending_point}
+                                                                </p>
                                                             </div>
-                                                        </>
-                                                    )
-                                                })
-                                            }
+                                                        </div>
+                                                        <div className="endofday">
+                                                            <div className="content">
+                                                                <span> End Of Day - &nbsp;</span> Spend time at
+                                                                Leisure or add an activity to your day
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                );
+                                            })}
                                             <div className="daymeal">
                                                 <div className="east">
                                                     <RestaurantIcon className="icon" />
@@ -659,112 +764,144 @@ const PackageDetail = ({ data }) => {
                                                     <p> Included at Evoke Lifestyle Candolim , Goa</p>
                                                 </div>
                                             </div>
-                                            {returningTransfer ? <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Hotel to Airport in {data.starting_point}  - 30 minutes
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("ending")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content">
-                                                    <div className="left">
-                                                        <img src={img1} alt="" />
-                                                    </div>
-                                                    <div className="right">
-                                                        <h1>Private Transfer</h1>
-                                                        <p>
-                                                            Travel comfortably in a private vehicle from Goa
-                                                            Airport to your hotel in Goa. Note: The pick-up
-                                                            timing is subject to your flight arrival and shall
-                                                            be communicated to you by the local vendor. There
-                                                            will be non stop-overs allowed during this
-                                                            transfer
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div> : <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Hotel to Airport in {data.starting_point}  - 30 minutes
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("ending")}>Add Transfer</button>
-                                                    </div>
-                                                </div>
-                                            </div>}
-                                            {returningFlight ? <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.location.city} to{" "}
-                                                            {data.starting_point} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("ending")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content2">
-                                                    <div className="left2">
-                                                        <div className="image">
-                                                            <img src={img3} alt="" />
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].flightno}
-                                                            </label>
+                                            {returningTransfer ? (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Hotel to Airport in{" "}
+                                                                {data.starting_point} - 30 minutes
+                                                            </h1>
                                                         </div>
-                                                        <div className="contentLeft">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].startTime}
-                                                            </label>
-                                                            <h4>{lastDateWhole}</h4>
-                                                            <h5>{data.location.city}</h5>
-                                                        </div>
-                                                        <div className="line"></div>
-                                                        <div className="contentRight">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].endTime}
-                                                            </label>
-                                                            <h4>{lastDateWhole}</h4>
-                                                            <h5>{data.starting_point} - {data.details[0].flights[0].destination_airport}</h5>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("ending")}
+                                                            >
+                                                                Remove
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="right2">
-                                                        <h1>Private Transfer</h1>
-                                                        <div className="downContent">
-                                                            <div className="item">
-                                                                <ShoppingBagIcon className="icon" />
-                                                                <span>Cabin: </span>
-                                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                                    <div className="content">
+                                                        <div className="left">
+                                                            <img src={img1} alt="" />
+                                                        </div>
+                                                        <div className="right">
+                                                            <h1>Private Transfer</h1>
+                                                            <p>
+                                                                Travel comfortably in a private vehicle from Goa
+                                                                Airport to your hotel in Goa. Note: The pick-up
+                                                                timing is subject to your flight arrival and
+                                                                shall be communicated to you by the local
+                                                                vendor. There will be non stop-overs allowed
+                                                                during this transfer
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Hotel to Airport in{" "}
+                                                                {data.starting_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("ending")}
+                                                            >
+                                                                Add Transfer
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {returningFlight ? (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.location.city} to{" "}
+                                                                {data.starting_point} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("ending")}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="content2">
+                                                        <div className="left2">
+                                                            <div className="image">
+                                                                <img src={img3} alt="" />
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].flightno}
+                                                                </label>
                                                             </div>
-                                                            <div className="item">
-                                                                <LuggageIcon className="icon" />
-                                                                <span>Check In: </span>
-                                                                <h4>15 Kg</h4>
+                                                            <div className="contentLeft">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].startTime}
+                                                                </label>
+                                                                <h4>{lastDateWhole}</h4>
+                                                                <h5>{data.location.city}</h5>
+                                                            </div>
+                                                            <div className="line"></div>
+                                                            <div className="contentRight">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].endTime}
+                                                                </label>
+                                                                <h4>{lastDateWhole}</h4>
+                                                                <h5>
+                                                                    {data.starting_point} -{" "}
+                                                                    {
+                                                                        data.details[0].flights[0]
+                                                                            .destination_airport
+                                                                    }
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className="right2">
+                                                            <h1>Private Transfer</h1>
+                                                            <div className="downContent">
+                                                                <div className="item">
+                                                                    <ShoppingBagIcon className="icon" />
+                                                                    <span>Cabin: </span>
+                                                                    <h4>7 Kgs ( 1 peice only )</h4>
+                                                                </div>
+                                                                <div className="item">
+                                                                    <LuggageIcon className="icon" />
+                                                                    <span>Check In: </span>
+                                                                    <h4>15 Kg</h4>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> : <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.location.city} to{" "}
-                                                            {data.starting_point} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("ending")}>Add Flight</button>
+                                            ) : (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.location.city} to{" "}
+                                                                {data.starting_point} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("ending")}
+                                                            >
+                                                                Add Flight
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            )}
                                             <div className="endofday">
                                                 <div className="content">
                                                     <span> End Of Day - &nbsp;</span> Spend time at
@@ -778,7 +915,9 @@ const PackageDetail = ({ data }) => {
                                             <div className="car1">
                                                 <div className="title">
                                                     <div className="east">
-                                                        <h1>Check-in to Hotel in {data.ending_point} @ 2 PM</h1>
+                                                        <h1>
+                                                            Check-in to Hotel in {data.ending_point} @ 2 PM
+                                                        </h1>
                                                     </div>
                                                     <div className="west">
                                                         <button>Change</button>
@@ -806,222 +945,283 @@ const PackageDetail = ({ data }) => {
                                     )}
                                     {itineraryOptions == 4 && (
                                         <>
-                                            {goingTransfer ? <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Airport to hotel in {data.ending_point}  - 30 minutes
-                                                        </h1>
+                                            {goingTransfer ? (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Airport to hotel in{" "}
+                                                                {data.ending_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("starting")}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("starting")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content">
-                                                    <div className="left">
-                                                        <img src={img4} alt="" />
-                                                    </div>
-                                                    <div className="right">
-                                                        <h1>Private Transfer</h1>
-                                                        <p>
-                                                            Travel comfortably in a private vehicle from Goa
-                                                            Airport to your hotel in Goa. Note: The pick-up
-                                                            timing is subject to your flight arrival and shall
-                                                            be communicated to you by the local vendor. There
-                                                            will be non stop-overs allowed during this
-                                                            transfer
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div> : <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Airport to hotel in {data.ending_point}  - 30 minutes
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("starting")}>Add transfer</button>
+                                                    <div className="content">
+                                                        <div className="left">
+                                                            <img src={img4} alt="" />
+                                                        </div>
+                                                        <div className="right">
+                                                            <h1>Private Transfer</h1>
+                                                            <p>
+                                                                Travel comfortably in a private vehicle from Goa
+                                                                Airport to your hotel in Goa. Note: The pick-up
+                                                                timing is subject to your flight arrival and
+                                                                shall be communicated to you by the local
+                                                                vendor. There will be non stop-overs allowed
+                                                                during this transfer
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
-                                            {returningTransfer ? <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Hotel to Airport in {data.starting_point}  - 30 minutes
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("ending")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content">
-                                                    <div className="left">
-                                                        <img src={img1} alt="" />
-                                                    </div>
-                                                    <div className="right">
-                                                        <h1>Private Transfer</h1>
-                                                        <p>
-                                                            Travel comfortably in a private vehicle from Goa
-                                                            Airport to your hotel in Goa. Note: The pick-up
-                                                            timing is subject to your flight arrival and shall
-                                                            be communicated to you by the local vendor. There
-                                                            will be non stop-overs allowed during this
-                                                            transfer
-                                                        </p>
+                                            ) : (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Airport to hotel in{" "}
+                                                                {data.ending_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("starting")}
+                                                            >
+                                                                Add transfer
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div> : <div className="car">
-                                                <div className="title">
-                                                    <div className="east">
-                                                        <h1>
-                                                            Transfer from Hotel to Airport in {data.starting_point}  - 30 minutes
-                                                        </h1>
+                                            )}
+                                            {returningTransfer ? (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Hotel to Airport in{" "}
+                                                                {data.starting_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("ending")}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div className="west">
-                                                        <button onClick={() => handleTransferRemove("ending")}>Add Transfer</button>
+                                                    <div className="content">
+                                                        <div className="left">
+                                                            <img src={img1} alt="" />
+                                                        </div>
+                                                        <div className="right">
+                                                            <h1>Private Transfer</h1>
+                                                            <p>
+                                                                Travel comfortably in a private vehicle from Goa
+                                                                Airport to your hotel in Goa. Note: The pick-up
+                                                                timing is subject to your flight arrival and
+                                                                shall be communicated to you by the local
+                                                                vendor. There will be non stop-overs allowed
+                                                                during this transfer
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            ) : (
+                                                <div className="car">
+                                                    <div className="title">
+                                                        <div className="east">
+                                                            <h1>
+                                                                Transfer from Hotel to Airport in{" "}
+                                                                {data.starting_point} - 30 minutes
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west">
+                                                            <button
+                                                                onClick={() => handleTransferRemove("ending")}
+                                                            >
+                                                                Add Transfer
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </>
                                     )}
                                     {itineraryOptions === 5 && (
                                         <>
-                                            {goingFlight ? <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.starting_point} to{" "}
-                                                            {data.location.city} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("starting")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content2">
-                                                    <div className="left2">
-                                                        <div className="image">
-                                                            <img src={img3} alt="" />
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].flightno}
-                                                            </label>
+                                            {goingFlight ? (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.starting_point} to{" "}
+                                                                {data.location.city} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
                                                         </div>
-                                                        <div className="contentLeft">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].startTime}
-                                                            </label>
-                                                            <h4>{firstDateWhole}</h4>
-                                                            <h5>{data.starting_point}</h5>
-                                                        </div>
-                                                        <div className="line"></div>
-                                                        <div className="contentRight">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].endTime}
-                                                            </label>
-                                                            <h4>{firstDateWhole}</h4>
-                                                            <h5>{data.location.city} - {data.details[0].flights[0].airport}</h5>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("starting")}
+                                                            >
+                                                                Remove
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="right2">
-                                                        <h1>Private Transfer</h1>
-                                                        <div className="downContent">
-                                                            <div className="item">
-                                                                <ShoppingBagIcon className="icon" />
-                                                                <span>Cabin: </span>
-                                                                <h4>7 Kgs ( 1 peice only )</h4>
+                                                    <div className="content2">
+                                                        <div className="left2">
+                                                            <div className="image">
+                                                                <img src={img3} alt="" />
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].flightno}
+                                                                </label>
                                                             </div>
-                                                            <div className="item">
-                                                                <LuggageIcon className="icon" />
-                                                                <span>Check In: </span>
-                                                                <h4>15 Kg</h4>
+                                                            <div className="contentLeft">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].startTime}
+                                                                </label>
+                                                                <h4>{firstDateWhole}</h4>
+                                                                <h5>{data.starting_point}</h5>
+                                                            </div>
+                                                            <div className="line"></div>
+                                                            <div className="contentRight">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].endTime}
+                                                                </label>
+                                                                <h4>{firstDateWhole}</h4>
+                                                                <h5>
+                                                                    {data.location.city} -{" "}
+                                                                    {data.details[0].flights[0].airport}
+                                                                </h5>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div> : <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.starting_point} to{" "}
-                                                            {data.location.city} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("starting")}>Add Flight</button>
-                                                    </div>
-                                                </div>
-                                            </div>}
-                                            {returningFlight ? <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.location.city} to{" "}
-                                                            {data.starting_point} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("ending")}>Remove</button>
-                                                    </div>
-                                                </div>
-                                                <div className="content2">
-                                                    <div className="left2">
-                                                        <div className="image">
-                                                            <img src={img3} alt="" />
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].flightno}
-                                                            </label>
-                                                        </div>
-                                                        <div className="contentLeft">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].startTime}
-                                                            </label>
-                                                            <h4>{lastDateWhole}</h4>
-                                                            <h5>{data.location.city}</h5>
-                                                        </div>
-                                                        <div className="line"></div>
-                                                        <div className="contentRight">
-                                                            <label htmlFor="">
-                                                                {singleDetail?.flights[0].endTime}
-                                                            </label>
-                                                            <h4>{lastDateWhole}</h4>
-                                                            <h5>{data.starting_point} - {data.details[0].flights[0].destination_airport}</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div className="right2">
-                                                        <h1>Private Transfer</h1>
-                                                        <div className="downContent">
-                                                            <div className="item">
-                                                                <ShoppingBagIcon className="icon" />
-                                                                <span>Cabin: </span>
-                                                                <h4>7 Kgs ( 1 peice only )</h4>
-                                                            </div>
-                                                            <div className="item">
-                                                                <LuggageIcon className="icon" />
-                                                                <span>Check In: </span>
-                                                                <h4>15 Kg</h4>
+                                                        <div className="right2">
+                                                            <h1>Private Transfer</h1>
+                                                            <div className="downContent">
+                                                                <div className="item">
+                                                                    <ShoppingBagIcon className="icon" />
+                                                                    <span>Cabin: </span>
+                                                                    <h4>7 Kgs ( 1 peice only )</h4>
+                                                                </div>
+                                                                <div className="item">
+                                                                    <LuggageIcon className="icon" />
+                                                                    <span>Check In: </span>
+                                                                    <h4>15 Kg</h4>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> : <div className="car2">
-                                                <div className="title2">
-                                                    <div className="east2">
-                                                        <h1>
-                                                            Flight from {data.location.city} to{" "}
-                                                            {data.starting_point} -{" "}
-                                                            {singleDetail?.flights[0].airport} 02h 45m
-                                                        </h1>
-                                                    </div>
-                                                    <div className="west2">
-                                                        <button onClick={() => handleFlightRemove("ending")}>Add Flight</button>
+                                            ) : (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.starting_point} to{" "}
+                                                                {data.location.city} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("starting")}
+                                                            >
+                                                                Add Flight
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            )}
+                                            {returningFlight ? (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.location.city} to{" "}
+                                                                {data.starting_point} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("ending")}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="content2">
+                                                        <div className="left2">
+                                                            <div className="image">
+                                                                <img src={img3} alt="" />
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].flightno}
+                                                                </label>
+                                                            </div>
+                                                            <div className="contentLeft">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].startTime}
+                                                                </label>
+                                                                <h4>{lastDateWhole}</h4>
+                                                                <h5>{data.location.city}</h5>
+                                                            </div>
+                                                            <div className="line"></div>
+                                                            <div className="contentRight">
+                                                                <label htmlFor="">
+                                                                    {singleDetail?.flights[0].endTime}
+                                                                </label>
+                                                                <h4>{lastDateWhole}</h4>
+                                                                <h5>
+                                                                    {data.starting_point} -{" "}
+                                                                    {
+                                                                        data.details[0].flights[0]
+                                                                            .destination_airport
+                                                                    }
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className="right2">
+                                                            <h1>Private Transfer</h1>
+                                                            <div className="downContent">
+                                                                <div className="item">
+                                                                    <ShoppingBagIcon className="icon" />
+                                                                    <span>Cabin: </span>
+                                                                    <h4>7 Kgs ( 1 peice only )</h4>
+                                                                </div>
+                                                                <div className="item">
+                                                                    <LuggageIcon className="icon" />
+                                                                    <span>Check In: </span>
+                                                                    <h4>15 Kg</h4>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="car2">
+                                                    <div className="title2">
+                                                        <div className="east2">
+                                                            <h1>
+                                                                Flight from {data.location.city} to{" "}
+                                                                {data.starting_point} -{" "}
+                                                                {singleDetail?.flights[0].airport} 02h 45m
+                                                            </h1>
+                                                        </div>
+                                                        <div className="west2">
+                                                            <button
+                                                                onClick={() => handleFlightRemove("ending")}
+                                                            >
+                                                                Add Flight
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -1032,9 +1232,15 @@ const PackageDetail = ({ data }) => {
                         <div className="newWholeDiv">
                             <div className="firstDiv">
                                 <div className="leftclass">
-                                    <h5>₹{data.details.find(detail => detail.duration === myParam)?.price}</h5>
+                                    <h5>
+                                        ₹
+                                        {
+                                            data.details.find((detail) => detail.duration === myParam)
+                                                ?.price
+                                        }
+                                    </h5>
                                     <div className="merge">
-                                        <h4>₹{price}</h4>
+                                        <h4>{"₹" + totalPrice1.toLocaleString("en-IN")}</h4>
                                         <h6>&nbsp;per person*</h6>
                                     </div>
                                     <h3>*Excluding Applicable taxes</h3>
@@ -1047,7 +1253,9 @@ const PackageDetail = ({ data }) => {
                                 <CalendarMonthIcon
                                     style={{ fontSize: "2rem", color: "rgb(74, 74, 74)" }}
                                 />
-                                <h4>{firstDate} - {lastDate}</h4>
+                                <h4>
+                                    {firstDate} - {lastDate}
+                                </h4>
                             </div>
                             <div className="thirdDiv">
                                 <h2>Details</h2>
@@ -1058,17 +1266,20 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(decreaseAdult())
-                                                dispatch(removeTraveller({ type: "adult" }))
+                                                dispatch(decreaseAdult());
+                                                dispatch(removeTraveller({ type: "adult" }));
                                             }}
                                         >
                                             -
                                         </div>
                                         <div className="two">{adult}</div>
-                                        <div className="one" onClick={() => {
-                                            dispatch(setAdult())
-                                            dispatch(addTravellers({ type: "adult" }))
-                                        }}>
+                                        <div
+                                            className="one"
+                                            onClick={() => {
+                                                dispatch(setAdult());
+                                                dispatch(addTravellers({ type: "adult" }));
+                                            }}
+                                        >
                                             +
                                         </div>
                                     </div>
@@ -1079,9 +1290,9 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(decreaseChildren())
-                                                dispatch(removeTraveller({ type: "children" }))
-                                                console.log("hsbchjsdbchjsdbcnsdc shjdv hsjd v")
+                                                dispatch(decreaseChildren());
+                                                dispatch(removeTraveller({ type: "children" }));
+                                                console.log("hsbchjsdbchjsdbcnsdc shjdv hsjd v");
                                             }}
                                         >
                                             -
@@ -1090,8 +1301,8 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(setChildren())
-                                                dispatch(addTravellers({ type: "children" }))
+                                                dispatch(setChildren());
+                                                dispatch(addTravellers({ type: "children" }));
                                             }}
                                         >
                                             +
@@ -1104,7 +1315,7 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(decreaseRoom())
+                                                dispatch(decreaseRoom());
                                             }}
                                         >
                                             -
@@ -1115,33 +1326,9 @@ const PackageDetail = ({ data }) => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="fourthDiv">
-                                <Link to={`/booking/${packId}`}>
-                                    <button>Proceed to Book Online</button>
-                                </Link>
                             </div>
                         </div>
-                        <div className="newWholeDiv">
-                            <div className="firstDiv">
-                                <div className="leftclass">
-                                    <h5>₹{data.details.find(detail => detail.duration === myParam)?.price}</h5>
-                                    <div className="merge">
-                                        <h4>₹{price}</h4>
-                                        <h6>&nbsp;per person*</h6>
-                                    </div>
-                                    <h3>*Excluding Applicable taxes</h3>
-                                </div>
-                                <div className="rightclass">
-                                    <div className="off">4% OFF</div>
-                                </div>
-                            </div>
-                            <div className="secondDiv">
-                                <CalendarMonthIcon
-                                    style={{ fontSize: "2rem", color: "rgb(74, 74, 74)" }}
-                                />
-                                <h4>{firstDate} - {lastDate}</h4>
-                            </div>
+                        <div className="newWholeDiv1">
                             <div className="thirdDiv">
                                 <h2>Details</h2>
                                 <h3>Travellers</h3>
@@ -1151,17 +1338,20 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(decreaseAdult())
-                                                dispatch(removeTraveller({ type: "adult" }))
+                                                dispatch(decreaseAdult());
+                                                dispatch(removeTraveller({ type: "adult" }));
                                             }}
                                         >
                                             -
                                         </div>
                                         <div className="two">{adult}</div>
-                                        <div className="one" onClick={() => {
-                                            dispatch(setAdult())
-                                            dispatch(addTravellers({ type: "adult" }))
-                                        }}>
+                                        <div
+                                            className="one"
+                                            onClick={() => {
+                                                dispatch(setAdult());
+                                                dispatch(addTravellers({ type: "adult" }));
+                                            }}
+                                        >
                                             +
                                         </div>
                                     </div>
@@ -1172,9 +1362,9 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(decreaseChildren())
-                                                dispatch(removeTraveller({ type: "children" }))
-                                                console.log("hsbchjsdbchjsdbcnsdc shjdv hsjd v")
+                                                dispatch(decreaseChildren());
+                                                dispatch(removeTraveller({ type: "children" }));
+                                                console.log("hsbchjsdbchjsdbcnsdc shjdv hsjd v");
                                             }}
                                         >
                                             -
@@ -1183,8 +1373,8 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(setChildren())
-                                                dispatch(addTravellers({ type: "children" }))
+                                                dispatch(setChildren());
+                                                dispatch(addTravellers({ type: "children" }));
                                             }}
                                         >
                                             +
@@ -1197,7 +1387,7 @@ const PackageDetail = ({ data }) => {
                                         <div
                                             className="one"
                                             onClick={() => {
-                                                dispatch(decreaseRoom())
+                                                dispatch(decreaseRoom());
                                             }}
                                         >
                                             -
@@ -1210,7 +1400,7 @@ const PackageDetail = ({ data }) => {
                                 </div>
                             </div>
                             <div className="fourthDiv">
-                                <Link to={`/booking/${packId}`}>
+                                <Link to={`/booking/${packId}?myParam=${myParam}`}>
                                     <button>Proceed to Book Online</button>
                                 </Link>
                             </div>
@@ -2193,144 +2383,295 @@ const Section = styled.section`
         }
       }
     }
-    .newWholeDiv {
-      flex: 1;
-      height: max-content;
-      box-shadow: 0 10px 30px 0px rgb(0, 0, 0, 0.1);
-      margin-top: 3rem;
-      .firstDiv {
-        width: 100%;
-        background-color: rgb(234, 245, 255);
+    .secondSection {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      .newWholeDiv {
+        height: max-content;
+        box-shadow: 0 10px 30px 0px rgb(0, 0, 0, 0.1);
+        margin-top: 3rem;
         border-top-left-radius: 1rem;
         border-top-right-radius: 1rem;
-        padding: 1.5rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        border-bottom: 1px solid rgb(0, 0, 0, 0.1);
-        .leftclass {
+        width: 100%;
+        .firstDiv {
+          width: 100%;
+          background-color: rgb(234, 245, 255);
+          border-top-left-radius: 1rem;
+          border-top-right-radius: 1rem;
+          padding: 1.5rem 2rem;
           display: flex;
-          flex-direction: column;
+          justify-content: space-between;
           align-items: flex-start;
-          h5 {
-            color: rgb(74, 74, 74);
-            text-decoration: line-through;
-            font-size: 1rem;
-            font-weight: 100;
-          }
-          .merge {
+          border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+          .leftclass {
             display: flex;
-            align-items: center;
-            h4 {
-              font-size: 2rem;
-              color: black;
-              padding: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            h5 {
+              color: rgb(74, 74, 74);
+              text-decoration: line-through;
+              font-size: 1rem;
+              font-weight: 100;
             }
-            h6 {
+            .merge {
+              display: flex;
+              align-items: center;
+              h4 {
+                font-size: 2rem;
+                color: black;
+                padding: 0;
+              }
+              h6 {
+                font-size: 1.2rem;
+                font-weight: 100;
+              }
+            }
+            h3 {
+              padding: 0;
               font-size: 1.2rem;
               font-weight: 100;
             }
           }
-          h3 {
-            padding: 0;
-            font-size: 1.2rem;
-            font-weight: 100;
+          .rightclass {
+            .off {
+              padding: 0.3rem 0.5rem;
+              background-color: rgb(255, 85, 78);
+              color: white;
+              border-radius: 0.3rem;
+            }
           }
         }
-        .rightclass {
-          .off {
-            padding: 0.3rem 0.5rem;
-            background-color: rgb(255, 85, 78);
-            color: white;
-            border-radius: 0.3rem;
-          }
-        }
-      }
-      .secondDiv {
-        border-bottom: 1px solid rgb(0, 0, 0, 0.1);
-        width: 100%;
-        display: flex;
-        align-items: center;
-        padding: 1.3rem 2rem;
-        background-color: white;
-        gap: 1rem;
-        h4 {
-          font-size: 1.5rem;
-          color: rgb(74, 74, 74);
-        }
-      }
-      .thirdDiv {
-        width: 100%;
-        border-bottom: 1px solid rgb(0, 0, 0, 0.1);
-        background-color: white;
-        padding: 1.3rem 2rem;
-        h2 {
-          font-size: 2rem;
-          color: rgb(74, 74, 74);
-        }
-        h3 {
-          font-size: 1.7rem;
-          color: rgb(74, 74, 74);
-          margin-top: 2rem;
-        }
-        .travellerDiv {
+        .secondDiv {
+          border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+          width: 100%;
           display: flex;
-          justify-content: space-between;
-          margin-top: 0.6rem;
           align-items: center;
-          h3 {
-            color: rgb(74, 74, 74, 0.7);
-            margin: 0;
+          padding: 1.3rem 2rem;
+          background-color: white;
+          gap: 1rem;
+          h4 {
             font-size: 1.5rem;
-          }
-          .right {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            align-items: center;
             color: rgb(74, 74, 74);
-            .one {
-              font-size: 2rem;
-              padding: 0.1rem 1rem;
-              border-radius: 1rem;
-              cursor: pointer;
-              border: 1px solid rgba(212, 225, 158, 0.5019607843);
-              transition: all 0.2s ease-in-out;
-              &:hover {
-                border: 1px solid black;
+          }
+        }
+        .thirdDiv {
+          width: 100%;
+          border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+          background-color: white;
+          padding: 1.3rem 2rem;
+          h2 {
+            font-size: 2rem;
+            color: rgb(74, 74, 74);
+          }
+          h3 {
+            font-size: 1.7rem;
+            color: rgb(74, 74, 74);
+            margin-top: 2rem;
+          }
+          .travellerDiv {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.6rem;
+            align-items: center;
+            h3 {
+              color: rgb(74, 74, 74, 0.7);
+              margin: 0;
+              font-size: 1.5rem;
+            }
+            .right {
+              display: flex;
+              justify-content: flex-end;
+              gap: 1rem;
+              align-items: center;
+              color: rgb(74, 74, 74);
+              .one {
+                font-size: 2rem;
+                padding: 0.1rem 1rem;
+                border-radius: 1rem;
+                cursor: pointer;
+                border: 1px solid rgba(212, 225, 158, 0.5019607843);
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                  border: 1px solid black;
+                }
+              }
+              .two {
+                font-size: 1.7rem;
+                width: 1.8rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
               }
             }
-            .two {
-              font-size: 1.7rem;
-              width: 1.8rem;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
+          }
+        }
+        .fourthDiv {
+          width: 100%;
+          padding: 1.3rem 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: white;
+          button {
+            padding: 0.8rem 1.3rem;
+            cursor: pointer;
+            background: linear-gradient(
+              to right,
+              rgb(79, 173, 254),
+              rgb(11, 95, 243)
+            );
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 900;
+            border: none;
+            outline: none;
+            border-radius: 0.6rem;
           }
         }
       }
-      .fourthDiv {
+
+      .newWholeDiv1 {
+        height: max-content;
+        box-shadow: 0 10px 30px 0px rgb(0, 0, 0, 0.1);
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
         width: 100%;
-        padding: 1.3rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-        button {
-          padding: 0.8rem 1.3rem;
-          cursor: pointer;
-          background: linear-gradient(
-            to right,
-            rgb(79, 173, 254),
-            rgb(11, 95, 243)
-          );
-          color: white;
-          font-size: 1.4rem;
-          font-weight: 900;
-          border: none;
-          outline: none;
-          border-radius: 0.6rem;
+        .firstDiv {
+          width: 100%;
+          background-color: rgb(234, 245, 255);
+          padding: 1.5rem 2rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+          .leftclass {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            h5 {
+              color: rgb(74, 74, 74);
+              text-decoration: line-through;
+              font-size: 1rem;
+              font-weight: 100;
+            }
+            .merge {
+              display: flex;
+              align-items: center;
+              h4 {
+                font-size: 2rem;
+                color: black;
+                padding: 0;
+              }
+              h6 {
+                font-size: 1.2rem;
+                font-weight: 100;
+              }
+            }
+            h3 {
+              padding: 0;
+              font-size: 1.2rem;
+              font-weight: 100;
+            }
+          }
+          .rightclass {
+            .off {
+              padding: 0.3rem 0.5rem;
+              background-color: rgb(255, 85, 78);
+              color: white;
+              border-radius: 0.3rem;
+            }
+          }
+        }
+        .secondDiv {
+          border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+          width: 100%;
+          display: flex;
+          align-items: center;
+          padding: 1.3rem 2rem;
+          background-color: white;
+          gap: 1rem;
+          h4 {
+            font-size: 1.5rem;
+            color: rgb(74, 74, 74);
+          }
+        }
+        .thirdDiv {
+          width: 100%;
+          border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+          background-color: white;
+          padding: 1.3rem 2rem;
+          h2 {
+            font-size: 2rem;
+            color: rgb(74, 74, 74);
+          }
+          h3 {
+            font-size: 1.7rem;
+            color: rgb(74, 74, 74);
+            margin-top: 2rem;
+          }
+          .travellerDiv {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.6rem;
+            align-items: center;
+            h3 {
+              color: rgb(74, 74, 74, 0.7);
+              margin: 0;
+              font-size: 1.5rem;
+            }
+            .right {
+              display: flex;
+              justify-content: flex-end;
+              gap: 1rem;
+              align-items: center;
+              color: rgb(74, 74, 74);
+              .one {
+                font-size: 2rem;
+                padding: 0.1rem 1rem;
+                border-radius: 1rem;
+                cursor: pointer;
+                border: 1px solid rgba(212, 225, 158, 0.5019607843);
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                  border: 1px solid black;
+                }
+              }
+              .two {
+                font-size: 1.7rem;
+                width: 1.8rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
+        }
+        .fourthDiv {
+          width: 100%;
+          padding: 1.3rem 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: white;
+          border-bottom-left-radius: 1rem;
+          border-bottom-right-radius: 1rem;
+          button {
+            padding: 0.8rem 1.3rem;
+            cursor: pointer;
+            background: linear-gradient(
+              to right,
+              rgb(79, 173, 254),
+              rgb(11, 95, 243)
+            );
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 900;
+            border: none;
+            outline: none;
+            border-radius: 0.6rem;
+          }
         }
       }
     }

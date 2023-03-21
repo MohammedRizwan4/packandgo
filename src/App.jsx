@@ -25,6 +25,8 @@ import LikePackages from "./scenes/liked/LikePackages";
 import UserPrivateRoute from "./scenes/routes/UserPrivateRoute";
 import Booking from "./scenes/booking/Booking";
 import MyBookings from "./scenes/mybookings/MyBookings";
+import { useSelector } from "react-redux";
+import { toast, Toaster } from "react-hot-toast";
 
 const App = () => {
 
@@ -41,36 +43,63 @@ const App = () => {
         }
     }, [])
 
+    const { success } = useSelector(state => state.globalReducer);
+
+    useEffect(() => {
+        if (success) {
+            const toastId = toast.success(success, {
+                style: {
+                    backgroundColor: "#393a3b",
+                    color: "white",
+                    padding: "8px",
+                },
+            });
+
+            setTimeout(() => {
+                toast.dismiss(toastId);
+            }, 3000);
+        }
+    }, [success]);
+
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="auth">
-                    <Route path="admin-login" element={<Public><AdminLogin /></Public>} />
-                </Route>
-                <Route path="dashboard">
-                    <Route path="users" element={<Private><AdminUsers /></Private>} ></Route>
-                    <Route path="updateuser/:id" element={<Private><AdminEditUsers /></Private>} ></Route>
-                    <Route path="add-users" element={<Private><AdminAddUsers /></Private>} ></Route>
-                    <Route path="update/:id" element={<Private><EditTheme /></Private>} ></Route>
-                    <Route path="packages" element={<Private><AdminPackages /></Private>} />
-                    <Route path="add-package" element={<Private><AdminAddPackage /></Private>} />
-                    <Route path="update-package/:id" element={<Private><AdminEditPackage /></Private>} ></Route>
-                    <Route path="theme" element={<Private><AdminTheme /></Private>} />
-                    <Route path="create-theme" element={<Private><CreateTheme /></Private>} />
-                    <Route path="*" element={<Private><AdminAddUsers /></Private>} />
-                </Route>
-                <Route path="/" element={<Home />} />
-                <Route path="/theme" element={<Theme />} />
-                <Route path="/contactus" element={<ContactUs />} />
-                <Route path="/aboutus" element={<AboutUs />} />
-                <Route path="/theme/:id" element={<SubTheme />} />
-                <Route path="/city/:name" element={<City />} />
-                <Route path="/package/:id" element={<Package />} />
-                <Route path="/liked" element={<UserPrivateRoute><LikePackages /></UserPrivateRoute>} />
-                <Route path="/booking/:id" element={<UserPrivateRoute><Booking /></UserPrivateRoute>} />
-                <Route path="/mybookings" element={<UserPrivateRoute><MyBookings /></UserPrivateRoute>} />
-            </Routes>
-        </BrowserRouter>
+        <>
+            {success && (
+                <Toaster
+                    toastOptions={{ style: { fontSize: "1.5rem" } }}
+                    position="top-center"
+                    reverseOrder={true}
+                />
+            )}
+            <BrowserRouter>
+                <Routes>
+                    <Route path="auth">
+                        <Route path="admin-login" element={<Public><AdminLogin /></Public>} />
+                    </Route>
+                    <Route path="dashboard">
+                        <Route path="users" element={<Private><AdminUsers /></Private>} ></Route>
+                        <Route path="updateuser/:id" element={<Private><AdminEditUsers /></Private>} ></Route>
+                        <Route path="add-users" element={<Private><AdminAddUsers /></Private>} ></Route>
+                        <Route path="update/:id" element={<Private><EditTheme /></Private>} ></Route>
+                        <Route path="packages" element={<Private><AdminPackages /></Private>} />
+                        <Route path="add-package" element={<Private><AdminAddPackage /></Private>} />
+                        <Route path="update-package/:id" element={<Private><AdminEditPackage /></Private>} ></Route>
+                        <Route path="theme" element={<Private><AdminTheme /></Private>} />
+                        <Route path="create-theme" element={<Private><CreateTheme /></Private>} />
+                        <Route path="*" element={<Private><AdminAddUsers /></Private>} />
+                    </Route>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/theme" element={<Theme />} />
+                    <Route path="/contactus" element={<ContactUs />} />
+                    <Route path="/aboutus" element={<AboutUs />} />
+                    <Route path="/theme/:id" element={<SubTheme />} />
+                    <Route path="/city/:name" element={<City />} />
+                    <Route path="/package/:id" element={<Package />} />
+                    <Route path="/liked" element={<UserPrivateRoute><LikePackages /></UserPrivateRoute>} />
+                    <Route path="/booking/:id" element={<UserPrivateRoute><Booking /></UserPrivateRoute>} />
+                    <Route path="/mybookings" element={<UserPrivateRoute><MyBookings /></UserPrivateRoute>} />
+                </Routes>
+            </BrowserRouter>
+        </>
     );
 };
 
