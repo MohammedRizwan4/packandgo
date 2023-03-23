@@ -26,7 +26,7 @@ const Traveller = ({ traveller, index }) => {
     const { travellers, travelDetail } = useSelector(state => state.globalReducer);
 
     const check = () => {
-        if (travellers[index].email && travellers[index].mcode && travellers[index].mobile && travellers[index].gender) {
+        if (travellers[index].email && travellers[index].name && travellers[index].mobile && travellers[index].gender) {
             return true;
         }
         return false
@@ -45,7 +45,7 @@ const Traveller = ({ traveller, index }) => {
                 <img src={img1} alt="" />
                 <div className="name">
                     <h4>Traveller {index + 1}</h4>
-                    <h2>{traveller.mcode ? traveller.mcode : "Add Traveller"}</h2>
+                    <h2>{traveller.name ? traveller.name : "Add Traveller"}</h2>
                 </div>
                 <div className="desc">
                     <p>{traveller?.type.toUpperCase()} - should be {traveller.type === "children" ? "below" : "above"} 18 years</p>

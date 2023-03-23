@@ -221,10 +221,10 @@ const Section = styled.div`
             gap: 2rem;
             .images{
                 flex: 1;
-                height:25vh;
-                width: 30rem;
+                height:30vh;
+                width: 100%;
                 img{
-                    width: 30rem;
+                    width: 100%;
                     height: 100%;
                     object-fit: cover;
                     border-radius: 1rem;

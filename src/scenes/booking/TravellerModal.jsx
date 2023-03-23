@@ -25,7 +25,7 @@ const TravellerModal = () => {
     const handleSubmit = () => {
         dispatch(clearMessage());
         dispatch(setSuccess("Traveller added Successfully"));
-        dispatch(updateTraveller({ index: activeTraveller, email: state.email, mcode: state.mcode, mobile: state.mobile, gender: state.gender }))
+        dispatch(updateTraveller({ index: activeTraveller, email: state.email, name: state.name, mobile: state.mobile, gender: state.gender }))
         if (check3()) {
             dispatch(decreaseTravelDetail());
             console.log("sahbhjabcajsbc hsbc hsakcbsahcjkbaschjsabckiabcshaybcyujdschbsdhjcjs");
@@ -33,24 +33,24 @@ const TravellerModal = () => {
     }
 
     const check = () => {
-        if (!travellers[activeTraveller].email && !travellers[activeTraveller].mcode && !travellers[activeTraveller].mobile && !travellers[activeTraveller].gender) {
+        if (!travellers[activeTraveller].email && !travellers[activeTraveller].name && !travellers[activeTraveller].mobile && !travellers[activeTraveller].gender) {
             return false
         }
         return true;
     }
 
     const check1 = () => {
-        if (state.email === travellers[activeTraveller].email && state.mcode === travellers[activeTraveller].mcode && state.mobile === travellers[activeTraveller].mobile && state.gender === travellers[activeTraveller].gender) {
+        if (state.email === travellers[activeTraveller].email && state.name === travellers[activeTraveller].name && state.mobile === travellers[activeTraveller].mobile && state.gender === travellers[activeTraveller].gender) {
             return true;
         }
-        if (state.email && state.mcode && state.mobile && state.gender) {
+        if (state.email && state.name && state.mobile && state.gender) {
             return false;
         }
         return true;
     }
 
     const check3 = () => {
-        const allTravellersFilled = travellers.every(traveller => traveller.email && traveller.mcode && traveller.mobile && traveller.gender);
+        const allTravellersFilled = travellers.every(traveller => traveller.email && traveller.name && traveller.mobile && traveller.gender);
         return allTravellersFilled;
     };
 
@@ -95,8 +95,8 @@ const TravellerModal = () => {
                     <input type="text" name="email" value={state.email} placeholder="Eg. john.doe@gmail.com" onChange={(e) => handleUpdateTraveller(e)} />
                 </div>
                 <div className="content">
-                    <label htmlFor="">Mobile Code</label>
-                    <input type="text" name="mcode" value={state.mcode} onChange={(e) => handleUpdateTraveller(e)} />
+                    <label htmlFor="">Traveller name</label>
+                    <input type="text" name="name" value={state.name} onChange={(e) => handleUpdateTraveller(e)} />
                 </div>
                 <div className="content">
                     <label htmlFor="">Mobile</label>

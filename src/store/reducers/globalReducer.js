@@ -10,9 +10,9 @@ const globalReducer = createSlice({
         children: 0,
         room: 1,
         travelDetail: false,
-        travellers: [{ email: "", mcode: "", mobile: "", gender: "", type: "adult" }],
+        travellers: [{ email: "sdfsfs", name: "dfsfsdff", mobile: "dsfdsfsdf", gender: "sdfdsfsdf", type: "adult" }],
         activeTraveller: 0,
-        price: 0,
+        price: null,
         totalPrice: 0,
         goingTransfer: 1,
         returningTransfer: 1,
@@ -111,7 +111,7 @@ const globalReducer = createSlice({
             const { type } = action.payload;
             state.travellers.push({
                 email: "",
-                mcode: "",
+                name: "",
                 mobile: "",
                 gender: "",
                 type
@@ -134,9 +134,9 @@ const globalReducer = createSlice({
             }
         },
         updateTraveller: (state, action) => {
-            const { index, email, mcode, mobile, gender } = action.payload;
+            const { index, email, name, mobile, gender } = action.payload;
             state.travellers[index].email = email;
-            state.travellers[index].mcode = mcode;
+            state.travellers[index].name = name;
             state.travellers[index].mobile = mobile;
             state.travellers[index].gender = gender;
         },

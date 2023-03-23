@@ -239,6 +239,7 @@ const Navbar = () => {
                                         Liked
                                     </MenuItem>
                                 </Link>
+                                <Link to="/mybookings">
                                 <MenuItem
                                     sx={{
                                         width: "14rem",
@@ -251,6 +252,7 @@ const Navbar = () => {
                                 >
                                     My Bookings
                                 </MenuItem>
+                                </Link>
                                 <MenuItem
                                     sx={{
                                         width: "14rem",

@@ -156,16 +156,16 @@ const PackageDetail = ({ data }) => {
     const adultPrice = price; // actual price for adults
     const childPrice = price * 0.85; // actual price minus 15% for children
     const totalPrice1 = (adultPrice * adult) + (childPrice * children)
-    console.log({price});
+    console.log({ price });
 
     useEffect(() => {
         if (data && myParam) {
-            let price1 = data?.package1?.details?.find(
+            let price1 = data?.details?.find(
                 (detail) => detail.duration === myParam
             )?.price;
             price1 = price1 - (price1 * 4) / 100;
             console.log("price: ", price1);
-            dispatch(setPrice(price === 0 ? price1 : price));
+            dispatch(setPrice(price === null ? price1 : price));
         }
     }, [data, myParam]);
 
@@ -753,51 +753,47 @@ const PackageDetail = ({ data }) => {
                                                     </>
                                                 );
                                             })}
-                                            <div className="daymeal">
-                                                <div className="east">
-                                                    <RestaurantIcon className="icon" />
-                                                    <span>Day Meals</span>
-                                                </div>
-                                                <div className="west">
-                                                    {/* <CheckIcon className="icon"/> */}
-                                                    <span>Breakfast: </span>
-                                                    <p> Included at Evoke Lifestyle Candolim , Goa</p>
-                                                </div>
-                                            </div>
                                             {returningTransfer ? (
-                                                <div className="car">
+                                                <>
                                                     <div className="title">
-                                                        <div className="east">
-                                                            <h1>
-                                                                Transfer from Hotel to Airport in{" "}
-                                                                {data.starting_point} - 30 minutes
-                                                            </h1>
-                                                        </div>
-                                                        <div className="west">
-                                                            <button
-                                                                onClick={() => handleTransferRemove("ending")}
-                                                            >
-                                                                Remove
-                                                            </button>
+                                                        <div className="left1">
+                                                            <h1>Day {myArray.length} - Arrival in Agra</h1>
                                                         </div>
                                                     </div>
-                                                    <div className="content">
-                                                        <div className="left">
-                                                            <img src={img1} alt="" />
+                                                    <div className="car">
+                                                        <div className="title">
+                                                            <div className="east">
+                                                                <h1>
+                                                                    Transfer from Hotel to Airport in{" "}
+                                                                    {data.starting_point} - 30 minutes
+                                                                </h1>
+                                                            </div>
+                                                            <div className="west">
+                                                                <button
+                                                                    onClick={() => handleTransferRemove("ending")}
+                                                                >
+                                                                    Remove
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div className="right">
-                                                            <h1>Private Transfer</h1>
-                                                            <p>
-                                                                Travel comfortably in a private vehicle from Goa
-                                                                Airport to your hotel in Goa. Note: The pick-up
-                                                                timing is subject to your flight arrival and
-                                                                shall be communicated to you by the local
-                                                                vendor. There will be non stop-overs allowed
-                                                                during this transfer
-                                                            </p>
+                                                        <div className="content">
+                                                            <div className="left">
+                                                                <img src={img1} alt="" />
+                                                            </div>
+                                                            <div className="right">
+                                                                <h1>Private Transfer</h1>
+                                                                <p>
+                                                                    Travel comfortably in a private vehicle from Goa
+                                                                    Airport to your hotel in Goa. Note: The pick-up
+                                                                    timing is subject to your flight arrival and
+                                                                    shall be communicated to you by the local
+                                                                    vendor. There will be non stop-overs allowed
+                                                                    during this transfer
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </>
                                             ) : (
                                                 <div className="car">
                                                     <div className="title">

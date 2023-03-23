@@ -22,16 +22,19 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useGetSingleUserQuery } from "../../store/services/adminUserService";
 import { useFetchOnePackageQuery } from "../../store/services/packageService";
+import { usePackageBookingMutation } from "../../store/services/bookingService";
 
 const Booking = () => {
-    
+
     const { adult, children, room, travellers, price } = useSelector((state) => state.globalReducer);
     const [state, setState] = useState({
-        email: "",
-        mcode: "",
-        mobile: "",
-        spMessage: ""
+        email: "fsdfdf",
+        name: "dsfsdf",
+        mobile: "sdfsdf",
+        spMessage: "sdfsdf"
     });
+
+    const [bookingFunc, response2] = usePackageBookingMutation();
 
     const { user } = useSelector((state) => state.authReducer);
 
@@ -39,18 +42,16 @@ const Booking = () => {
     const userId = user.id;
 
     const handleSubmit = () => {
-        console.log({ state, travellers, id, userId, totalPrice });
+        console.log({ state, travellers, id, userId, totalPrice, myParam });
+        bookingFunc({ state, travellers, id, userId, totalPrice, myParam, adult, children, room, adultPrice, childPrice });
     }
 
     const inputChangeHandler = (e) => {
         setState(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
     }
 
-    console.log(state);
-
     const [adultCount, setAdultCount] = useState(false);
     const [childrenCount, setChildrenCount] = useState(false);
-    console.log(travellers);
     const dispatch = useDispatch();
     const totalPeople = adult + children;
     const myArray = Array.from(
@@ -66,7 +67,7 @@ const Booking = () => {
     const totalPrice = (adultPrice * adult) + (childPrice * children)
 
     useEffect(() => {
-        if (adultCount) {
+        if (adult) {
             dispatch(clearMessage());
             dispatch(setSuccess("adult Added"));
 
@@ -85,10 +86,10 @@ const Booking = () => {
 
             return () => clearTimeout(interval);
         }
-    }, [adultCount]);
+    }, [adult]);
 
     useEffect(() => {
-        if (childrenCount) {
+        if (children) {
             dispatch(clearMessage());
             dispatch(setSuccess("Children Added"));
 
@@ -107,13 +108,13 @@ const Booking = () => {
 
             return () => clearTimeout(interval);
         }
-    }, [childrenCount]);
+    }, [children]);
 
 
     const check = () => {
-        const allTravellersFilled = travellers.every(traveller => traveller.email && traveller.mcode && traveller.mobile && traveller.gender);
-        const { email, mcode, mobile, spMessage } = state;
-        const allFieldsFilled = email && mcode && mobile && spMessage;
+        const allTravellersFilled = travellers.every(traveller => traveller.email && traveller.name && traveller.mobile && traveller.gender);
+        const { email, name, mobile, spMessage } = state;
+        const allFieldsFilled = email && name && mobile && spMessage;
         return allTravellersFilled && allFieldsFilled;
     };
 
@@ -121,7 +122,6 @@ const Booking = () => {
     const { id: packId } = useParams();
     const myParam = searchParams.get("myParam");
     const skipDays = parseInt(myParam) - 1;
-    console.log(skipDays);
     const days = myParam?.slice(-2, -1);
 
     const singleDetail = data?.packages1?.packages1?.packages1?.packages1?.details?.find(
@@ -146,18 +146,14 @@ const Booking = () => {
     const formattedEndDate = endDate.getDate() + " " + getMonthName1(endDate.getMonth());
     const formattedStartDate = startDate.getDate() + " " + getMonthName1(startDate.getMonth());
 
-    console.log(formattedEndDate); // output: "22 Mar"
-
-    console.log({ data, myParam });
-
     useEffect(() => {
         if (data && myParam) {
-            let price1 = data?.package1?.details?.find(
+            let price1 = data?.package1.details?.find(
                 (detail) => detail.duration === myParam
             )?.price;
             price1 = price1 - (price1 * 4) / 100;
             console.log("price: ", price1);
-            dispatch(setPrice(price === 0 ? price1 : price));
+            dispatch(setPrice(price === null ? price1 : price));
         }
     }, [data, myParam]);
 
@@ -201,8 +197,6 @@ const Booking = () => {
         return monthNames[monthIndex];
     }
 
-    console.log({ firstDateWhole, lastDateWhole, firstDate, lastDate });
-    console.log(data);
 
     return (
         <Section>
@@ -218,6 +212,7 @@ const Booking = () => {
                             <h4>2. PACKAGE ITINERARY & INCLUSIONS</h4>
                             <h4>3. CANCELLATION & DATE CHANGE</h4>
                         </div>
+
                     </div>
                     <div className="mainDiv">
                         <div className="left">
@@ -257,8 +252,8 @@ const Booking = () => {
                                         <input type="text" placeholder="Eg. john.doe@gmail.com" name="email" value={state.email} onChange={(e) => inputChangeHandler(e)} />
                                     </div>
                                     <div className="content">
-                                        <label htmlFor="">Mobile Code</label>
-                                        <input type="text" name="mcode" value={state.mcode} onChange={(e) => inputChangeHandler(e)} />
+                                        <label htmlFor="">Username</label>
+                                        <input type="text" name="name" value={state.name} onChange={(e) => inputChangeHandler(e)} />
                                     </div>
                                     <div className="content">
                                         <label htmlFor="">Mobile</label>

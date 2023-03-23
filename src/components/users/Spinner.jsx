@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const Spinner = () => {
     return (
         <Section>
-            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+            <Stack sx={{ color: 'grey.500',marginTop: "3rem" }} spacing={2} direction="row">
                 <CircularProgress color="inherit" />
             </Stack>
         </Section>
@@ -23,3 +23,4 @@ const Section = styled.div`
     height: 100%;
     width: 98%;
 `
+
