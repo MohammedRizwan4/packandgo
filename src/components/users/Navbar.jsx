@@ -139,27 +139,25 @@ const Navbar = () => {
                                     <a href="#">HOME</a>
                                 </li>
                             </Link>
-                            <Link to="/theme">
-                                <li id="theme" className="bounce">
-                                    <a href="#">THEMES</a>
-                                    <div className="theme_big">
-                                        <ul>
-                                            {data?.map((theme, index) => {
-                                                return (
-                                                    <Link
-                                                        to={`/theme/${theme._id}`}
-                                                        style={{ margin: "0", padding: "0" }}
-                                                    >
-                                                        <li>
-                                                            <a href="#">{theme.name}</a>
-                                                        </li>
-                                                    </Link>
-                                                );
-                                            })}
-                                        </ul>
-                                    </div>
-                                </li>
-                            </Link>
+                            <li id="theme" className="bounce">
+                                <a href="#">THEMES</a>
+                                <div className="theme_big">
+                                    <ul>
+                                        {data?.map((theme, index) => {
+                                            return (
+                                                <Link
+                                                    to={`/theme/${theme._id}`}
+                                                    style={{ margin: "0", padding: "0" }}
+                                                >
+                                                    <li>
+                                                        <a href="#">{theme.name}</a>
+                                                    </li>
+                                                </Link>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            </li>
                             <Link to="/contactus">
                                 <li>
                                     <a href="#">CONTACT US</a>
@@ -240,18 +238,18 @@ const Navbar = () => {
                                     </MenuItem>
                                 </Link>
                                 <Link to="/mybookings">
-                                <MenuItem
-                                    sx={{
-                                        width: "14rem",
-                                        color: "var(--bgDarkBlue)",
-                                        fontSize: 18,
-                                        fontWeight: 700,
-                                        fontFamily: "'DM Sans', sans-serif",
-                                    }}
-                                    onClick={handleClose}
-                                >
-                                    My Bookings
-                                </MenuItem>
+                                    <MenuItem
+                                        sx={{
+                                            width: "14rem",
+                                            color: "var(--bgDarkBlue)",
+                                            fontSize: 18,
+                                            fontWeight: 700,
+                                            fontFamily: "'DM Sans', sans-serif",
+                                        }}
+                                        onClick={handleClose}
+                                    >
+                                        My Bookings
+                                    </MenuItem>
                                 </Link>
                                 <MenuItem
                                     sx={{

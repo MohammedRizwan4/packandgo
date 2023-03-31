@@ -7,18 +7,66 @@ import Spinner from '../../../components/users/Spinner';
 import { useDeleteUserMutation } from '../../../store/services/adminUserService';
 import { useDeletePackageMutation, useFetchAllPackagesQuery } from '../../../store/services/packageService';
 import { useFetchAllThemesQuery, useFetchOneThemeQuery } from '../../../store/services/themeService';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const AdminSubPackage = () => {
 
+    const { data, isFetching } = useFetchAllPackagesQuery();
+
+    const exportPDF = () => {
+        const unit = "pt";
+        const size = [window.screen.availWidth, window.screen.availHeight];
+        const orientation = "landscape";
+
+        const marginLeft = 40;
+        const doc = new jsPDF(orientation, unit, size);
+
+        doc.setFontSize(6);
+
+        const title = "Packages Report";
+
+        const headers = [["ID", "Theme Of", "Package name", "City","State", "Total Destinations", "Starting Point", "Ending Point", "Date", "Stars", "Durations"]];
+
+        const data1 = rows.map(elt => [elt._id,
+        data?.themes?.find(t => t._id === elt.theme_id)?.name
+            , elt.name, elt.location.city,elt.location.state_name, elt.destinations_covered.map(destination => destination), elt.starting_point, elt.ending_point, elt.date.slice(0, 15), elt.stars, elt.details.map(detail => detail.duration)]);
+
+        // const headers = [["ID", "Package name", "City", "Starting Point", "Stars", "Durations"]];
+
+        // const data = rows.map(elt => [elt._id, elt.name, elt.location.city, elt.starting_point, elt.stars, elt.details.map(detail => detail.duration)]);
+
+        let content = {
+            startY: 50,
+            head: headers,
+            body: data1
+        };
+
+
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save("report.pdf")
+    }
+
 
     let [rows, setRows] = useState([])
-    const { data, isFetching } = useFetchAllPackagesQuery();
     console.log(data?.data);
     const [deletePackage, response] = useDeletePackageMutation();
 
     const handleDelete = (e, id) => {
         deletePackage({ id })
     }
+
+    useEffect(() => {
+        if (data?.data) {
+            setRows(data.data);
+        }
+    }, [data]);
+
+    console.log(data?.themes);
+
+    rows = data?.data || [];
+
 
     const columns = [
         { field: '_id', headerName: 'ID', width: 100 },
@@ -169,15 +217,6 @@ const AdminSubPackage = () => {
         }
     ];
 
-
-    useEffect(() => {
-        if (data?.data) {
-            setRows(data.data);
-        }
-    }, [data]);
-
-    rows = data?.data || [];
-
     return (
         <>
             <Section>
@@ -202,6 +241,18 @@ const AdminSubPackage = () => {
                             </Box>
                     }
                 </div>
+                <button style={{
+                    padding: ".7rem 3rem",
+                    marginLeft: "5rem",
+                    backgroundColor: "var(--bgYellow)",
+                    border: "none",
+                    color: "var(--bgDarkAdmin)",
+                    fontWeight: "900",
+                    fontSize: "1.7rem",
+                    borderRadius: ".8rem",
+                    border: "1px solid var(--bgBorder)",
+                    cursor: "pointer",
+                }} onClick={exportPDF}>Export</button>
             </Section>
         </>
     );

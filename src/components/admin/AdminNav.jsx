@@ -25,11 +25,6 @@ const AdminNav = () => {
 
     return (
         <Section>
-            <Toaster
-                toastOptions={{ style: { fontSize: "1.6rem" } }}
-                position="top-center"
-                reverseOrder={true}
-            />
             <h1>PACK&GO</h1>
             {adminToken && <button onClick={() => logout1()}>Logout</button>}
         </Section>

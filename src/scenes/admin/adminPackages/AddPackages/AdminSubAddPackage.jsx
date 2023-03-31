@@ -214,7 +214,7 @@ const AdminSubAddPackage = () => {
 
     useEffect(() => {
         if (response?.isSuccess) {
-            dispatch(setSuccess("User added Successfully"));
+            dispatch(setSuccess("Package added Successfully"));
             navigate("/dashboard/packages");
         }
         if (response?.isError) {
@@ -226,11 +226,6 @@ const AdminSubAddPackage = () => {
 
     return (
         <>
-            <Toaster
-                toastOptions={{ style: { fontSize: "1.5rem" } }}
-                position="top-center"
-                reverseOrder={true}
-            />
             {!isFetching ? <Section>
                 <div className="add">
                     <Link to="/dashboard/packages">

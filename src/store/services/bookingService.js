@@ -44,11 +44,19 @@ const bookingService = createApi({
                     }
                 }
             }),
+            getAllBookings: builder.query({
+                query: () => {
+                    return {
+                        url: `fetch-all-bookings`,
+                        method: "GET",
+                    }
+                }
+            }),
         }
     }
 })
 
-export const { useVerifyPaymentQuery, useFetchUserBookingQuery, usePackageBookingMutation, useCheckOutSessionPaymentMutation } = bookingService;
+export const { useGetAllBookingsQuery, useVerifyPaymentQuery, useFetchUserBookingQuery, usePackageBookingMutation, useCheckOutSessionPaymentMutation } = bookingService;
 
 export default bookingService;
 

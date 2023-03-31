@@ -6,35 +6,33 @@ import Box from '@mui/material/Box';
 import { useDeleteThemeMutation, useFetchAllThemesQuery } from '../../../store/services/themeService';
 import Spinner from '../../../components/users/Spinner';
 import { useDeleteUserMutation, useGetAllUsersQuery } from '../../../store/services/adminUserService';
+import { useGetAllBookingsQuery } from '../../../store/services/bookingService';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-const AdminSubUsers = () => {
+const AdminSubBookings = () => {
 
     let [rows, setRows] = useState([])
 
-    const [deleteUser, response] = useDeleteUserMutation();
-
     const exportPDF = () => {
         const unit = "pt";
-        const size = "A4";
-        const orientation = "portrait";
+        const size = [window.screen.availWidth, window.screen.availHeight];
+        const orientation = "landscape";
 
         const marginLeft = 40;
         const doc = new jsPDF(orientation, unit, size);
 
-        doc.setFontSize(15);
+        doc.setFontSize(20);
+        const title = "Bookings Report";
 
-        const title = "Users Report";
+        const headers = [["ID", "Package name", "Adult", "Children", "Total Price", "Travellers", "Room", "Date", "Payment Status"]];
 
-        const headers = [["ID", "First Name", "Last Name", "Email", "Admin"]];
-
-        const data = rows.map(elt => [elt._id, elt.firstName, elt.lastName, elt.email, elt.admin]);
+        const data1 = rows.map(elt => [elt._id, elt.packageName, elt.adult, elt.children, elt.totalPrice, elt.travellers.map(traveller => traveller.name), elt.room, elt.startingDate.slice(0, 15), elt.paymentStatus]);
 
         let content = {
             startY: 50,
             head: headers,
-            body: data
+            body: data1
         };
 
 
@@ -43,80 +41,110 @@ const AdminSubUsers = () => {
         doc.save("report.pdf")
     }
 
-    const handleDelete = (e, id, isAdmin) => {
-        if (isAdmin) {
-            alert("hello")
-        }
-        else {
-            console.log(id);
-            deleteUser({ id })
-        }
+    const [deleteUser, response] = useDeleteUserMutation();
+
+    const { data: data1, isFetching: isFetching1 } = useGetAllBookingsQuery();
+    console.log(data1);
+
+    const handleDelete = (e, id) => {
+        console.log(id);
+        deleteUser({ id })
     }
 
     const columns = [
-        { field: '_id', headerName: 'ID', width: 100 },
+        { field: '_id', headerName: 'Booking ID', width: 100 },
+        { field: 'userId', headerName: 'User ID', width: 100 },
         {
-            field: 'firstName',
-            headerName: 'First Name',
-            width: 230,
-            editable: true,
+            field: 'paymentStatus',
+            headerName: 'Payment Status',
+            width: 130,
+            renderCell: (params) => {
+                const paymentStatus = params.row.paymentStatus;
+                return paymentStatus === "PAID" ? <p style={{ fontWeight: "900", color: "green" }}>{paymentStatus}</p> : <p style={{ fontWeight: "900", color: "red" }}>{paymentStatus}</p>
+            }
         },
         {
-            field: 'lastName',
-            headerName: 'Last Name',
-            width: 230,
-            editable: true,
-        },
-        {
-            field: 'email',
-            headerName: 'Email ID',
-            width: 280,
-            editable: true,
-        },
-        {
-            field: 'admin',
-            headerName: 'Admin',
+            field: 'adult',
+            headerName: 'Adult',
             width: 70,
             editable: true,
         },
         {
-            field: 'edit',
-            headerName: 'Edit User',
+            field: 'children',
+            headerName: 'Children',
+            width: 100,
+            editable: true,
+        },
+        {
+            field: 'totalPrice',
+            headerName: 'Total Price',
+            width: 100,
+            renderCell: (params) => {
+                const totalPrice = params.row.totalPrice;
+                const paymentStatus = params.row.paymentStatus;
+                return paymentStatus === "PAID" ? <p style={{ fontWeight: "900", color: "green" }}>₹{totalPrice}</p> : <p style={{ fontWeight: "900", color: "red" }}>₹{totalPrice}</p>
+            }
+        },
+        {
+            field: 'packageName',
+            headerName: 'Package Name',
+            width: 280,
+            editable: true,
+        },
+        {
+            field: 'travellers',
+            headerName: 'Travellers',
             width: 150,
             renderCell: (params) => {
+                const travellers = params.row.travellers;
                 return (
-                    <Link to={`/dashboard/updateuser/${params.id}`} style={{ padding: "1rem 3rem", color: "var(--bgDarkViolet)", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "var(--bgYellow)", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Edit</Link>
+                    <ul style={{ display: "flex", gap: "1rem" }}>{
+                        travellers.map((traveller) => {
+                            return (
+                                <li style={{ listStyleType: "none" }}>• {traveller.name}</li>
+                            )
+                        })
+                    }</ul>
                 )
             }
         },
         {
-            field: 'delete',
-            headerName: 'Delete User',
-            width: 150,
+            field: 'user_contact_info',
+            headerName: 'Contact Info',
+            width: 300,
             renderCell: (params) => {
+                const contact = params.row.user_contact_info;
                 return (
-                    <button onClick={(e) => handleDelete(e, params.id, params.admin)} style={{ padding: "1rem 3rem", color: "white", fontWeight: "700", margin: "2rem", cursor: "pointer", backgroundColor: "red", border: "2px solid var(--bgBlack)", borderRadius: "1.2rem", }}>Delete</button>
+                    <ul style={{ display: "flex", gap: "1rem" }}>
+                        <li style={{ listStyleType: "none" }}>• {contact.email}</li>
+                        <li style={{ listStyleType: "none" }}>• {contact.name}</li>
+                        <li style={{ listStyleType: "none" }}>• {contact.mobile}</li>
+                        <li style={{ listStyleType: "none" }}>• {contact.spMessage}</li>
+                    </ul>
                 )
             }
         },
+        {
+            field: 'startingDate',
+            headerName: 'Starting Date',
+            width: 230,
+            editable: true,
+        }
     ];
 
     const { data, isFetching } = useGetAllUsersQuery();
 
     useEffect(() => {
-        if (data?.users) {
-            setRows(data.users);
+        if (data1?.bookings) {
+            setRows(data1.bookings);
         }
-    }, [data]);
+    }, [data1]);
 
-    rows = data?.users || [];
+    rows = data1?.bookings || [];
 
     return (
         <>
             <Section>
-                <div className="add">
-                    <Link to="/dashboard/add-users"><button>Add Users</button></Link>
-                </div>
                 <div className="content">
                     {
                         isFetching ?
@@ -146,14 +174,13 @@ const AdminSubUsers = () => {
                     borderRadius: ".8rem",
                     border: "1px solid var(--bgBorder)",
                     cursor: "pointer",
-                    marginTop: "5rem"
                 }} onClick={exportPDF}>Export</button>
             </Section>
         </>
     );
 }
 
-export default AdminSubUsers;
+export default AdminSubBookings;
 
 const Section = styled.div`
     flex: 7;

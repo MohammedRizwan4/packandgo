@@ -74,9 +74,7 @@ const SinglePackage = ({ singlePackage }) => {
                         }
                     </div>
                 </div>
-                <Link to={`/package/${singlePackage._id}`}>
-                    <div className="title">{singlePackage.name}</div>
-                </Link>
+                <div className="title">{singlePackage.name}</div>
             </div>
             <div className="imgparent">
                 <img src={`http://localhost:7800/${singlePackage?.images[0]}`} alt="" />

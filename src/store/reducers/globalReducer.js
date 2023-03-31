@@ -10,7 +10,7 @@ const globalReducer = createSlice({
         children: 0,
         room: 1,
         travelDetail: false,
-        travellers: [{ email: "sdfsfs", name: "dfsfsdff", mobile: "dsfdsfsdf", gender: "sdfdsfsdf", type: "adult" }],
+        travellers: [{ email: "", name: "", mobile: "", gender: "", type: "adult" }],
         activeTraveller: 0,
         price: null,
         totalPrice: 0,
@@ -152,33 +152,33 @@ const globalReducer = createSlice({
         },
         setGoingTransfer: (state, action) => {
             state.goingTransfer = action.payload;
-            if(action.payload === 0) {
+            if (action.payload === 0) {
                 state.price = state.price - 200
-            }else{
+            } else {
                 state.price = state.price + 200
             }
         },
         setReturningTransfer: (state, action) => {
             state.returningTransfer = action.payload;
-            if(action.payload === 0) {
+            if (action.payload === 0) {
                 state.price = state.price - 200
-            }else{
+            } else {
                 state.price = state.price + 200
             }
         },
         setGoingFlight: (state, action) => {
             state.goingFlight = action.payload;
-            if(action.payload === 0) {
+            if (action.payload === 0) {
                 state.price = state.price - 1400
-            }else{
+            } else {
                 state.price = state.price + 1400
             }
         },
         setReturningFlight: (state, action) => {
             state.returningFlight = action.payload
-            if(action.payload === 0) {
+            if (action.payload === 0) {
                 state.price = state.price - 1400
-            }else{
+            } else {
                 state.price = state.price + 1400
             }
         },

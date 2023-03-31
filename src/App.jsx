@@ -27,6 +27,7 @@ import Booking from "./scenes/booking/Booking";
 import MyBookings from "./scenes/mybookings/MyBookings";
 import { useSelector } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
+import AdminBookings from "./scenes/admin/adminBookings/AdminBookings";
 
 const App = () => {
 
@@ -77,14 +78,16 @@ const App = () => {
                     </Route>
                     <Route path="dashboard">
                         <Route path="users" element={<Private><AdminUsers /></Private>} ></Route>
-                        <Route path="updateuser/:id" element={<Private><AdminEditUsers /></Private>} ></Route>
                         <Route path="add-users" element={<Private><AdminAddUsers /></Private>} ></Route>
-                        <Route path="update/:id" element={<Private><EditTheme /></Private>} ></Route>
+                        <Route path="updateuser/:id" element={<Private><AdminEditUsers /></Private>} ></Route>
                         <Route path="packages" element={<Private><AdminPackages /></Private>} />
                         <Route path="add-package" element={<Private><AdminAddPackage /></Private>} />
                         <Route path="update-package/:id" element={<Private><AdminEditPackage /></Private>} ></Route>
                         <Route path="theme" element={<Private><AdminTheme /></Private>} />
                         <Route path="create-theme" element={<Private><CreateTheme /></Private>} />
+                        <Route path="update/:id" element={<Private><EditTheme /></Private>} ></Route>
+                        <Route path="bookings" element={<Private><AdminBookings /></Private>} />
+                        <Route path="payments" element={<Private><AdminTheme /></Private>} />
                         <Route path="*" element={<Private><AdminAddUsers /></Private>} />
                     </Route>
                     <Route path="/" element={<Home />} />

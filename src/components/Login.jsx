@@ -31,10 +31,9 @@ const Login = ({ loginOpen, setLoginOpen }) => {
 
     const onSubmit = async (values, actions) => {
         loginData(values);
-        dispatch(closeLogin());
         // actions.resetForm();
     };
-
+    
     const {
         values,
         errors,
@@ -51,7 +50,7 @@ const Login = ({ loginOpen, setLoginOpen }) => {
         validationSchema: basicSchema,
         onSubmit,
     });
-
+    
     useEffect(() => {
         if (response1?.isSuccess) {
             if (response1?.data?.token) {
@@ -60,6 +59,7 @@ const Login = ({ loginOpen, setLoginOpen }) => {
             }
             dispatch(setUserToken(response1?.data?.token));
             toast.success("Logged In successfully");
+            dispatch(closeLogin());
         }
     }, [response1?.isSuccess]);
 

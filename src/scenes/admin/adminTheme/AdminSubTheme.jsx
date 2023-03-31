@@ -6,9 +6,37 @@ import { useDeleteThemeMutation, useFetchAllThemesQuery } from '../../../store/s
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
-import { display } from '@mui/system';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const AdminSubTheme = () => {
+
+    const exportPDF = () => {
+        const unit = "pt";
+        const size = "A4";
+        const orientation = "landscape";
+
+        const marginLeft = 40;
+        const doc = new jsPDF(orientation, unit, size);
+
+        doc.setFontSize(15);
+
+        const title = "Themes Report";
+        const headers = [["ID", "Theme Name", "Description"]];
+
+        const data = rows.map(elt => [elt._id, elt.name, elt.description]);
+
+        let content = {
+            startY: 50,
+            head: headers,
+            body: data
+        };
+
+
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save("report.pdf")
+    }
 
     const { success } = useSelector(state => state.globalReducer)
     let [rows, setRows] = useState([])
@@ -102,9 +130,9 @@ const AdminSubTheme = () => {
         <>
             <Section>
                 <div className="add" style={{ opacity: check() ? '.7' : "1", }}>
-                    {/* <Link to="/dashboard/create-theme" style={{ opacity: check() ? '.7' : "1" }}><button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }}>Add Theme</button></Link> */}
+                    <Link to="/dashboard/create-theme" style={{ opacity: check() ? '.7' : "1" }}><button disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }}>Add Theme</button></Link>
                 </div>
-                <div className="content">
+                <div className="content" id="myTable">
                     {
                         isFetching ?
                             <Spinner /> : data && <Box sx={{ height: 400, width: '100%' }}>
@@ -122,6 +150,18 @@ const AdminSubTheme = () => {
                             </Box>
                     }
                 </div>
+                <button style={{
+                    padding: ".7rem 3rem",
+                    marginLeft: "5rem",
+                    backgroundColor: "var(--bgYellow)",
+                    border: "none",
+                    color: "var(--bgDarkAdmin)",
+                    fontWeight: "900",
+                    fontSize: "1.7rem",
+                    borderRadius: ".8rem",
+                    border: "1px solid var(--bgBorder)",
+                    cursor: "pointer",
+                }} onClick={exportPDF}>Export</button>
             </Section>
         </>
     );

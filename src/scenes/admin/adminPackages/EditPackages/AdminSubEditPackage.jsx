@@ -55,6 +55,9 @@ const AdminSubEditPackage = () => {
         image3: "",
         image4: "",
         image5: "",
+        image6: "",
+        image7: "",
+        image8: "",
     });
 
     const { data, isFetching } = useFetchAllThemesQuery();
@@ -164,21 +167,11 @@ const AdminSubEditPackage = () => {
         }
         if (state.image7) {
             formData.append('images', state.image7);
-            fetchedPackage?.details?.map(detail => {
-                if (detail.duration === "3N/4D") {
-                    formData.append('image7path', detail.accommodations[0].images)
-                    console.log(detail.accommodations[0].images);
-                }
-            })
+            formData.append('image7path', "hello")
         }
         if (state.image8) {
             formData.append('images', state.image8);
-            fetchedPackage?.details?.map(detail => {
-                if (detail.duration === "5N/6D") {
-                    formData.append('image8path', detail.accommodations[0].images)
-                    console.log(detail.accommodations[0].images);
-                }
-            })
+            formData.append('image8path', "hello")
         }
         formData.append('name', state.name);
         formData.append('starting_point', state.starting_point);
@@ -264,7 +257,7 @@ const AdminSubEditPackage = () => {
 
     useEffect(() => {
         if (response?.isSuccess) {
-            dispatch(setSuccess("User added Successfully"));
+            dispatch(setSuccess("Package Updated Successfully"));
             navigate("/dashboard/packages");
         }
         if (response?.isError) {
@@ -328,11 +321,6 @@ const AdminSubEditPackage = () => {
 
     return (
         <>
-            <Toaster
-                toastOptions={{ style: { fontSize: "1.5rem" } }}
-                position="top-center"
-                reverseOrder={true}
-            />
             {!isFetching ? <Section>
                 <div className="add">
                     <Link to="/dashboard/packages">
@@ -561,22 +549,22 @@ const AdminSubEditPackage = () => {
                                                 <tr>
                                                     <td colSpan={6}>
                                                         <div className="images-flex">
-                                                            {preview.image1 && <img src={preview.image1} alt={preview.image1.name} />}
-                                                            {preview.image2 && <img src={preview.image2} alt={preview.image2.name} />}
-                                                            {preview.image3 && <img src={preview.image3} alt={preview.image3.name} />}
-                                                            {preview.image4 && <img src={preview.image4} alt={preview.image4.name} />}
-                                                            {preview.image5 && <img src={preview.image5} alt={preview.image5.name} />}
+                                                            {preview.image1 ? <img src={preview.image1} alt={preview.image1.name} /> : <img src={`http://localhost:7800/${fetchedPackage?.images[0]}`} />}
+                                                            {preview.image2 ? <img src={preview.image2} alt={preview.image2.name} /> : <img src={`http://localhost:7800/${fetchedPackage?.images[1]}`} />}
+                                                            {preview.image3 ? <img src={preview.image3} alt={preview.image3.name} /> : <img src={`http://localhost:7800/${fetchedPackage?.images[2]}`} />}
+                                                            {preview.image4 ? <img src={preview.image4} alt={preview.image4.name} /> : <img src={`http://localhost:7800/${fetchedPackage?.images[3]}`} />}
+                                                            {preview.image5 ? <img src={preview.image5} alt={preview.image5.name} /> : <img src={`http://localhost:7800/${fetchedPackage?.images[4]}`} />}
                                                         </div>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colSpan={6}>
                                                         <div className="images-flex1">
-                                                            {preview.image1 && <p>Image 1</p>}
-                                                            {preview.image2 && <p>Image 2</p>}
-                                                            {preview.image3 && <p>Image 3</p>}
-                                                            {preview.image4 && <p>Image 4</p>}
-                                                            {preview.image5 && <p>Image 5</p>}
+                                                            <p>Image 1</p>
+                                                            <p>Image 2</p>
+                                                            <p>Image 3</p>
+                                                            <p>Image 4</p>
+                                                            <p>Image 5</p>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -790,23 +778,22 @@ const AdminSubEditPackage = () => {
                                                             />
                                                         </td>
                                                     </tr>
-                                                    <tr>
-
+                                                    {/* <tr>
                                                         <td>
                                                             <label htmlFor="stime">Starting Time</label>
                                                         </td>
                                                         <td>:</td>
                                                         <td>
-                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                            <TimePicker onChange={handleStartTime} value={startTime} />
                                                         </td>
                                                         <td>
                                                             <label htmlFor="etime">Ending Time</label>
                                                         </td>
                                                         <td>:</td>
                                                         <td>
-                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                            <TimePicker onChange={handleStartTime} value={startTime} />
                                                         </td>
-                                                    </tr>
+                                                    </tr> */}
                                                     <tr>
                                                         <td>
                                                             <label htmlFor="image6">Image 6</label>
@@ -820,9 +807,13 @@ const AdminSubEditPackage = () => {
                                                                 id="image6"
                                                                 onChange={(e) => handleFileSelect(e, "image6")}
                                                             />
-                                                            {/* <p>{state.image5.name}</p> */}
                                                         </td>
                                                     </tr>
+                                                    <td>
+                                                        <div className="newContent" style={{ width: "15rem", height: "15rem" }}>
+                                                            {preview.image6 ? <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={preview.image6} alt={preview.image6.name} /> : <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={`http://localhost:7800/${fetchedPackage?.details[0].accommodations[0].images}`} />}
+                                                        </div>
+                                                    </td>
                                                     <div className="left">
                                                         <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
                                                     </div>
@@ -995,22 +986,22 @@ const AdminSubEditPackage = () => {
                                                             />
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    {/* <tr>
                                                         <td>
                                                             <label htmlFor="stime">Starting Time</label>
                                                         </td>
                                                         <td>:</td>
                                                         <td>
-                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                            <TimePicker onChange={handleStartTime} value={startTime} />
                                                         </td>
                                                         <td>
                                                             <label htmlFor="etime">Ending Time</label>
                                                         </td>
                                                         <td>:</td>
                                                         <td>
-                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                            <TimePicker onChange={handleStartTime} value={startTime} />
                                                         </td>
-                                                    </tr>
+                                                    </tr> */}
                                                     <tr>
                                                         <td>
                                                             <label htmlFor="image7">Image 7</label>
@@ -1027,6 +1018,11 @@ const AdminSubEditPackage = () => {
                                                             {/* <p>{state.image5.name}</p> */}
                                                         </td>
                                                     </tr>
+                                                    <td>
+                                                        <div className="newContent" style={{ width: "15rem", height: "15rem" }}>
+                                                            {preview.image7 ? <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={preview.image7} alt={preview.image7.name} /> : state.aname_1 && <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={`http://localhost:7800/${fetchedPackage?.details[1].accommodations[0].images}`} />}
+                                                        </div>
+                                                    </td>
                                                     <div className="left">
                                                         <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
                                                     </div>
@@ -1198,23 +1194,22 @@ const AdminSubEditPackage = () => {
                                                             />
                                                         </td>
                                                     </tr>
-                                                    <tr>
-
+                                                    {/* <tr>
                                                         <td>
                                                             <label htmlFor="stime">Starting Time</label>
                                                         </td>
                                                         <td>:</td>
                                                         <td>
-                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                            <TimePicker onChange={handleStartTime} value={startTime} />
                                                         </td>
                                                         <td>
                                                             <label htmlFor="etime">Ending Time</label>
                                                         </td>
                                                         <td>:</td>
                                                         <td>
-                                                            {/* <TimePicker onChange={handleStartTime} value={startTime} /> */}
+                                                            <TimePicker onChange={handleStartTime} value={startTime} />
                                                         </td>
-                                                    </tr>
+                                                    </tr> */}
                                                     <tr>
                                                         <td>
                                                             <label htmlFor="image8">Image 8</label>
@@ -1228,9 +1223,13 @@ const AdminSubEditPackage = () => {
                                                                 id="image8"
                                                                 onChange={(e) => handleFileSelect(e, "image8")}
                                                             />
-                                                            {/* <p>{state.image5.name}</p> */}
                                                         </td>
                                                     </tr>
+                                                    <td>{console.log(fetchedPackage.details.length,"jjjj")}
+                                                        <div className="newContent" style={{ width: "15rem", height: "15rem" }}>
+                                                            {preview.image8 ? <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={preview.image8} alt={preview.image8.name} /> : (state.aname_2 && fetchedPackage.details.length > 2) ? <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={`http://localhost:7800/${fetchedPackage?.details[2].accommodations[0].images}`} /> : <img style={{ height: "100%", width: "100%", objectFit: "cover" }} src={`http://localhost:7800/${fetchedPackage?.details[1].accommodations[0].images}`} />}
+                                                        </div>
+                                                    </td>
                                                     <div className="left">
                                                         <div className="hello" onClick={() => setNext(3)}>3 - Back</div>
                                                     </div>

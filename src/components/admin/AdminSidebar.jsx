@@ -9,7 +9,8 @@ const AdminSidebar = () => {
                 <Link to="/dashboard/users" href="#"><li>Users</li></Link>
                 <Link to="/dashboard/theme" href="#"><li>Theme</li></Link>
                 <Link to="/dashboard/packages" href="#"><li>Packages</li></Link>
-                <Link to="/dashboard/reviews" href="#"><li>Reviews</li></Link>
+                {/* <Link to="/dashboard/reviews" href="#"><li>Reviews</li></Link> */}
+                <Link to="/dashboard/bookings" href="#"><li>Bookings</li></Link>
             </ul>
         </Section>
     );

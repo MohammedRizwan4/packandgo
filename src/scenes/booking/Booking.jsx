@@ -28,10 +28,10 @@ const Booking = () => {
 
     const { adult, children, room, travellers, price } = useSelector((state) => state.globalReducer);
     const [state, setState] = useState({
-        email: "fsdfdf",
-        name: "dsfsdf",
-        mobile: "sdfsdf",
-        spMessage: "sdfsdf"
+        email: "",
+        name: "",
+        mobile: "",
+        spMessage: ""
     });
 
     const [bookingFunc, response2] = usePackageBookingMutation();
@@ -273,7 +273,7 @@ const Booking = () => {
                                 <div className="leftclass">
                                     <h5>$76,877</h5>
                                     <div className="merge">
-                                        <h4>{"₹" + totalPrice.toLocaleString("en-IN")}</h4>
+                                        <h4>{"₹" + Math.floor(totalPrice).toLocaleString("en-IN")}</h4>
                                         <h6>&nbsp;per person*</h6>
                                     </div>
                                     <h3>*Excluding Applicable taxes</h3>
@@ -360,7 +360,7 @@ const Booking = () => {
                             </div>
                             <div className="fourthDiv1">
                                 <Link to={`/mybookings`}>
-                                    <button disabled={!check()} className={!check() ? "check" : ""} onClick={handleSubmit}>Proceed to Book Online</button>
+                                    <button disabled={!check()} className={!check() ? "check" : ""} onClick={handleSubmit}>Book Online</button>
                                 </Link>
                             </div>
                         </div>
