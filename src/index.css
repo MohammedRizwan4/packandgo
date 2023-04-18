@@ -235,3 +235,19 @@ a{
     font-size: 1.3rem;
     font-weight: 900;
 }
+
+.round-image {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform: rotateY(30deg) rotateX(-30deg);
+    transition: transform 0.5s;
+  }
+  
+  .round-image:hover {
+    transform: rotateY(0deg) rotateX(0deg);
+  }
+  

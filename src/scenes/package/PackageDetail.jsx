@@ -180,6 +180,8 @@ const PackageDetail = ({ data }) => {
         setLike(userData?.user[0]?.likes?.includes(packId));
     }, [userData]);
 
+    console.log(userData);
+
     const [likePackage, response] = useUserLikePackageMutation();
     const [dislikePackage, response1] = useUserDisLikePackageMutation();
 

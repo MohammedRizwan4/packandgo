@@ -209,7 +209,7 @@ const MyBookings = () => {
                                 </div>
                                 <div className="content">
                                     <StyledBookingCardLabel>Total Price</StyledBookingCardLabel>
-                                    <StyledBookingCardValue className='price'>{booking.totalPrice}</StyledBookingCardValue>
+                                    <StyledBookingCardValue className='price'>{Math.floor(booking.totalPrice).toLocaleString("en-IN")}</StyledBookingCardValue>
                                 </div>
                             </StyledBookingCardBody>
                             <StyledBookingCardFooter>

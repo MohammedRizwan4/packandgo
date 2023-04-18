@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -9,38 +9,59 @@ import img2 from '../../scenes/images/2.jpg'
 import img3 from '../../scenes/images/3.jpg'
 import img4 from '../../scenes/images/4.jpg'
 import img5 from '../../scenes/images/5.jpg'
+import img6 from './new.png';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/virtual';
 
 const Hero = () => {
+
+    useEffect(() => {
+        var types = new Typed(".auto-input", {
+            strings: [
+                "Experience the world with ease",
+                "Discover the world with our experts",
+                "Explore, Dream, Discover",
+                "Adventure awaits, let's explore together",
+                "Wanderlust fulfilled, one trip at a time",
+                "See the world, make it your own"],
+            typeSpeed: 100,
+            backSpeed: 100,
+            loop: true
+        })
+    }, []);
+
     return (
-        <Section>
+        <Section style={{ position: "relative" }}>
+            <div className='container' style={{ position: "absolute", color: "white", top: "25%", fontSize: "2.5rem", left: "10%", zIndex: "999" }}>
+                <h1>Hello, fellow adventurer! <br></br><span style={{ color: "#FFC93C", fontSize: "5rem" }} class="auto-input">Travel with us and create memories</span></h1>
+            </div>
+            {/* <img src={img6} alt="3D World Image" style={{ position: "absolute", top: "10%", width:"80rem",height: "40rem",objectFit: "cover",right: "-25%", zIndex: "999" }}/> */}
             <Swiper modules={[Virtual]} slidesPerView={1} virtual>
                 <SwiperSlide>
                     <div className="images">
-                        <img src={img1} alt="" />
+                        <img src={img1} alt="" style={{ filter: "brightness(60%)" }} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="images">
-                        <img src={img2} alt="" />
+                        <img src={img2} alt="" style={{ filter: "brightness(60%)" }} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="images">
-                        <img src={img3} alt="" />
+                        <img src={img3} alt="" style={{ filter: "brightness(60%)" }} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="images">
-                        <img src={img4} alt="" />
+                        <img src={img4} alt="" style={{ filter: "brightness(60%)" }} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="images">
-                        <img src={img5} alt="" />
+                        <img src={img5} alt="" style={{ filter: "brightness(60%)" }} />
                     </div>
                 </SwiperSlide>
             </Swiper>

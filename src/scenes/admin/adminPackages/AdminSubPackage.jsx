@@ -252,6 +252,7 @@ const AdminSubPackage = () => {
                     borderRadius: ".8rem",
                     border: "1px solid var(--bgBorder)",
                     cursor: "pointer",
+                    marginTop: "2.5rem"
                 }} onClick={exportPDF}>Export</button>
             </Section>
         </>

@@ -85,11 +85,11 @@ const AdminSubAddUsers = () => {
                                 </div>
                                 <div className="join">
                                     <label htmlFor="themeName">Password</label>
-                                    <input type="text" placeholder='Enter Users Password' name='password' id="password" value={state.password} onChange={handleChange} />
+                                    <input type="password" placeholder='Enter Users Password' name='password' id="password" value={state.password} onChange={handleChange} />
                                 </div>
                                 <div className="join">
                                     <label htmlFor="themeName">Confirm Password</label>
-                                    <input type="text" placeholder='Enter Confirm Password' name='confirmPassword' id="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
+                                    <input type="password" placeholder='Enter Confirm Password' name='confirmPassword' id="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
                                 </div>
                                 <input disabled={check() ? true : false} style={{ opacity: check() ? '.7' : "1" }} type="submit" value="Submit" />
                             </form>
