@@ -231,9 +231,9 @@ const AdminSubPackage = () => {
                                     sx={{ fontSize: "1.5rem" }}
                                     rows={rows.map(row => ({ ...row, id: row._id }))}
                                     columns={columns}
-                                    pageSize={7}
+                                    pageSize={6}
                                     autoHeight
-                                    rowsPerPageOptions={[7]}
+                                    rowsPerPageOptions={[6]}
                                     checkboxSelection
                                     disableSelectionOnClick
                                     experimentalFeatures={{ newEditingApi: true }}
@@ -252,7 +252,7 @@ const AdminSubPackage = () => {
                     borderRadius: ".8rem",
                     border: "1px solid var(--bgBorder)",
                     cursor: "pointer",
-                    marginTop: "2.5rem"
+                    marginTop: "5.5rem"
                 }} onClick={exportPDF}>Export</button>
             </Section>
         </>
@@ -291,7 +291,7 @@ const Section = styled.div`
         }
     }
     .content{
-        padding: var(--r2) var(--r4);
+        padding: 0 var(--r4);
         color: black;
         .MuiTablePagination-displayedRows{
             font-size: var(--r1-25);

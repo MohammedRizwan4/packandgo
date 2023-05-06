@@ -5,8 +5,8 @@ import GridViewIcon from '@mui/icons-material/GridView';
 const SearchBar = ({ packages }) => {
 
     const [state, setState] = useState({
-        starting: packages ? packages[1]?.starting_point : "",
-        destination: packages ? packages[1]?.ending_point : ""
+        starting: packages ? packages[0]?.starting_point : "",
+        destination: packages ? packages[0]?.ending_point : ""
     })
 
     const handleChange = e => {
@@ -25,7 +25,7 @@ const SearchBar = ({ packages }) => {
                         <input
                             type="text"
                             name="starting"
-                            value={state.starting}
+                            value={state.starting.slice(0,17)+".."}
                             onChange={(e) => handleChange(e)}
                             disabled
                         />
@@ -35,7 +35,7 @@ const SearchBar = ({ packages }) => {
                         <input
                             type="text"
                             name="destination"
-                            value={state.destination}
+                            value={state.destination.slice(0,17)+".."}
                             disabled
                         />
                     </div>

@@ -4,11 +4,11 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Virtual } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import img1 from '../../scenes/images/1.jpg'
-import img2 from '../../scenes/images/2.jpg'
-import img3 from '../../scenes/images/3.jpg'
-import img4 from '../../scenes/images/4.jpg'
-import img5 from '../../scenes/images/5.jpg'
+import img1 from '../../scenes/images/1.jpg';
+import img2 from '../../scenes/images/2.jpg';
+import img3 from '../../scenes/images/3.jpg';
+import img4 from '../../scenes/images/4.jpg';
+import img5 from '../../scenes/images/5.jpg';
 import img6 from './new.png';
 
 // Import Swiper styles
@@ -27,7 +27,7 @@ const Hero = () => {
                 "Wanderlust fulfilled, one trip at a time",
                 "See the world, make it your own"],
             typeSpeed: 100,
-            backSpeed: 100,
+            backSpeed: 50,
             loop: true
         })
     }, []);

@@ -108,8 +108,8 @@ const SinglePackage = ({ singlePackage }) => {
 
                 <div className="description">
                     <ul>
-                        <li>North Goa Sightseeing</li>
-                        <li>North Goa Sightseeing</li>
+                        <li>South {singlePackage?.location?.city.slice(0,7)}.. Sightseeing</li>
+                        <li>Central {singlePackage?.location?.city.slice(0,7)}.. Sightseeing</li>
                     </ul>
                     <div className="priceDetails">
                         <h4>₹{singlePackage.details[0].price} </h4>

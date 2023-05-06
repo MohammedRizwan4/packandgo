@@ -145,6 +145,7 @@ const AdminSubBookings = () => {
     return (
         <>
             <Section>
+                <div className="title">Bookings</div>
                 <div className="content">
                     {
                         isFetching ?
@@ -153,9 +154,9 @@ const AdminSubBookings = () => {
                                     sx={{ fontSize: "1.5rem" }}
                                     rows={rows.map(row => ({ ...row, id: row._id }))}
                                     columns={columns}
-                                    pageSize={7}
+                                    pageSize={6}
                                     autoHeight
-                                    rowsPerPageOptions={[7]}
+                                    rowsPerPageOptions={[6]}
                                     checkboxSelection
                                     disableSelectionOnClick
                                     experimentalFeatures={{ newEditingApi: true }}
@@ -174,6 +175,7 @@ const AdminSubBookings = () => {
                     borderRadius: ".8rem",
                     border: "1px solid var(--bgBorder)",
                     cursor: "pointer",
+                    marginTop: "8rem"
                 }} onClick={exportPDF}>Export</button>
             </Section>
         </>
@@ -186,6 +188,12 @@ const Section = styled.div`
     flex: 7;
     background-color: var(--bgWhite);
     color: white;
+    .title{
+        color: var(--bgDarkBlue);
+        font-size: 3rem;
+        font-weight: 900;
+        padding: var(--r1) var(--r4);
+    }
     .add{
         margin: var(--r2) var(--r2);
         height: var(--r7);

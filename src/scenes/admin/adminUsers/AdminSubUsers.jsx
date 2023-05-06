@@ -125,9 +125,9 @@ const AdminSubUsers = () => {
                                     sx={{ fontSize: "1.5rem" }}
                                     rows={rows.map(row => ({ ...row, id: row._id }))}
                                     columns={columns}
-                                    pageSize={7}
+                                    pageSize={6}
                                     autoHeight
-                                    rowsPerPageOptions={[7]}
+                                    rowsPerPageOptions={[6]}
                                     checkboxSelection
                                     disableSelectionOnClick
                                     experimentalFeatures={{ newEditingApi: true }}
@@ -146,7 +146,7 @@ const AdminSubUsers = () => {
                     borderRadius: ".8rem",
                     border: "1px solid var(--bgBorder)",
                     cursor: "pointer",
-                    marginTop: "5rem"
+                    marginTop: "3.5rem"
                 }} onClick={exportPDF}>Export</button>
             </Section>
         </>

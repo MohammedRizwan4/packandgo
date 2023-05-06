@@ -46,11 +46,11 @@ const Package = () => {
                         <div className="left">
                             <div className="box">
                                 <label htmlFor="">Starting From</label>
-                                <input type="text" name="starting" value={state.starting} onChange={(e) => handleChange(e)} disabled />
+                                <input type="text" name="starting" value={state.starting.slice(0,17)+".."} onChange={(e) => handleChange(e)} disabled />
                             </div>
                             <div className="box">
                                 <label htmlFor="">Going to</label>
-                                <input type="text" name="destination" value={state.destination} disabled />
+                                <input type="text" name="destination" value={state.destination.slice(0,17)+".."} disabled />
                             </div>
                             <div className="box">
                                 <label htmlFor="">Starting date</label>
